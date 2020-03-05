@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>并行与分布式计算作业1 | reeeeeeeeeein的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="并行与分布式计算作业1作业题目现代处理器如Intel、ARM、AMD、Power以及国产CPU如华为鲲鹏等，均包含了并行指令集合，① 请调查这些处理器中的并行指 令集，并选择其中一种进行编程练习，计算两个各包含10^6个整数的向量之和。 此外，② 现代操作系统为了发挥多核的优势，支持多线程并行编程模型，请将问题①用多线程的方式实现，线程实现的语言不限，可以是Java，也可以是 C&#x2F;C++。 用串行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="并行与分布式计算作业1">
+<meta property="og:url" content="http://yoursite.com/2020/03/02/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A1/index.html">
+<meta property="og:site_name" content="reeeeeeeeeein的博客">
+<meta property="og:description" content="并行与分布式计算作业1作业题目现代处理器如Intel、ARM、AMD、Power以及国产CPU如华为鲲鹏等，均包含了并行指令集合，① 请调查这些处理器中的并行指 令集，并选择其中一种进行编程练习，计算两个各包含10^6个整数的向量之和。 此外，② 现代操作系统为了发挥多核的优势，支持多线程并行编程模型，请将问题①用多线程的方式实现，线程实现的语言不限，可以是Java，也可以是 C&#x2F;C++。 用串行">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/03/02/ftERVcS28Zq1O5h.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/02/d2uWqbMJlsU5T6P.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/02/a4PGxXndvMmhOpg.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/02/e4tHBE5ODVrqAh3.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/02/ftERVcS28Zq1O5h.png">
+<meta property="article:published_time" content="2020-03-02T15:20:04.845Z">
+<meta property="article:modified_time" content="2020-03-02T15:20:04.845Z">
+<meta property="article:author" content="reeeeeeeeeein">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/03/02/ftERVcS28Zq1O5h.png">
+  
+    <link rel="alternate" href="/atom.xml" title="reeeeeeeeeein的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">reeeeeeeeeein的博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-并行与分布式计算作业1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/02/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A1/" class="article-date">
+  <time datetime="2020-03-02T15:20:04.845Z" itemprop="datePublished">2020-03-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      并行与分布式计算作业1
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="并行与分布式计算作业1"><a href="#并行与分布式计算作业1" class="headerlink" title="并行与分布式计算作业1"></a>并行与分布式计算作业1</h1><h2 id="作业题目"><a href="#作业题目" class="headerlink" title="作业题目"></a>作业题目</h2><p>现代处理器如Intel、ARM、AMD、Power以及国产CPU如华为鲲鹏等，均包含了并行指令集合，① 请调查这些处理器中的并行指 令集，并选择其中一种进行编程练习，计算两个各包含10^6个整数的向量之和。 此外，② 现代操作系统为了发挥多核的优势，支持多线程并行编程模型，请将问题①用多线程的方式实现，线程实现的语言不限，可以是Java，也可以是 C/C++。</p>
+<h2 id="用串行的方法完成向量之和计算"><a href="#用串行的方法完成向量之和计算" class="headerlink" title="用串行的方法完成向量之和计算"></a>用串行的方法完成向量之和计算</h2><p>为了进行对照，先写一个串行的程序：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Size 1000000</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> a[Size],b[Size],c[Size];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">tv</span>,<span class="title">tv2</span>;</span></span><br><span class="line">    gettimeofday(&amp;tv,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Size;i++)c[i]=a[i]+b[i];</span><br><span class="line">    gettimeofday(&amp;tv2,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"time: %d\n"</span>,tv2.tv_sec*<span class="number">1000000</span> + tv2.tv_usec - tv.tv_sec*<span class="number">1000000</span> - tv.tv_usec);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>进行了5次实验，结果如下：<br><img src="https://i.loli.net/2020/03/02/ftERVcS28Zq1O5h.png" alt="image.png"><br>平均耗时：3,276.2μs</p>
+<h2 id="用并行指令集axv来完成向量之和计算"><a href="#用并行指令集axv来完成向量之和计算" class="headerlink" title="用并行指令集axv来完成向量之和计算"></a>用并行指令集axv来完成向量之和计算</h2><p>首先在<a href="https://github.com/chen0031/AVX-AVX2-Example-Code" target="_blank" rel="noopener">https://github.com/chen0031/AVX-AVX2-Example-Code</a>中下载文件夹，在wsl中cd进入文件夹，即可用make命令进行编译，用make run命令运行。</p>
+<p><img src="https://i.loli.net/2020/03/02/d2uWqbMJlsU5T6P.png" alt="image.png"></p>
+<p><img src="https://i.loli.net/2020/03/02/a4PGxXndvMmhOpg.png" alt="image.png"></p>
+<p>然后执行 cd ./Arithmetic_Intrinsics/src，将其中的add.c文件修改为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Author:  TripleZ&lt;me@triplez.cn&gt;</span></span><br><span class="line"><span class="comment"> * Date:    2018-08-17</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Size 1000000</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;immintrin.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line">__m256i my_int_vec_0[Size/<span class="number">8</span>+<span class="number">3</span>];<span class="comment">//数组每个元素存8个整数，故数组的大小为Size/8,+3是为了防止越界</span></span><br><span class="line">__m256i my_int_vec_1[Size/<span class="number">8</span>+<span class="number">3</span>];</span><br><span class="line">__m256i my_int_result[Size/<span class="number">8</span>+<span class="number">3</span>];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Size/<span class="number">8</span>;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">8</span>;j++)&#123;</span><br><span class="line">        my_int_vec_0[i][j]=rand();</span><br><span class="line">        my_int_vec_1[i][j]=rand();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">tv</span>,<span class="title">tv2</span>;</span></span><br><span class="line">    gettimeofday(&amp;tv,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Size/<span class="number">8</span>;i++)&#123;</span><br><span class="line">      my_int_result[i]=_mm256_add_epi32(my_int_vec_0[i],my_int_vec_1[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    gettimeofday(&amp;tv2,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n\n\n\n\n\ntime: %dμs\n\n\n\n\n\n"</span>,tv2.tv_sec*<span class="number">1000000</span> + tv2.tv_usec - tv.tv_sec*<span class="number">1000000</span> - tv.tv_usec);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>即可进行计算。</p>
+<p>分别进行5次实验，耗时分别为(单位为μs)：<br>1491，1329，1178，2009，1470<br>平均耗时：1,495.4μs<br>可以发现，用并行指令集进行计算会快很多，加速比大概是2.19</p>
+<h2 id="用多线程来完成向量之和计算"><a href="#用多线程来完成向量之和计算" class="headerlink" title="用多线程来完成向量之和计算"></a>用多线程来完成向量之和计算</h2><p>使用mpi来实现多线程完成向量之和，代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mpi.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX_size 10000000</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> a[MAX_size], b[MAX_size], c[MAX_size];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">//cout&lt;&lt;"???\n";</span></span><br><span class="line">  <span class="keyword">int</span> numprocs, myid, source;</span><br><span class="line">  MPI_Status status;</span><br><span class="line">  MPI_Init(&amp;argc, &amp;argv);</span><br><span class="line">  MPI_Comm_rank(MPI_COMM_WORLD, &amp;myid);</span><br><span class="line">  MPI_Comm_size(MPI_COMM_WORLD, &amp;numprocs);</span><br><span class="line">  <span class="keyword">int</span> sub_size=MAX_size / (numprocs - <span class="number">1</span>);</span><br><span class="line"><span class="comment">//  cout&lt;&lt;"???\n";</span></span><br><span class="line">  <span class="keyword">if</span> (myid == <span class="number">0</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">tv</span>,<span class="title">tv2</span>;</span></span><br><span class="line">    gettimeofday(&amp;tv,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="comment">//cout&lt;&lt;"???\n";</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; numprocs; i++)</span><br><span class="line">    &#123;</span><br><span class="line">      MPI_Send(a + (i - <span class="number">1</span>) * sub_size, sub_size,</span><br><span class="line">               MPI_INT, i, i, MPI_COMM_WORLD);</span><br><span class="line">      MPI_Send(b + (i - <span class="number">1</span>) * sub_size, sub_size,</span><br><span class="line">               MPI_INT, i, i, MPI_COMM_WORLD);</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="comment">//  cout&lt;&lt;"???\n";</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; numprocs; i++)</span><br><span class="line">    &#123;</span><br><span class="line">      MPI_Recv(c + (i - <span class="number">1</span>) * sub_size, sub_size,</span><br><span class="line">               MPI_INT, i, i, MPI_COMM_WORLD, &amp;status);</span><br><span class="line">    &#125;</span><br><span class="line">    gettimeofday(&amp;tv2,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"time: %d\n"</span>,tv2.tv_sec*<span class="number">1000000</span> + tv2.tv_usec - tv.tv_sec*<span class="number">1000000</span> - tv.tv_usec);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">int</span> *tema = <span class="keyword">new</span> <span class="keyword">int</span>[sub_size];</span><br><span class="line">    <span class="keyword">int</span> *temb = <span class="keyword">new</span> <span class="keyword">int</span>[sub_size];</span><br><span class="line">    <span class="keyword">int</span> *temc = <span class="keyword">new</span> <span class="keyword">int</span>[sub_size];</span><br><span class="line">    MPI_Recv(tema, sub_size,</span><br><span class="line">             MPI_INT, <span class="number">0</span>, myid, MPI_COMM_WORLD, &amp;status);</span><br><span class="line">    MPI_Recv(temb, sub_size,</span><br><span class="line">            MPI_INT, <span class="number">0</span>, myid, MPI_COMM_WORLD,&amp;status);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;sub_size;i++)temc[i]=tema[i]+temb[i];</span><br><span class="line"><span class="comment">//    cout&lt;&lt;"?????\n";</span></span><br><span class="line">    MPI_Send(temc,sub_size,MPI_INT,<span class="number">0</span>,myid,MPI_COMM_WORLD);</span><br><span class="line">  &#125;</span><br><span class="line">  MPI_Finalize();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分别对线程数量为3,5,6,9,11(即将数组分为2,4,5,8,10份)进行了实验，结果如下：</p>
+<p><img src="https://i.loli.net/2020/03/02/e4tHBE5ODVrqAh3.png" alt="image.png"></p>
+<p>可以发现消耗的时间比前面用并行指令集多很多，这应该是因为线程之间通信次数很多，消耗了很多时间，而本身要计算的任务并不复杂，因此多线程的优势并不能得以发挥。</p>
+<p>再使用OpenMP来进行多线程计算，这只需将串行的代码稍作修改即可。<br>代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Size 1000000</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> a[Size],b[Size],c[Size];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">tv</span>,<span class="title">tv2</span>;</span></span><br><span class="line">    gettimeofday(&amp;tv,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Size;i++)c[i]=a[i]+b[i];</span><br><span class="line">    gettimeofday(&amp;tv2,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"time: %d\n"</span>,tv2.tv_sec*<span class="number">1000000</span> + tv2.tv_usec - tv.tv_sec*<span class="number">1000000</span> - tv.tv_usec);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果如下：<br><img src="https://i.loli.net/2020/03/02/ftERVcS28Zq1O5h.png" alt="image.png"></p>
+<p>平均用时为3,276.2μs,与串行的程序相比速度几乎没有提高，并不知道是什么原因(我把数据量调大，结果依然没有提高)。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/03/02/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A1/" data-id="ck7a1siok00016iwpg45f583b" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/03/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AE%9E%E9%AA%8C1_Echo%E5%AE%9E%E9%AA%8C/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          计算机网络实验1_Echo实验
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/03/02/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">并行与分布式计算</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MPI/" rel="tag">MPI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VSCode/" rel="tag">VSCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WSL/" rel="tag">WSL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97/" rel="tag">并行与分布式计算</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 20px;">C++</a> <a href="/tags/MPI/" style="font-size: 20px;">MPI</a> <a href="/tags/VSCode/" style="font-size: 10px;">VSCode</a> <a href="/tags/WSL/" style="font-size: 10px;">WSL</a> <a href="/tags/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97/" style="font-size: 20px;">并行与分布式计算</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">计算机网络</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/03/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AE%9E%E9%AA%8C1_Echo%E5%AE%9E%E9%AA%8C/">计算机网络实验1_Echo实验</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/02/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A1/">并行与分布式计算作业1</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/02/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97/">并行与分布式计算</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/01/MPI%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">MPI学习笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/28/MPI%E5%85%A5%E9%97%A8/">MPI入门</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 reeeeeeeeeein<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
