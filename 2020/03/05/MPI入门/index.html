@@ -21,17 +21,22 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="SYSU 计算机专业大二在读">
-<meta property="og:type" content="website">
-<meta property="og:title" content="reeeeeeeeeein的博客">
-<meta property="og:url" content="http://yoursite.com/tags/WSL/index.html">
+  <meta name="description" content="在WSL里安装MPI非常方便，只需执行 1sudo apt install -y build-essential mpich  即可。这样就可以在终端中使用mpi了，但为了方便使用，还需在VSCode中添加路径。在c_cpp_properties.json的includePath中添加”&#x2F;usr&#x2F;include&#x2F;mpich”即可。 用mpi编写一个helloworld程序： 12345678910">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MPI入门">
+<meta property="og:url" content="http://yoursite.com/2020/03/05/MPI%E5%85%A5%E9%97%A8/index.html">
 <meta property="og:site_name" content="reeeeeeeeeein的博客">
-<meta property="og:description" content="SYSU 计算机专业大二在读">
+<meta property="og:description" content="在WSL里安装MPI非常方便，只需执行 1sudo apt install -y build-essential mpich  即可。这样就可以在终端中使用mpi了，但为了方便使用，还需在VSCode中添加路径。在c_cpp_properties.json的includePath中添加”&#x2F;usr&#x2F;include&#x2F;mpich”即可。 用mpi编写一个helloworld程序： 12345678910">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/ApG7uIckXLoWZKF.png">
+<meta property="article:published_time" content="2020-03-05T13:58:15.597Z">
+<meta property="article:modified_time" content="2020-02-28T08:57:31.695Z">
 <meta property="article:author" content="reeeeeeeeeein">
+<meta property="article:tag" content="MPI">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/02/28/ApG7uIckXLoWZKF.png">
 
-<link rel="canonical" href="http://yoursite.com/tags/WSL/">
+<link rel="canonical" href="http://yoursite.com/2020/03/05/MPI%E5%85%A5%E9%97%A8/">
 
 
 <script id="page-configurations">
@@ -39,11 +44,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false
+    isPost : true
   };
 </script>
 
-  <title>标签: WSL | reeeeeeeeeein的博客</title>
+  <title>MPI入门 | reeeeeeeeeein的博客</title>
   
 
 
@@ -160,50 +165,113 @@
           <div class="content">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h1 class="collection-header">WSL
-          <small>标签</small>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/05/MPI%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MPI入门
         </h1>
-      </div>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-05 21:58:15" itemprop="dateCreated datePublished" datetime="2020-03-05T21:58:15+08:00">2020-03-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-28 16:57:31" itemprop="dateModified" datetime="2020-02-28T16:57:31+08:00">2020-02-28</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h1 class="collection-header">2020</h1>
+        <p>在WSL里安装MPI非常方便，只需执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install -y build-essential mpich</span><br></pre></td></tr></table></figure>
+
+<p>即可。<br>这样就可以在终端中使用mpi了，但为了方便使用，还需在VSCode中添加路径。<br>在c_cpp_properties.json的includePath中添加”/usr/include/mpich”即可。</p>
+<p>用mpi编写一个helloworld程序：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;mpi.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span> **argv)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> numprocs, myid;</span><br><span class="line">    MPI_Status status;</span><br><span class="line">    MPI_Init(&amp;argc, &amp;argv);<span class="comment">//</span></span><br><span class="line">    MPI_Comm_rank(MPI_COMM_WORLD, &amp;myid);<span class="comment">//这里myid表示这个线程是第几个线程，如果myid是0则是第一个线程</span></span><br><span class="line">    MPI_Comm_size(MPI_COMM_WORLD, &amp;numprocs);  <span class="comment">//numprocs表示总的线程数量</span></span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"helloworld\n"</span>;</span><br><span class="line">    MPI_Finalize();<span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码由许多值得注意的地方：</p>
+<p>1.注意不能使用 bits/stdc++ 这个库，否则会出错。</p>
+<p>2.main函数要带命令行参数。</p>
+<p>3.MPI_Init函数表示从这一行开始，后面的代码会被并行执行，即在每个线程中执行一次。其他的MPI<br>函数必须在MPI_Init函数之后。</p>
+<p>4.MPI_Comm_rank函数获得本线程是第几个线程，把线程号存储在myid中。第1个线程(也称为主线程)对应的myid是0，<br>第二个线程对应的myid是1……以此类推。</p>
+<p>5.MPI_Comm_size得到线程的数量。</p>
+<p>6.在网上查阅资料了解到，MPI_Finalize函数将并行部分终止，除了主线程外的线程都会被终止，主线程的串行部分还可以正常执行。但事实上我在本地运行程序时，MPI_Finalize函数之后的部分还是会被并行执行，我也不知道为什么。</p>
+<p>写完之后，就可以在终端执行程序了。</p>
+<p><img src="https://i.loli.net/2020/02/28/ApG7uIckXLoWZKF.png" alt="image.png"></p>
+<p>用mpic++编译源代码，生成一个名为hw的可执行文件。再用mpirun运行文件，4表示4个线程，所以输出时4个helloworld。</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-02-28T00:12:03+08:00"
-              content="2020-02-28">
-          02-28
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MPI/" rel="tag"># MPI</a>
+          </div>
 
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2020/02/28/aaaa/" itemprop="url">
-            <span itemprop="name">在WSL安装并配置VSCode</span>
-          </a>
-      </h2>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/05/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A1/" rel="prev" title="并行与分布式计算作业1">
+      <i class="fa fa-chevron-left"></i> 并行与分布式计算作业1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/10/MPI%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="next" title="MPI学习笔记">
+      MPI学习笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
   </article>
+  
+  
+  
 
-    </div>
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
