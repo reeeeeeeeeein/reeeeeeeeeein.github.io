@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="并行与分布式计算作业2   姓名 学号 班级 邮箱    张景润 18340210 计科八班 zhangjr35@mail2.sysu.edu.cn   第一题题目&amp;#8195;&amp;#8195;分别采用不同的算法（非分布式算法）例如一般算法、分治算法和Strassen算法等计算计 算矩阵两个300x300的矩阵乘积，并通过Perf工具分别观察cache miss、CPI、 mem_load 等性能指">
+<meta property="og:type" content="article">
+<meta property="og:title" content="并行与分布式计算作业2">
+<meta property="og:url" content="http://yoursite.com/2020/04/04/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A2/index.html">
+<meta property="og:site_name" content="reeeeeeeeeein的博客">
+<meta property="og:description" content="并行与分布式计算作业2   姓名 学号 班级 邮箱    张景润 18340210 计科八班 zhangjr35@mail2.sysu.edu.cn   第一题题目&amp;#8195;&amp;#8195;分别采用不同的算法（非分布式算法）例如一般算法、分治算法和Strassen算法等计算计 算矩阵两个300x300的矩阵乘积，并通过Perf工具分别观察cache miss、CPI、 mem_load 等性能指">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/03/30/YGRbAyPqlkmzEfM.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/30/SdRMi4Lk7hbqaAl.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/30/ewKDWIO6qu2vjCM.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/31/2iUzk4M1wdLNgQa.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/31/q4Hm1AJgVjOcaZ5.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/31/lfOq56AnPWUJNgV.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/31/scpDBqOVY5iPkIL.png">
+<meta property="article:published_time" content="2020-04-04T13:35:37.834Z">
+<meta property="article:modified_time" content="2020-04-04T13:35:37.834Z">
+<meta property="article:author" content="reeeeeeeeeein">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/03/30/YGRbAyPqlkmzEfM.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/04/04/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>并行与分布式计算作业2 | reeeeeeeeeein的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+<div class="bg_content">
+<canvas id="canvas"></canvas>
+</div>
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">reeeeeeeeeein的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/04/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          并行与分布式计算作业2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-04 21:35:37" itemprop="dateCreated datePublished" datetime="2020-04-04T21:35:37+08:00">2020-04-04</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="并行与分布式计算作业2"><a href="#并行与分布式计算作业2" class="headerlink" title="并行与分布式计算作业2"></a>并行与分布式计算作业2</h1><table>
+<thead>
+<tr>
+<th>姓名</th>
+<th>学号</th>
+<th>班级</th>
+<th>邮箱</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>张景润</td>
+<td>18340210</td>
+<td>计科八班</td>
+<td><a href="mailto:zhangjr35@mail2.sysu.edu.cn">zhangjr35@mail2.sysu.edu.cn</a></td>
+</tr>
+</tbody></table>
+<h2 id="第一题"><a href="#第一题" class="headerlink" title="第一题"></a>第一题</h2><h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>&#8195;&#8195;分别采用不同的算法（非分布式算法）例如一般算法、分治算法和Strassen算法等计算计 算矩阵两个300x300的矩阵乘积，并通过Perf工具分别观察cache miss、CPI、 mem_load 等性能指标。</p>
+<h3 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h3><h4 id="一般算法"><a href="#一般算法" class="headerlink" title="一般算法"></a>一般算法</h4><p>&#8195;&#8195;编写一个矩阵乘法程序，代码如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SIZE_OF_MATRIX 300</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">matrix</span>&#123;</span></span><br><span class="line">  <span class="keyword">int</span> n,m;</span><br><span class="line">  <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">double</span>&gt; &gt; vec;</span><br><span class="line">  matrix(<span class="keyword">int</span> nn=<span class="number">0</span>,<span class="keyword">int</span> mm=<span class="number">0</span>):n(nn),m(mm)&#123;</span><br><span class="line">    vec=<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">double</span>&gt; &gt; (n);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)vec[i]=<span class="built_in">vector</span>&lt;<span class="keyword">double</span>&gt; (m);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">get_rand</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m;j++)vec[i][j]=(<span class="keyword">double</span>)rand()/(INT_MAX);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">output</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m;j++)<span class="built_in">cout</span>&lt;&lt;vec[i][j]&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;<span class="string">"\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  matrix <span class="keyword">operator</span> *(matrix b)&#123;</span><br><span class="line">    <span class="keyword">if</span>(m!=b.n)&#123;</span><br><span class="line">      <span class="keyword">return</span> matrix();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">matrix <span class="title">ret</span><span class="params">(n,b.m)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;ret.n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;ret.m;j++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">0</span>;k&lt;m;k++)&#123;</span><br><span class="line">          ret.vec[i][j]+=vec[i][k]*b.vec[k][j];</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="comment">//cout&lt;&lt;"Hello world\n";</span></span><br><span class="line">  matrix a(SIZE_OF_MATRIX,SIZE_OF_MATRIX),b(SIZE_OF_MATRIX,SIZE_OF_MATRIX);</span><br><span class="line">  a.get_rand(),b.get_rand();</span><br><span class="line">  <span class="comment">//a.output(),b.output();</span></span><br><span class="line">  </span><br><span class="line">  matrix c=a*b;</span><br><span class="line">  <span class="comment">//c.output();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&#8195;&#8195;使用perf观察 cache-misses,cpi,mem-loads 等性能指标:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">perf <span class="built_in">stat</span> -e cache-misses,instructions,cycles,mem-loads -r 10  ./a</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：<br><img src="https://i.loli.net/2020/03/30/YGRbAyPqlkmzEfM.png" alt="image.png"><br>&#8195;&#8195;可以看到,10次运行的平均cache-misses次数只有38100次，相比于3e9级别的指令数量，这个数字还是比较少的。<br>&#8195;&#8195;平均指令数为3,373,445,889，平均cpu cycles只有 1,189,821,710，计算得$$CPI=\frac{1,189,821,710}{3,373,445,889}\approx0.3527$$这是一个小于1的数字，十分奇怪，我推测是编译器或者是CPU在底层对循环进行了并行优化。<br>&#8195;&#8195;而mem_loads为0，这也十分奇怪，大概是perf出了什么bug。<br>&#8195;&#8195;用perf record 对cache-misses 和 instructions的分布进行详细分析:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">perf record -e cache-misses,instructions -g ./a</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：<br><img src="https://i.loli.net/2020/03/30/SdRMi4Lk7hbqaAl.png" alt="N7C_FJC~_W7KBF080VFUQHO.png"></p>
+<p>![57UDL_OJL_`3HPY1F0ND3ZS.png](<a href="https://i.loli.net/2020/03/30/Hhj6YGoLQwitACD.png" target="_blank" rel="noopener">https://i.loli.net/2020/03/30/Hhj6YGoLQwitACD.png</a>)<br>&#8195;&#8195;可以看到，矩阵乘法阶段占用instructions的比例较高，发生的cache-misses次数也较多。</p>
+<h4 id="分治算法"><a href="#分治算法" class="headerlink" title="分治算法"></a>分治算法</h4><p>&#8195;&#8195;这里的分治算法是利用矩阵分块将矩阵分为4个子矩阵，这样就可以对两个二乘二的矩阵进行乘法，最后再合并起来得到结果。简单的分治算法的时间复杂度仍然是$O(n^3)$的。<br>代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SIZE_OF_MATRIX 300</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">double</span> eps=<span class="number">1e-6</span>;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">matrix</span>&#123;</span></span><br><span class="line">  <span class="keyword">int</span> n,m;</span><br><span class="line">  <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">double</span>&gt; &gt; vec;</span><br><span class="line">  matrix(<span class="keyword">int</span> nn=<span class="number">0</span>,<span class="keyword">int</span> mm=<span class="number">0</span>):n(nn),m(mm)&#123;</span><br><span class="line">    vec=<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">double</span>&gt; &gt; (n);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)vec[i]=<span class="built_in">vector</span>&lt;<span class="keyword">double</span>&gt; (m);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">get_rand</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m;j++)vec[i][j]=(<span class="keyword">double</span>)rand()/(INT_MAX);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">output</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m;j++)<span class="built_in">cout</span>&lt;&lt;vec[i][j]&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;<span class="string">"\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  matrix <span class="keyword">operator</span> *(matrix &amp;b)&#123;</span><br><span class="line">    <span class="keyword">if</span>(m!=b.n)&#123;</span><br><span class="line">      <span class="keyword">return</span> matrix();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">matrix <span class="title">ret</span><span class="params">(n,b.m)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;ret.n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;ret.m;j++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">0</span>;k&lt;m;k++)&#123;</span><br><span class="line">          ret.vec[i][j]+=vec[i][k]*b.vec[k][j];</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  matrix <span class="keyword">operator</span>+(<span class="keyword">const</span> matrix&amp; b)&#123;</span><br><span class="line">    <span class="keyword">if</span>(n!=b.n&amp;&amp;m!=b.m)&#123;</span><br><span class="line">      <span class="keyword">return</span> matrix();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">matrix <span class="title">ret</span><span class="params">(n,m)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;ret.n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;ret.m;j++)&#123;</span><br><span class="line">        ret.vec[i][j]=vec[i][j]+b.vec[i][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="built_in">vector</span>&lt;matrix&gt; <span class="title">divide</span><span class="params">()</span></span>&#123;</span><br><span class="line">    matrix m1(n/2,m/2),m2(n/2,m-m/2),m3(n-n/2,m/2),m4(n-n/2,m-m/2);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m1.n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m1.m;j++)&#123;</span><br><span class="line">        m1.vec[i][j]=vec[i][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m2.n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m2.m;j++)&#123;</span><br><span class="line">        m2.vec[i][j]=vec[i][j+m1.m];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m3.n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m3.m;j++)&#123;</span><br><span class="line">        m3.vec[i][j]=vec[i+m1.n][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m4.n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m4.m;j++)&#123;</span><br><span class="line">        m4.vec[i][j]=vec[i+m1.n][j+m1.m];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">vector</span>&lt;matrix&gt;&#123;m1,m2,m3,m4&#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">  <span class="function">matrix <span class="title">merge</span><span class="params">(<span class="built_in">vector</span>&lt;matrix&gt; &amp;matrices)</span></span>&#123;</span><br><span class="line">    <span class="function">matrix <span class="title">ret</span><span class="params">(matrices[<span class="number">0</span>].n+matrices[<span class="number">3</span>].n,matrices[<span class="number">0</span>].m+matrices[<span class="number">3</span>].m)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;matrices[<span class="number">0</span>].n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;matrices[<span class="number">0</span>].m;j++)&#123;</span><br><span class="line">        ret.vec[i][j]=matrices[<span class="number">0</span>].vec[i][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;matrices[<span class="number">1</span>].n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;matrices[<span class="number">1</span>].m;j++)&#123;</span><br><span class="line">        ret.vec[i][j+matrices[<span class="number">0</span>].m]=matrices[<span class="number">1</span>].vec[i][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;matrices[<span class="number">2</span>].n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;matrices[<span class="number">2</span>].m;j++)&#123;</span><br><span class="line">        ret.vec[i+matrices[<span class="number">0</span>].n][j]=matrices[<span class="number">2</span>].vec[i][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;matrices[<span class="number">3</span>].n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;matrices[<span class="number">3</span>].m;j++)&#123;</span><br><span class="line">        ret.vec[i+matrices[<span class="number">0</span>].n][j+matrices[<span class="number">0</span>].m]=matrices[<span class="number">3</span>].vec[i][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function">matrix <span class="title">divide_conquer</span><span class="params">(matrix &amp;a,matrix &amp;b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(a.n&lt;<span class="number">10</span>)<span class="keyword">return</span> a*b;</span><br><span class="line">    <span class="built_in">vector</span>&lt;matrix&gt; vec1=a.divide(),vec2=b.divide();</span><br><span class="line"><span class="comment">//    cout&lt;&lt;vec1[0].n&lt;&lt;" "&lt;&lt;vec2[3].m&lt;&lt;endl;</span></span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;matrix&gt; <span class="title">sub_matrix</span><span class="params">(<span class="number">4</span>)</span></span>;</span><br><span class="line">    sub_matrix[<span class="number">0</span>]=divide_conquer(vec1[<span class="number">0</span>],vec2[<span class="number">0</span>])+divide_conquer(vec1[<span class="number">1</span>],vec2[<span class="number">2</span>]);</span><br><span class="line">    sub_matrix[<span class="number">1</span>]=divide_conquer(vec1[<span class="number">0</span>],vec2[<span class="number">1</span>])+divide_conquer(vec1[<span class="number">1</span>],vec2[<span class="number">3</span>]);</span><br><span class="line">    sub_matrix[<span class="number">2</span>]=divide_conquer(vec1[<span class="number">2</span>],vec2[<span class="number">0</span>])+divide_conquer(vec1[<span class="number">3</span>],vec2[<span class="number">2</span>]);</span><br><span class="line">    sub_matrix[<span class="number">3</span>]=divide_conquer(vec1[<span class="number">2</span>],vec2[<span class="number">1</span>])+divide_conquer(vec1[<span class="number">3</span>],vec2[<span class="number">3</span>]);</span><br><span class="line">    <span class="keyword">return</span> merge(sub_matrix);</span><br><span class="line">  &#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="comment">//cout&lt;&lt;"Hello world\n";</span></span><br><span class="line">  matrix a(SIZE_OF_MATRIX,SIZE_OF_MATRIX),b(SIZE_OF_MATRIX,SIZE_OF_MATRIX);</span><br><span class="line">  a.get_rand(),b.get_rand();</span><br><span class="line">  <span class="comment">//a.output(),b.output();</span></span><br><span class="line">  matrix c=divide_conquer(a,b);</span><br><span class="line">  <span class="comment">//matrix d=a*b;</span></span><br><span class="line">  <span class="keyword">bool</span> ok=<span class="literal">true</span>;</span><br><span class="line">  <span class="comment">/*for(int i=0;i&lt;SIZE_OF_MATRIX;i++)&#123;</span></span><br><span class="line"><span class="comment">    for(int j=0;j&lt;SIZE_OF_MATRIX;j++)if(abs(c.vec[i][j]-d.vec[i][j])&gt;eps)ok=false;//cout&lt;&lt;i&lt;&lt;" "&lt;&lt;j&lt;&lt;" "&lt;&lt;c.vec[i][j]&lt;&lt;" "&lt;&lt;d.vec[i][j]&lt;&lt;endl;</span></span><br><span class="line"><span class="comment">  &#125;</span></span><br><span class="line"><span class="comment">  cout&lt;&lt;ok&lt;&lt;endl;*/</span></span><br><span class="line"><span class="comment">//  c.output();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&#8195;&#8195;同样是使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">perf <span class="built_in">stat</span> -e cache-misses,instructions,cycles,mem-loads -r 10  ./a</span><br></pre></td></tr></table></figure>
+
+<p>&#8195;&#8195;来对性能进行分析，结果如下图所示：<br><img src="https://i.loli.net/2020/03/30/ewKDWIO6qu2vjCM.png" alt="image.png"></p>
+<p>&#8195;&#8195;可以看到cache-misses次数与之前基本一样；CPI升高到了0.5208，仍然小于1，说明底层的并行化效果不错；而mem-loads仍然为0。<br>&#8195;&#8195;平均时间消耗达到了将近3秒，是之前的4倍还要多，说明程序在递归调用时消耗了大量时间。</p>
+<h4 id="strassen算法"><a href="#strassen算法" class="headerlink" title="strassen算法"></a>strassen算法</h4><p>&#8195;&#8195;strassen算法用很神奇的方法把矩阵乘法的时间复杂度降低到了$O(n^{2.81})$左右,在矩阵规模较大的情况下性能会更好。<br>&#8195;&#8195;代码如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SIZE_OF_MATRIX 300</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">double</span> eps=<span class="number">1e-6</span>;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">matrix</span>&#123;</span></span><br><span class="line">  <span class="keyword">int</span> n,m;</span><br><span class="line">  <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">double</span>&gt; &gt; vec;</span><br><span class="line">  matrix(<span class="keyword">int</span> nn=<span class="number">0</span>,<span class="keyword">int</span> mm=<span class="number">0</span>):n(nn),m(mm)&#123;</span><br><span class="line">    vec=<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">double</span>&gt; &gt; (n);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)vec[i]=<span class="built_in">vector</span>&lt;<span class="keyword">double</span>&gt; (m);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">get_rand</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m;j++)vec[i][j]=(<span class="keyword">double</span>)rand()/(INT_MAX);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">output</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m;j++)<span class="built_in">cout</span>&lt;&lt;vec[i][j]&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;<span class="string">"\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  matrix <span class="keyword">operator</span> *(<span class="keyword">const</span> matrix &amp;b)<span class="keyword">const</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(m!=b.n)&#123;</span><br><span class="line">      <span class="keyword">return</span> matrix();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">matrix <span class="title">ret</span><span class="params">(n,b.m)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;ret.n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;ret.m;j++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">0</span>;k&lt;m;k++)&#123;</span><br><span class="line">          ret.vec[i][j]+=vec[i][k]*b.vec[k][j];</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  matrix <span class="keyword">operator</span>+(<span class="keyword">const</span> matrix&amp; b)<span class="keyword">const</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n!=b.n&amp;&amp;m!=b.m)&#123;</span><br><span class="line">      <span class="keyword">return</span> matrix();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">matrix <span class="title">ret</span><span class="params">(n,m)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;ret.n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;ret.m;j++)&#123;</span><br><span class="line">        ret.vec[i][j]=vec[i][j]+b.vec[i][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  matrix <span class="keyword">operator</span>-(<span class="keyword">const</span> matrix&amp; b)<span class="keyword">const</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n!=b.n&amp;&amp;m!=b.m)&#123;</span><br><span class="line">      <span class="keyword">return</span> matrix();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">matrix <span class="title">ret</span><span class="params">(n,m)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;ret.n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;ret.m;j++)&#123;</span><br><span class="line">        ret.vec[i][j]=vec[i][j]-b.vec[i][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="built_in">vector</span>&lt;matrix&gt; <span class="title">divide</span><span class="params">()</span><span class="keyword">const</span></span>&#123;</span><br><span class="line">    matrix m1(n/2,m/2),m2(n/2,m-m/2),m3(n-n/2,m/2),m4(n-n/2,m-m/2);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m1.n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m1.m;j++)&#123;</span><br><span class="line">        m1.vec[i][j]=vec[i][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m2.n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m2.m;j++)&#123;</span><br><span class="line">        m2.vec[i][j]=vec[i][j+m1.m];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m3.n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m3.m;j++)&#123;</span><br><span class="line">        m3.vec[i][j]=vec[i+m1.n][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m4.n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;m4.m;j++)&#123;</span><br><span class="line">        m4.vec[i][j]=vec[i+m1.n][j+m1.m];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">vector</span>&lt;matrix&gt;&#123;m1,m2,m3,m4&#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">  <span class="function">matrix <span class="title">merge</span><span class="params">(<span class="built_in">vector</span>&lt;matrix&gt; &amp;matrices)</span></span>&#123;</span><br><span class="line">    <span class="function">matrix <span class="title">ret</span><span class="params">(matrices[<span class="number">0</span>].n+matrices[<span class="number">3</span>].n,matrices[<span class="number">0</span>].m+matrices[<span class="number">3</span>].m)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;matrices[<span class="number">0</span>].n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;matrices[<span class="number">0</span>].m;j++)&#123;</span><br><span class="line">        ret.vec[i][j]=matrices[<span class="number">0</span>].vec[i][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;matrices[<span class="number">1</span>].n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;matrices[<span class="number">1</span>].m;j++)&#123;</span><br><span class="line">        ret.vec[i][j+matrices[<span class="number">0</span>].m]=matrices[<span class="number">1</span>].vec[i][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;matrices[<span class="number">2</span>].n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;matrices[<span class="number">2</span>].m;j++)&#123;</span><br><span class="line">        ret.vec[i+matrices[<span class="number">0</span>].n][j]=matrices[<span class="number">2</span>].vec[i][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;matrices[<span class="number">3</span>].n;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;matrices[<span class="number">3</span>].m;j++)&#123;</span><br><span class="line">        ret.vec[i+matrices[<span class="number">0</span>].n][j+matrices[<span class="number">0</span>].m]=matrices[<span class="number">3</span>].vec[i][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function">matrix <span class="title">strassen</span><span class="params">(matrix a,matrix b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(a.n&lt;=<span class="number">75</span>)<span class="keyword">return</span> a*b;</span><br><span class="line">    <span class="keyword">if</span>(a.n&amp;<span class="number">1</span>)&#123;</span><br><span class="line">      a.vec.push_back(<span class="built_in">vector</span>&lt;<span class="keyword">double</span>&gt;(a.m));</span><br><span class="line">      b.vec.push_back(<span class="built_in">vector</span>&lt;<span class="keyword">double</span>&gt;(b.m));</span><br><span class="line">      a.n++,b.n++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(a.m&amp;<span class="number">1</span>)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">auto</span> i:a.vec)i.push_back(<span class="number">0</span>);</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">auto</span> i:b.vec)i.push_back(<span class="number">0</span>);</span><br><span class="line">      a.m++,b.m++;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//    cout&lt;&lt;a.n&lt;&lt;" "&lt;&lt;a.m&lt;&lt;" "&lt;&lt;b.n&lt;&lt;" "&lt;&lt;b.m;</span></span><br><span class="line">    <span class="built_in">vector</span>&lt;matrix&gt; vec1=a.divide(),vec2=b.divide();</span><br><span class="line"><span class="comment">//    cout&lt;&lt;vec1[0].n&lt;&lt;" "&lt;&lt;vec2[3].m&lt;&lt;endl;</span></span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;matrix&gt; <span class="title">m</span><span class="params">(<span class="number">7</span>)</span></span>;</span><br><span class="line">    m[<span class="number">0</span>]=strassen((vec1[<span class="number">0</span>]+vec1[<span class="number">3</span>]),(vec2[<span class="number">0</span>]+vec2[<span class="number">3</span>]));</span><br><span class="line">    m[<span class="number">1</span>]=strassen((vec1[<span class="number">2</span>]+vec1[<span class="number">3</span>]),vec2[<span class="number">0</span>]);</span><br><span class="line">    m[<span class="number">2</span>]=strassen(vec1[<span class="number">0</span>],(vec2[<span class="number">1</span>]-vec2[<span class="number">3</span>]));</span><br><span class="line">    m[<span class="number">3</span>]=strassen(vec1[<span class="number">3</span>],(vec2[<span class="number">2</span>]-vec2[<span class="number">0</span>]));</span><br><span class="line">    m[<span class="number">4</span>]=strassen((vec1[<span class="number">0</span>]+vec1[<span class="number">1</span>]),vec2[<span class="number">3</span>]);</span><br><span class="line">    m[<span class="number">5</span>]=strassen((vec1[<span class="number">2</span>]-vec1[<span class="number">0</span>]),(vec2[<span class="number">0</span>]+vec2[<span class="number">1</span>]));</span><br><span class="line">    m[<span class="number">6</span>]=strassen((vec1[<span class="number">1</span>]-vec1[<span class="number">3</span>]),(vec2[<span class="number">2</span>]+vec2[<span class="number">3</span>]));</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;matrix&gt; <span class="title">mm</span><span class="params">(&#123;m[<span class="number">0</span>]+m[<span class="number">3</span>]-m[<span class="number">4</span>]+m[<span class="number">6</span>],m[<span class="number">2</span>]+m[<span class="number">4</span>],m[<span class="number">1</span>]+m[<span class="number">3</span>],m[<span class="number">0</span>]+m[<span class="number">2</span>]-m[<span class="number">1</span>]+m[<span class="number">5</span>]&#125;)</span></span>;</span><br><span class="line">    <span class="keyword">return</span> merge(mm);</span><br><span class="line">  &#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="comment">//cout&lt;&lt;"Hello world\n";</span></span><br><span class="line">  matrix a(SIZE_OF_MATRIX,SIZE_OF_MATRIX),b(SIZE_OF_MATRIX,SIZE_OF_MATRIX);</span><br><span class="line">  a.get_rand(),b.get_rand();</span><br><span class="line">  <span class="comment">//a.output(),b.output();</span></span><br><span class="line">  </span><br><span class="line">  matrix c=strassen(a,b);</span><br><span class="line">  <span class="comment">/*matrix d=a*b;</span></span><br><span class="line"><span class="comment">  bool ok=true;</span></span><br><span class="line"><span class="comment">  for(int i=0;i&lt;SIZE_OF_MATRIX;i++)&#123;</span></span><br><span class="line"><span class="comment">    for(int j=0;j&lt;SIZE_OF_MATRIX;j++)if(abs(c.vec[i][j]-d.vec[i][j])&gt;eps)ok=false,cout&lt;&lt;i&lt;&lt;" "&lt;&lt;j&lt;&lt;" "&lt;&lt;c.vec[i][j]&lt;&lt;" "&lt;&lt;d.vec[i][j]&lt;&lt;endl;</span></span><br><span class="line"><span class="comment">  &#125;*/</span></span><br><span class="line"><span class="comment">//  c.output();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&#8195;&#8195;考虑到函数调用会产生大量性能损失，我在strassen函数里设置了一个常量，当矩阵大小小于等于这个量时使用普通的矩阵乘法。<br>&#8195;&#8195;对这个常量值为40,75,150(对应进行三层递归，两层递归，一层递归)分别进行了测试，运行效果如下：</p>
+<p><img src="https://i.loli.net/2020/03/31/2iUzk4M1wdLNgQa.png" alt="image.png"></p>
+<p><img src="https://i.loli.net/2020/03/31/q4Hm1AJgVjOcaZ5.png" alt="image.png"><br><img src="https://i.loli.net/2020/03/31/lfOq56AnPWUJNgV.png" alt="image.png"><br>&#8195;&#8195;实验证明，进行两层递归的效果最好，为0.52秒左右，比直接计算有稍微的提高。<br>&#8195;&#8195;同样是使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">perf <span class="built_in">stat</span> -e cache-misses,instructions,cycles,mem-loads -r 10  ./a</span><br></pre></td></tr></table></figure>
+
+<p>&#8195;&#8195;来对性能进行分析，结果如下图所示：<br><img src="https://i.loli.net/2020/03/31/scpDBqOVY5iPkIL.png" alt="image.png"><br>&#8195;&#8195;cache-misses次数较多，CPI是0.347，比之前有所降低。</p>
+<h2 id="第二题"><a href="#第二题" class="headerlink" title="第二题"></a>第二题</h2><p>本来是打算做一下的，但没装双系统，只有一个linux服务器，又没有管理员权限，只能放弃了。</p>
+<h2 id="第三题"><a href="#第三题" class="headerlink" title="第三题"></a>第三题</h2><h3 id="题目-1"><a href="#题目-1" class="headerlink" title="题目"></a>题目</h3><p>&#8195;&#8195;Consider a memory system with a level 1 cache of 32 KB and DRAM of 512 MB with the processor operating at 1 GHz. The latency to L1 cache is one cycle and the latency to DRAM is 100 cycles. In each memory cycle, the processor fetches four words (cache line size is four words). What is the peak achievable performance of a dot product of two vectors? Note: Where necessary, assume an optimal cache placement policy.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; dim; i++)</span><br><span class="line">dot_prod += a[i] * b[i];</span><br></pre></td></tr></table></figure>
+
+<h3 id="解答-1"><a href="#解答-1" class="headerlink" title="解答"></a>解答</h3><p>&#8195;&#8195;在这里我假设数组的元素都是4字节的float类型，一个word是4个字节，cache分配时不会把上一次刚分配的块覆盖掉，i,dot_prod两个变量放在寄存器里。<br>&#8195;&#8195;则对每一次循环：<br>&#8195;&#8195;①如果i%4==0，则读取a[i]时需要从内存中取出a[i],a[i+1],a[i+2],a[i+3]放在cache里，需要100ns，读取b[i]时需要从内存中取出b[i],b[i+1],b[i+2],b[i+3]放在cache里，需要100ns。则这次循环需要 100ns+100ns+4ns(比较i与dim要1ns,i++要1ns,a[i]<em>b[i]要1ns，将结果加到dot_prod要1ns)，共204ns。<br>&#8195;&#8195;②如果i%4！=0，则a[i],b[i]可以从cache里取出，需要2ns。则这次循环需要 2ns+2ns+4ns，共8ns。<br>&#8195;&#8195;所以，每次循环平均需要 $\frac{3</em>8+204}{4}=57ns$故每秒钟能进行17.5M次循环。考虑到每次循环是进行了两次浮点数运算，所以能达到的最高性能是35MFLOPS</p>
+<h2 id="第四题"><a href="#第四题" class="headerlink" title="第四题"></a>第四题</h2><h3 id="题目-2"><a href="#题目-2" class="headerlink" title="题目"></a>题目</h3><p>&#8195;&#8195;Now consider the problem of multiplying a dense matrix with a vector using a two-loop dot-product formulation. The matrix is of dimension 4K x 4K. (Each row of the matrix takes 16 KB of storage.) What is the peak achievable performance of this technique using a twoloop dot-product based matrix-vector product.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; dim; i++)</span><br><span class="line"><span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; dim; j++)</span><br><span class="line">c[i] += a[i][j] * b[j];</span><br></pre></td></tr></table></figure>
+
+<h3 id="解答-2"><a href="#解答-2" class="headerlink" title="解答"></a>解答</h3><p>&#8195;&#8195;我们仍然假设cache不会把刚刚分配的块覆盖掉，在取a[i][j]时只需访问一次内存\cache，i和j两个变量放在寄存器里，且i&lt;dim，i++这两个操作可以忽略不计。值得注意的是cache的大小为32k，而b数组大小为16k，矩阵a的一行也是16k，如果cache分配策略是最优的，则b数组会在i=0时全部装进cache里，只有a数组需要重复取出，所以在内存里取出b数组的时间也可以忽略。<br>&#8195;&#8195;则对每一次循环：<br>&#8195;&#8195;①如果j%4==0，则读取a[i][j]时需要从内存中取出a[i][j],a[i][j+1],a[i][j+2],a[i][j+3]放在cache里，需要100ns。c[i]只有一开始会从内存中取到cache里(这一次的用时也忽略不计)，之后一直在寄存器里放着。<br>则这次循环需要 100ns+5ns(假设比较j与dim要1ns,j++要1ns,a[i][j]<em>b[j]要1ns，取出c[i]要2ns，将结果加到c[i]要1ns)，共106ns。<br>&#8195;&#8195;②如果i%4！=0，则a[i][j],b[j]可以从cache里取出，需要2ns。则这次循环需要 2ns+2ns+6ns，共10ns。<br>&#8195;&#8195;所以，每次循环平均需要 $\frac{3</em>10+106}{4}=34ns$,每秒钟能执行29.4M次循环，能达到的最高性能是59.8MFLOPS。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>&#8195;&#8195;这次实验还是很有难度的。使用perf需要在linux系统，而我只有一个WSL,用不了perf，于是只能找人借了个linux服务器账号。好不容易完成了第一问，去钻研第二问的时候又遇到了很多不会的知识。折腾一番后总算明白要用到linux内核，但我没有管理员权限，用不了，只得作罢。虽然没能把第二问做出来，但多多少少还是有点收获。<br>&#8195;&#8195;做到后面的时候发现第一问的矩阵乘法还有很多可以优化的地方，如vector改为数组、把数组改为指针等，但时间有限就没有修改了。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/28/fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" rel="prev" title="fat12文件系统">
+      <i class="fa fa-chevron-left"></i> fat12文件系统
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/05/%E5%AE%89%E5%8D%93%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B01/" rel="next" title="安卓开发笔记1">
+      安卓开发笔记1 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#并行与分布式计算作业2"><span class="nav-number">1.</span> <span class="nav-text">并行与分布式计算作业2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一题"><span class="nav-number">1.1.</span> <span class="nav-text">第一题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目"><span class="nav-number">1.1.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答"><span class="nav-number">1.1.2.</span> <span class="nav-text">解答</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一般算法"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">一般算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分治算法"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">分治算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#strassen算法"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">strassen算法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二题"><span class="nav-number">1.2.</span> <span class="nav-text">第二题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三题"><span class="nav-number">1.3.</span> <span class="nav-text">第三题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-1"><span class="nav-number">1.3.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四题"><span class="nav-number">1.4.</span> <span class="nav-text">第四题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-2"><span class="nav-number">1.4.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-2"><span class="nav-number">1.4.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.5.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">reeeeeeeeeein</p>
+  <div class="site-description" itemprop="description">SYSU 计算机专业大二在读</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">reeeeeeeeeein</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>

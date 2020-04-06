@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="fat12文件系统:理论与实践一块1.44MB的fat12格式的软盘由2880个扇区，每个扇区512占个字节。其中第0个扇区称为引导扇区;第1-9扇区为fat表;第10-18扇区是fat表的复制版;第19-32扇区为根目录区;从第33扇区往后为数据区。 创建软盘我们使用WinImage工具创建软盘。打开WinImage，点击右上角的新建，确定，就创建了一块软盘，我们可以往里面添加文件，我随便拖了两">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fat12文件系统">
+<meta property="og:url" content="http://yoursite.com/2020/03/28/fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="reeeeeeeeeein的博客">
+<meta property="og:description" content="fat12文件系统:理论与实践一块1.44MB的fat12格式的软盘由2880个扇区，每个扇区512占个字节。其中第0个扇区称为引导扇区;第1-9扇区为fat表;第10-18扇区是fat表的复制版;第19-32扇区为根目录区;从第33扇区往后为数据区。 创建软盘我们使用WinImage工具创建软盘。打开WinImage，点击右上角的新建，确定，就创建了一块软盘，我们可以往里面添加文件，我随便拖了两">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/04/01/SsDBwxbyukm4Hvo.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/30/NUZMQVGdKsD8uCb.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/01/lA7fVIsEn14JSBh.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/01/56owAs1WFaBnOgf.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/01/qMFOnw7YvjibfNh.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/01/XJm7K58ohPzADF9.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/01/XUI76AZpoPQs9uB.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/01/yp4aPLAuk9rbUtG.png">
+<meta property="article:published_time" content="2020-03-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-04-01T12:17:31.874Z">
+<meta property="article:author" content="reeeeeeeeeein">
+<meta property="article:tag" content="操作系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/01/SsDBwxbyukm4Hvo.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/28/fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>fat12文件系统 | reeeeeeeeeein的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+<div class="bg_content">
+<canvas id="canvas"></canvas>
+</div>
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">reeeeeeeeeein的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/28/fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          fat12文件系统
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-28T00:00:00+08:00">2020-03-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-01 20:17:31" itemprop="dateModified" datetime="2020-04-01T20:17:31+08:00">2020-04-01</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="fat12文件系统-理论与实践"><a href="#fat12文件系统-理论与实践" class="headerlink" title="fat12文件系统:理论与实践"></a>fat12文件系统:理论与实践</h1><p>一块1.44MB的fat12格式的软盘由2880个扇区，每个扇区512占个字节。其中第0个扇区称为引导扇区;第1-9扇区为fat表;第10-18扇区是fat表的复制版;第19-32扇区为根目录区;从第33扇区往后为数据区。</p>
+<h2 id="创建软盘"><a href="#创建软盘" class="headerlink" title="创建软盘"></a>创建软盘</h2><p>我们使用WinImage工具创建软盘。<br>打开WinImage，点击右上角的新建，确定，就创建了一块软盘，我们可以往里面添加文件，我随便拖了两个文件进去，结果如下<br><img src="https://i.loli.net/2020/04/01/SsDBwxbyukm4Hvo.png" alt="image.png"><br>按ctrl+s，将其保存为vfd文件。<br>然后就可以通过hexview工具打开它。</p>
+<h2 id="引导扇区"><a href="#引导扇区" class="headerlink" title="引导扇区"></a>引导扇区</h2><p>引导扇区主要记录了软盘的相关信息和引导扇区程序。启动计算机时，BIOS程序通过读入引导扇区中的引导扇区程序来启动操作系统。引导扇区的内容如下表所示:<br>(下表主要参考CSDN博客<a href="https://blog.csdn.net/begginghard/article/details/7284834?depth_1-utm_source=distribute.pc_relevant_right.none-task&amp;utm_source=distribute.pc_relevant_right.none-task" target="_blank" rel="noopener">https://blog.csdn.net/begginghard/article/details/7284834?depth_1-utm_source=distribute.pc_relevant_right.none-task&amp;utm_source=distribute.pc_relevant_right.none-task</a>)<br>|名称|开始字节|长度|内容|参考值|<br>|–|–|–|–|–|<br>|BS_jmpBOOT|0|3|一个短跳转指令|0xEB 0x58 0x90|<br>|BS_OEMName|3|8|厂商名|’ZGH’|<br>|BPB_BytesPerSec|11|2|每扇区字节数（Bytes/Sector）|0x200|<br>|BPB_SecPerClus|13|1|每簇扇区数（Sector/Cluster）|0x1|<br>|BPB_ResvdSecCnt|14|2|Boot记录占用多少扇区|ox1|<br>|BPB_NumFATs|16|1|共有多少FAT表|0x2|<br>|BPB_RootEntCnt|17|2|根目录区文件最大数|0xE0|<br>|BPB_TotSec16|19|2|扇区总数|0xB40|<br>|BPB_Media|21|1|介质描述符|0xF0|<br>|BPB_FATSz16|22|2|每个FAT表所占扇区数|0x9|<br>|BPB_SecPerTrk|24|2|每磁道扇区数（Sector/track）|0x12|<br>|BPB_NumHeads|26|2|磁头数（面数）|0x2|<br>|BPB_HiddSec|28|4|隐藏扇区数|0|<br>|BPB_TotSec32|32|4|如果BPB_TotSec16=0,则由这里给出扇区数|0|<br>|BS_DrvNum|36|1|INT|13H的驱动器号|<br>|0|BS_Reserved1|37|1|保留，未使用|<br>|0|BS_BootSig|38|1|扩展引导标记(29h)|<br>|0x29|BS_VolID|39|4|卷序列号|<br>|0|BS_VolLab|43|11|卷标|<br>|’ZGH’|BS_FileSysType|54|8|文件系统类型|<br>|引导扇区程序|62|448|引导代码及其他数据|引导代码（剩余空间用0填充）|<br>|结束标志0xAA55|510|2|第510字节为0x55，第511字节为0xAA|0xAA55|</p>
+<p>BIOS程序通过识别结束标志判断该软盘是否符合fat12格式。</p>
+<h2 id="fat区"><a href="#fat区" class="headerlink" title="fat区"></a>fat区</h2><p>fat区共有18个扇区，其中后9个扇区是前9个扇区的副本。fat12文件系统启动时，需要检查这两部分是否一样。我们将前9个扇区称为fat表。<br>从名字中就可以看出，fat表是fat12文件系统的核心。fat12文件系统是怎样存储文件的呢？<br>文件存储是以簇为单位的，一般情况下，一个簇就是一个扇区，所以下文将簇与扇区划等号。对于一个文件，如果它的大小小于512字节，则在数据区中给它分配一个簇，将它的内容写进这个簇里，然后将fat表中这个簇对应的值(下文会详述这种对应的方式)修改为一个特殊的结束标志。<br>如果它的大小大于等于512字节呢？首先还是分配簇a，将文件的前512个字节写进簇a里，然后再分配一个簇b，将fat表中簇a对应的值修改为一个值，通过这个值我们能找到b扇区，然后再分配一个簇c，将fat表中簇b对应的值修改为一个值，通过这个值我们能找到簇c……一直这样下去，直至文件结束，将分配的最后一个簇在fat表中对应的值修改为结束标志。<br>这样，读文件时，只需知道这个文件开始的簇，就可以读下一个簇，下下个簇……直到在fat表里读到结束标志为止。</p>
+<p>下图是一个fat表的开头：(这个fat表不是刚才创建的软盘的fat表)<br><img src="https://i.loli.net/2020/03/30/NUZMQVGdKsD8uCb.png" alt="image.png"><br>fat12文件系统中的”12”是什么意思呢？12是指一个fat表中12个bit组成一个fat表项，而我们知道一个字节是8个bit，所以fat表中，3个字节组成两个fat表项。<br>既然如此，fat表该怎么读呢？如果你以为是顺着读，就太naive了。我们知道x86系统采用小端存储方式，就是说，低字节存储在高地址位中(高地址位就是地址值较小)。比如说，一个16位整数0000000011111111，在x86系统中会先存11111111(低字节),再存00000000(高字节)。<br>了解了这些，我们再来看fat表。前3个字节是 0xf0 0xff 0xff。我们把第二个字节的低四位拿出来，跟第一个字节拼在一起，组成0xff0(注意不是0xf0f)，它就是fat表的第一个表项了。再把第三个字节拿出来，和第二个字节的高四位拼在一起，组成 0xfff，它就是第二个表项了，如下图所示：<br>![CEU3__8__V6@DE2`GG9IHO1.png](<a href="https://i.loli.net/2020/03/30/7RItOHvzNwFl6D5.png" target="_blank" rel="noopener">https://i.loli.net/2020/03/30/7RItOHvzNwFl6D5.png</a>)<br>按这个规则读下去，第三个表项就是0xfff，第四个表项是0x004……如果你是第一次了解fat表，不妨多读几个加深印象。</p>
+<p>现在我们知道如何读这个fat表了。但问题来了，读出来的值有什么用呢？fat表中读出的第一个值表示坏簇标志，一般为0xff0，第二个值是结束标志，一般为0xfff。后续的每个值代表这个簇的下个簇的簇号。如第三个值为0x004，代表第一个簇(前两个值不算)对应的下一个簇是第二个簇，第四个值为0xfff，表示这个文件到第二个簇这里就结束了。</p>
+<h2 id="根目录区"><a href="#根目录区" class="headerlink" title="根目录区"></a>根目录区</h2><p>根目录区占14个扇区，由于前面已经用了19个扇区(引导扇区1个，fat18个)，所以根目录区是从第19个扇区开始的，起始位置是0x2600。根目录里每32字节构成了一个文件记录，记录了这个文件的基本信息，我们可以根据这个记录来找到文件的内容。<br>第1-8个字节是文件名，如果长度不够就用空格填充；<br>第9-11个字节是文件后缀名，如果长度不够或者没有后缀就用空格填充；<br>第12个字节是文件属性，十分重要，一般的文件的文件属性就是0x00，文件夹的文件属性一般是0x10。<br>第13-22个字节是保留字节，没有作用；<br>第23,24字节是文件的创建时间<br>第25,26字节是文件的创建日期，精确到分钟<br>第27,28字节是文件的起始簇号<br>第29-32字节是文件的大小<br>如下图所示：<br><img src="https://i.loli.net/2020/04/01/lA7fVIsEn14JSBh.png" alt="image.png"></p>
+<p>以第一个文件为例，它的名字是NEW,后缀名是CPP，文件属性是0x00,说明它是一个普通文件。创建时间是0x89A4,换成二进制是<br>1000 1001 1010 0100。<br>其中前5位是小时，10001=17,说明创建时间是17点；后6位是分钟,001101=13，说明具体时间是17:13。后五位没有作用(因为5位最多表示32个数，而一分钟有60秒)<br>创建日期是0x507E,换成二进制是<br>0101 0000 0111 1110<br>前7位是年份与1980的差值， 01010000=40,40+1980=2020，说明文件创建于2020年；后面4位是月份，0011是3，说明是2020年的3月；后面5位11110=30说明日期是 2020-3-30<br>起始簇号是0x0002<br>大小是0x0000003c，说明它一共占60个字节。<br>现在我们知道了这个文件的基本信息，我们要怎么找到它的内容呢？这就需要我们了解一下数据区了。</p>
+<h2 id="数据区"><a href="#数据区" class="headerlink" title="数据区"></a>数据区</h2><p>从第33个扇区往后的扇区都是数据区，每个扇区512字节。上文的NEW.CPP文件的起始簇号是2，由于fat表前两个值有其他用途，所以簇号2代表的是第一个簇，或者说数据区的第一个扇区。<br>数据区的起始位置是0x4200，我们看看这里有什么：<br><img src="https://i.loli.net/2020/04/01/56owAs1WFaBnOgf.png" alt="image.png"><br>是60个a。<br>再来看根目录下的下一个文件，起始簇号是3，代表它开始于数据区的第一个扇区，即0x4400<br><img src="https://i.loli.net/2020/04/01/qMFOnw7YvjibfNh.png" alt="image.png"><br>它是一些奇奇怪怪的东西。<br>根据前文所述的读文件方法，我们可以把整个文件读出来，在此不再赘述。</p>
+<h2 id="文件夹的存储"><a href="#文件夹的存储" class="headerlink" title="文件夹的存储"></a>文件夹的存储</h2><p>打开前面创建的软盘，点击上方的映像、创建文件夹，然后输入名字，就可以创建一个文件夹了。<br><img src="https://i.loli.net/2020/04/01/XJm7K58ohPzADF9.png" alt="image.png"><br>往里面拖两个文件<br><img src="https://i.loli.net/2020/04/01/XUI76AZpoPQs9uB.png" alt="image.png"><br>然后我们来看看根目录里发生了什么：<br><img src="https://i.loli.net/2020/04/01/yp4aPLAuk9rbUtG.png" alt="image.png"><br>可以看到它多了一个文件记录，名字是HOULAI，后缀是空的，文件属性是0x10，说明这是个文件夹，首簇号是0x2B，由于(0x2B-0x2)*0x200+0x4200=0xA600</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"># 操作系统</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/16/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E7%AC%94%E8%AE%B02/" rel="prev" title="并行与分布式计算笔记2">
+      <i class="fa fa-chevron-left"></i> 并行与分布式计算笔记2
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/04/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A2/" rel="next" title="并行与分布式计算作业2">
+      并行与分布式计算作业2 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#fat12文件系统-理论与实践"><span class="nav-number">1.</span> <span class="nav-text">fat12文件系统:理论与实践</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建软盘"><span class="nav-number">1.1.</span> <span class="nav-text">创建软盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引导扇区"><span class="nav-number">1.2.</span> <span class="nav-text">引导扇区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fat区"><span class="nav-number">1.3.</span> <span class="nav-text">fat区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#根目录区"><span class="nav-number">1.4.</span> <span class="nav-text">根目录区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据区"><span class="nav-number">1.5.</span> <span class="nav-text">数据区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件夹的存储"><span class="nav-number">1.6.</span> <span class="nav-text">文件夹的存储</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">reeeeeeeeeein</p>
+  <div class="site-description" itemprop="description">SYSU 计算机专业大二在读</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">reeeeeeeeeein</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
