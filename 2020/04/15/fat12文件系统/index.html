@@ -21,12 +21,12 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="fat12文件系统仿真实验报告个人信息   学院 专业 姓名 学号    数据科学与计算机学院 计算机类 张景润 18340210   实验目的本实验目的在于学习fat12文件系统，增强编写C语言、C++语言和汇编语言程序的的能力，为进一步学习操作系统相关知识做好准备。 实验要求总体要求用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的FAT12文件系统仿真程序 具体要求用c、c">
+  <meta name="description" content="fat12文件系统仿真实验报告实验目的本实验目的在于学习fat12文件系统，增强编写C语言、C++语言和汇编语言程序的的能力，为进一步学习操作系统相关知识做好准备。 实验要求总体要求用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的FAT12文件系统仿真程序 具体要求用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的程序: 1.查看fdd144虚拟软盘的第一个扇">
 <meta property="og:type" content="article">
-<meta property="og:title" content="fat12文件系统实验报告">
-<meta property="og:url" content="http://yoursite.com/2020/04/15/fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/index.html">
+<meta property="og:title" content="fat12文件系统">
+<meta property="og:url" content="http://yoursite.com/2020/04/15/fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/index.html">
 <meta property="og:site_name" content="reeeeeeeeeein的博客">
-<meta property="og:description" content="fat12文件系统仿真实验报告个人信息   学院 专业 姓名 学号    数据科学与计算机学院 计算机类 张景润 18340210   实验目的本实验目的在于学习fat12文件系统，增强编写C语言、C++语言和汇编语言程序的的能力，为进一步学习操作系统相关知识做好准备。 实验要求总体要求用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的FAT12文件系统仿真程序 具体要求用c、c">
+<meta property="og:description" content="fat12文件系统仿真实验报告实验目的本实验目的在于学习fat12文件系统，增强编写C语言、C++语言和汇编语言程序的的能力，为进一步学习操作系统相关知识做好准备。 实验要求总体要求用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的FAT12文件系统仿真程序 具体要求用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的程序: 1.查看fdd144虚拟软盘的第一个扇">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2020/04/01/SsDBwxbyukm4Hvo.png">
 <meta property="og:image" content="https://i.loli.net/2020/03/30/NUZMQVGdKsD8uCb.png">
@@ -48,13 +48,13 @@
 <meta property="og:image" content="https://i.loli.net/2020/04/15/iDcPjqfGAby87de.png">
 <meta property="og:image" content="https://i.loli.net/2020/04/15/dlXBxtUIA4VnTzH.png">
 <meta property="og:image" content="https://i.loli.net/2020/04/15/cFNKIGk6BWAuCoH.png">
-<meta property="article:published_time" content="2020-04-14T17:11:33.715Z">
-<meta property="article:modified_time" content="2020-04-14T17:11:33.715Z">
+<meta property="article:published_time" content="2020-04-14T17:25:11.683Z">
+<meta property="article:modified_time" content="2020-04-14T17:25:11.683Z">
 <meta property="article:author" content="reeeeeeeeeein">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2020/04/01/SsDBwxbyukm4Hvo.png">
 
-<link rel="canonical" href="http://yoursite.com/2020/04/15/fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/">
+<link rel="canonical" href="http://yoursite.com/2020/04/15/fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">
 
 
 <script id="page-configurations">
@@ -66,7 +66,7 @@
   };
 </script>
 
-  <title>fat12文件系统实验报告 | reeeeeeeeeein的博客</title>
+  <title>fat12文件系统 | reeeeeeeeeein的博客</title>
   
 
 
@@ -188,7 +188,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/15/fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/15/fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -201,7 +201,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          fat12文件系统实验报告
+          fat12文件系统
         </h1>
 
         <div class="post-meta">
@@ -211,7 +211,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-04-15 01:11:33" itemprop="dateCreated datePublished" datetime="2020-04-15T01:11:33+08:00">2020-04-15</time>
+              <time title="创建时间：2020-04-15 01:25:11" itemprop="dateCreated datePublished" datetime="2020-04-15T01:25:11+08:00">2020-04-15</time>
             </span>
 
           
@@ -232,23 +232,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="fat12文件系统仿真实验报告"><a href="#fat12文件系统仿真实验报告" class="headerlink" title="fat12文件系统仿真实验报告"></a>fat12文件系统仿真实验报告</h1><h2 id="个人信息"><a href="#个人信息" class="headerlink" title="个人信息"></a>个人信息</h2><table>
-<thead>
-<tr>
-<th>学院</th>
-<th>专业</th>
-<th>姓名</th>
-<th>学号</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>数据科学与计算机学院</td>
-<td>计算机类</td>
-<td>张景润</td>
-<td>18340210</td>
-</tr>
-</tbody></table>
-<h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><p>本实验目的在于学习fat12文件系统，增强编写C语言、C++语言和汇编语言程序的的能力，为进一步学习操作系统相关知识做好准备。</p>
+        <h1 id="fat12文件系统仿真实验报告"><a href="#fat12文件系统仿真实验报告" class="headerlink" title="fat12文件系统仿真实验报告"></a>fat12文件系统仿真实验报告</h1><h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><p>本实验目的在于学习fat12文件系统，增强编写C语言、C++语言和汇编语言程序的的能力，为进一步学习操作系统相关知识做好准备。</p>
 <h2 id="实验要求"><a href="#实验要求" class="headerlink" title="实验要求"></a>实验要求</h2><h3 id="总体要求"><a href="#总体要求" class="headerlink" title="总体要求"></a>总体要求</h3><p>用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的FAT12文件系统仿真程序</p>
 <h3 id="具体要求"><a href="#具体要求" class="headerlink" title="具体要求"></a>具体要求</h3><p>用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的程序:</p>
 <p>1.查看fdd144虚拟软盘的第一个扇区内容是否符合FAT12格式。<br>2.检查fdd144虚拟软盘的FAT12格式各部分信息是否一致完整。<br>3.列出fdd144虚拟软盘中根目录文件目录内容。<br>4.列出fdd144虚拟软盘中目录树。<br>5.提供一个输入框，输入任意字符，创建一个文件保存这些输入的字符。<br>6.删除根目录的一个指定文件<br>7.实现按路径名操作文件<br>8.显示一个文件的内容<br>9.编辑文件的内容<br>10.复制文件，2个文件合并为一个文件。<br>11.建立子目录<br>12.删除子目录<br>13.其他</p>
@@ -558,7 +542,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#fat12文件系统仿真实验报告"><span class="nav-number">1.</span> <span class="nav-text">fat12文件系统仿真实验报告</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#个人信息"><span class="nav-number">1.1.</span> <span class="nav-text">个人信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验目的"><span class="nav-number">1.2.</span> <span class="nav-text">实验目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验要求"><span class="nav-number">1.3.</span> <span class="nav-text">实验要求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总体要求"><span class="nav-number">1.3.1.</span> <span class="nav-text">总体要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体要求"><span class="nav-number">1.3.2.</span> <span class="nav-text">具体要求</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验方案与过程"><span class="nav-number">1.4.</span> <span class="nav-text">实验方案与过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实验环境"><span class="nav-number">1.4.1.</span> <span class="nav-text">实验环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fat12文件系统相关知识"><span class="nav-number">1.4.2.</span> <span class="nav-text">fat12文件系统相关知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建软盘"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">创建软盘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引导扇区"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">引导扇区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fat区"><span class="nav-number">1.4.2.3.</span> <span class="nav-text">fat区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#根目录区与数据区"><span class="nav-number">1.4.2.4.</span> <span class="nav-text">根目录区与数据区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件与文件夹"><span class="nav-number">1.4.2.5.</span> <span class="nav-text">文件与文件夹</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体实现"><span class="nav-number">1.4.3.</span> <span class="nav-text">具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#路径分析"><span class="nav-number">1.4.3.1.</span> <span class="nav-text">路径分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cd操作的实现"><span class="nav-number">1.4.3.2.</span> <span class="nav-text">cd操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dir操作的实现"><span class="nav-number">1.4.3.3.</span> <span class="nav-text">dir操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dir-r操作的实现"><span class="nav-number">1.4.3.4.</span> <span class="nav-text">dir_r操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#print操作的实现"><span class="nav-number">1.4.3.5.</span> <span class="nav-text">print操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mk操作的实现"><span class="nav-number">1.4.3.6.</span> <span class="nav-text">mk操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mkdir操作的实现"><span class="nav-number">1.4.3.7.</span> <span class="nav-text">mkdir操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rm操作的实现"><span class="nav-number">1.4.3.8.</span> <span class="nav-text">rm操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gedit操作的实现"><span class="nav-number">1.4.3.9.</span> <span class="nav-text">gedit操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#find操作的实现"><span class="nav-number">1.4.3.10.</span> <span class="nav-text">find操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cp操作和mv操作"><span class="nav-number">1.4.3.11.</span> <span class="nav-text">cp操作和mv操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码架构"><span class="nav-number">1.4.4.</span> <span class="nav-text">代码架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结果展示"><span class="nav-number">1.5.</span> <span class="nav-text">结果展示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验总结"><span class="nav-number">1.6.</span> <span class="nav-text">实验总结</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#fat12文件系统仿真实验报告"><span class="nav-number">1.</span> <span class="nav-text">fat12文件系统仿真实验报告</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实验目的"><span class="nav-number">1.1.</span> <span class="nav-text">实验目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验要求"><span class="nav-number">1.2.</span> <span class="nav-text">实验要求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总体要求"><span class="nav-number">1.2.1.</span> <span class="nav-text">总体要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体要求"><span class="nav-number">1.2.2.</span> <span class="nav-text">具体要求</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验方案与过程"><span class="nav-number">1.3.</span> <span class="nav-text">实验方案与过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实验环境"><span class="nav-number">1.3.1.</span> <span class="nav-text">实验环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fat12文件系统相关知识"><span class="nav-number">1.3.2.</span> <span class="nav-text">fat12文件系统相关知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建软盘"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">创建软盘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引导扇区"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">引导扇区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fat区"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">fat区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#根目录区与数据区"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">根目录区与数据区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件与文件夹"><span class="nav-number">1.3.2.5.</span> <span class="nav-text">文件与文件夹</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体实现"><span class="nav-number">1.3.3.</span> <span class="nav-text">具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#路径分析"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">路径分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cd操作的实现"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">cd操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dir操作的实现"><span class="nav-number">1.3.3.3.</span> <span class="nav-text">dir操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dir-r操作的实现"><span class="nav-number">1.3.3.4.</span> <span class="nav-text">dir_r操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#print操作的实现"><span class="nav-number">1.3.3.5.</span> <span class="nav-text">print操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mk操作的实现"><span class="nav-number">1.3.3.6.</span> <span class="nav-text">mk操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mkdir操作的实现"><span class="nav-number">1.3.3.7.</span> <span class="nav-text">mkdir操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rm操作的实现"><span class="nav-number">1.3.3.8.</span> <span class="nav-text">rm操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gedit操作的实现"><span class="nav-number">1.3.3.9.</span> <span class="nav-text">gedit操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#find操作的实现"><span class="nav-number">1.3.3.10.</span> <span class="nav-text">find操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cp操作和mv操作"><span class="nav-number">1.3.3.11.</span> <span class="nav-text">cp操作和mv操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码架构"><span class="nav-number">1.3.4.</span> <span class="nav-text">代码架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结果展示"><span class="nav-number">1.4.</span> <span class="nav-text">结果展示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验总结"><span class="nav-number">1.5.</span> <span class="nav-text">实验总结</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -571,12 +555,12 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
