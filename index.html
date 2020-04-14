@@ -165,6 +165,514 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/15/fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/15/fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" class="post-title-link" itemprop="url">fat12文件系统实验报告</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-15 01:11:33" itemprop="dateCreated datePublished" datetime="2020-04-15T01:11:33+08:00">2020-04-15</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="fat12文件系统仿真实验报告"><a href="#fat12文件系统仿真实验报告" class="headerlink" title="fat12文件系统仿真实验报告"></a>fat12文件系统仿真实验报告</h1><h2 id="个人信息"><a href="#个人信息" class="headerlink" title="个人信息"></a>个人信息</h2><table>
+<thead>
+<tr>
+<th>学院</th>
+<th>专业</th>
+<th>姓名</th>
+<th>学号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据科学与计算机学院</td>
+<td>计算机类</td>
+<td>张景润</td>
+<td>18340210</td>
+</tr>
+</tbody></table>
+<h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><p>本实验目的在于学习fat12文件系统，增强编写C语言、C++语言和汇编语言程序的的能力，为进一步学习操作系统相关知识做好准备。</p>
+<h2 id="实验要求"><a href="#实验要求" class="headerlink" title="实验要求"></a>实验要求</h2><h3 id="总体要求"><a href="#总体要求" class="headerlink" title="总体要求"></a>总体要求</h3><p>用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的FAT12文件系统仿真程序</p>
+<h3 id="具体要求"><a href="#具体要求" class="headerlink" title="具体要求"></a>具体要求</h3><p>用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的程序:</p>
+<p>1.查看fdd144虚拟软盘的第一个扇区内容是否符合FAT12格式。<br>2.检查fdd144虚拟软盘的FAT12格式各部分信息是否一致完整。<br>3.列出fdd144虚拟软盘中根目录文件目录内容。<br>4.列出fdd144虚拟软盘中目录树。<br>5.提供一个输入框，输入任意字符，创建一个文件保存这些输入的字符。<br>6.删除根目录的一个指定文件<br>7.实现按路径名操作文件<br>8.显示一个文件的内容<br>9.编辑文件的内容<br>10.复制文件，2个文件合并为一个文件。<br>11.建立子目录<br>12.删除子目录<br>13.其他</p>
+<h2 id="实验方案与过程"><a href="#实验方案与过程" class="headerlink" title="实验方案与过程"></a>实验方案与过程</h2><h3 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h3><p>首先通过WinImage软件创建一个虚拟软盘，往里面添加文件，保存后得到一个fat12格式的软盘。为了方便验证结果是否正确，我使用了HexView工具来查看软盘的内容。编写代码时，我主要在WSL(一个可以在windows操作系统下运行的linux简化版)系统下使用VSCode编辑器，用c语言和c++语言进行编程。</p>
+<h3 id="fat12文件系统相关知识"><a href="#fat12文件系统相关知识" class="headerlink" title="fat12文件系统相关知识"></a>fat12文件系统相关知识</h3><p>一块1.44MB的fat12格式的软盘共有2880个扇区，每个扇区512占个字节。其中第0个扇区称为主引导扇区;第1-9扇区为fat表;第10-18扇区是fat表的复制版;第19-32扇区为根目录区;从第33扇区往后为数据区。</p>
+<p>字节和扇区在fat12文件系统中是两个相当重要的概念，为此，我们在程序中定义bt这个结构体来表示字节，sector这个结构体来表示扇区。为了方便行文，先给出它们的定义:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">byte</span>//用<span class="title">byte</span>和<span class="title">bt</span>来表示字节</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">char</span> s[<span class="number">9</span>];<span class="comment">//把字节用01字符串表示</span></span><br><span class="line">    <span class="keyword">char</span> h, l;<span class="comment">//把字节用16进制表示，h为高4位，l为低4位</span></span><br><span class="line">    uc ascii;<span class="comment">//这个字节的值，uc是unsigned char</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">input</span><span class="params">()</span></span>;<span class="comment">//从输入流中读取一个字节</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">from_char</span><span class="params">(<span class="keyword">char</span> c)</span></span>;</span><br><span class="line">&#125; bt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Sector</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    bt bs[SIZE_OF_SECTOR];<span class="comment">//SIZE_OF_SECTOR默认是512</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">input</span><span class="params">()</span></span>;<span class="comment">//从输入流中读取扇区</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">input_from_string</span><span class="params">(<span class="built_in">string</span> a)</span></span>;<span class="comment">//从一个长为512的字符串中读取扇区</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">output</span><span class="params">()</span></span>;<span class="comment">//打印扇区内容，方便调试</span></span><br><span class="line">    bt <span class="keyword">operator</span>[](<span class="keyword">int</span> i);<span class="comment">//按下标取出一个字节</span></span><br><span class="line">&#125; sector;</span><br></pre></td></tr></table></figure>
+
+<h4 id="创建软盘"><a href="#创建软盘" class="headerlink" title="创建软盘"></a>创建软盘</h4><p>我们使用WinImage工具创建软盘。<br>打开WinImage，点击左上角的文件、新建，然后确定，就创建了一块软盘，我们可以往里面添加文件，我随便拖了两个文件进去，结果如下<br><img src="https://i.loli.net/2020/04/01/SsDBwxbyukm4Hvo.png" alt="image.png"><br>按ctrl+s，将其保存为vfd文件。<br>然后就可以通过HexView工具打开它。</p>
+<h4 id="引导扇区"><a href="#引导扇区" class="headerlink" title="引导扇区"></a>引导扇区</h4><p>引导扇区主要记录了软盘的相关信息和引导扇区程序。启动计算机时，BIOS程序通过读入引导扇区中的引导扇区程序来启动操作系统。引导扇区的内容如下表所示:<br>(下表主要参考CSDN博客<a href="https://blog.csdn.net/begginghard/article/details/7284834?depth_1-utm_source=distribute.pc_relevant_right.none-task&amp;utm_source=distribute.pc_relevant_right.none-task" target="_blank" rel="noopener">https://blog.csdn.net/begginghard/article/details/7284834?depth_1-utm_source=distribute.pc_relevant_right.none-task&amp;utm_source=distribute.pc_relevant_right.none-task</a>)<br>|名称|开始字节|长度|内容|参考值|<br>|–|–|–|–|–|<br>|BS_jmpBOOT|0|3|一个短跳转指令|0xEB 0x58 0x90|<br>|BS_OEMName|3|8|厂商名|’ZGH’|<br>|BPB_BytesPerSec|11|2|每扇区字节数（Bytes/Sector）|0x200|<br>|BPB_SecPerClus|13|1|每簇扇区数（Sector/Cluster）|0x1|<br>|BPB_ResvdSecCnt|14|2|Boot记录占用多少扇区|ox1|<br>|BPB_NumFATs|16|1|共有多少FAT表|0x2|<br>|BPB_RootEntCnt|17|2|根目录区文件最大数|0xE0|<br>|BPB_TotSec16|19|2|扇区总数|0xB40|<br>|BPB_Media|21|1|介质描述符|0xF0|<br>|BPB_FATSz16|22|2|每个FAT表所占扇区数|0x9|<br>|BPB_SecPerTrk|24|2|每磁道扇区数（Sector/track）|0x12|<br>|BPB_NumHeads|26|2|磁头数（面数）|0x2|<br>|BPB_HiddSec|28|4|隐藏扇区数|0|<br>|BPB_TotSec32|32|4|如果BPB_TotSec16=0,则由这里给出扇区数|0|<br>|BS_DrvNum|36|1|INT|13H的驱动器号|<br>|0|BS_Reserved1|37|1|保留，未使用|<br>|0|BS_BootSig|38|1|扩展引导标记(29h)|<br>|0x29|BS_VolID|39|4|卷序列号|<br>|0|BS_VolLab|43|11|卷标|<br>|’ZGH’|BS_FileSysType|54|8|文件系统类型|<br>|引导扇区程序|62|448|引导代码及其他数据|引导代码（剩余空间用0填充）|<br>|结束标志0xAA55|510|2|第510字节为0x55，第511字节为0xAA|0xAA55|</p>
+<p>BIOS程序通过识别结束标志判断该软盘是否符合fat12格式。</p>
+<p>在程序中，我们需要将软盘中的第一个扇区读入程序中，并判断它是否符合fat12格式。由于引导扇区本身就是一个扇区，所以定义sector的子类MBR，用以表示一个扇区。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">MBR</span>:</span><span class="keyword">public</span> sector&#123;</span><br><span class="line">    <span class="keyword">char</span> BS_OEMName[<span class="number">8</span>]; <span class="comment">// OEM字符串，必须为8个字符，不足以空格填空 </span></span><br><span class="line">    short BPB_BytsPerSec; <span class="comment">// 每扇区字节数 </span></span><br><span class="line">    <span class="keyword">char</span> BPB_SecPerClus; <span class="comment">// 每簇占用的扇区数 </span></span><br><span class="line">    short BPB_RsvdSecCnt; <span class="comment">// Boot占用的扇区数 </span></span><br><span class="line">    <span class="keyword">char</span> BPB_NumFATs; <span class="comment">// FAT表的记录数 </span></span><br><span class="line">    short BPB_RootEntCnt; <span class="comment">// 最大根目录文件数 </span></span><br><span class="line">    short BPB_TotSec16; <span class="comment">// 扇区总数 </span></span><br><span class="line">    <span class="keyword">char</span> BPB_Media; <span class="comment">// 媒体描述符 </span></span><br><span class="line">    short BPB_FATSz16; <span class="comment">// 每个FAT占用扇区数 </span></span><br><span class="line">    short BPB_SecPerTrk; <span class="comment">// 每个磁道扇区数 </span></span><br><span class="line">    short BPB_NumHeads; <span class="comment">// 磁头数 </span></span><br><span class="line">    <span class="keyword">int</span> BPB_HiddSec; <span class="comment">// 隐藏扇区数 </span></span><br><span class="line">    <span class="keyword">int</span> BPB_TotSec32; <span class="comment">// 如果BPB_TotSec16是0，则在这里记录 </span></span><br><span class="line">    <span class="keyword">char</span> BS_DrvNum; <span class="comment">// 中断13的驱动器号 </span></span><br><span class="line">    <span class="keyword">char</span> BS_Reserved1; <span class="comment">// 未使用 </span></span><br><span class="line">    <span class="keyword">char</span> BS_BootSig; <span class="comment">// 扩展引导标志 </span></span><br><span class="line">    <span class="keyword">int</span> BS_VolID; <span class="comment">// 卷序列号 </span></span><br><span class="line">    <span class="keyword">char</span> BS_VolLab[<span class="number">11</span>]; <span class="comment">// 卷标，必须是11个字符，不足以空格填充 </span></span><br><span class="line">    <span class="keyword">char</span> BS_FileSysType[<span class="number">8</span>];<span class="comment">// 文件系统类型，8个字符，不足填充空格</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>;<span class="comment">//用于读入后初始化各个变量</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">check</span><span class="params">()</span></span>;<span class="comment">//用于检查MBR是否合法</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">int</span>&amp; Byte_Per_Sector,<span class="keyword">int</span>&amp; Sector_Per_Cluster,<span class="keyword">int</span>&amp; Num_Of_Fats,<span class="keyword">int</span>&amp; Root_Entry_Count,<span class="keyword">int</span>&amp; Num_Of_Sector,<span class="keyword">int</span>&amp; Size_Of_Fat,<span class="keyword">int</span>&amp; Sector_Hidden)</span></span>;<span class="comment">//用于显示提示信息</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在程序开始时，我们首先读入MBR，调用init()函数对各个变量进行赋值；再检查它的前三个字节是否为0xeb 0x58 0x90;然后检查各个变量是否符合默认值；最后看结束标志是否为 0xaa55。如果发现问题，则给出提示信息并中止程序。如果检查正确，则调用print()函数输出各项信息。</p>
+<h4 id="fat区"><a href="#fat区" class="headerlink" title="fat区"></a>fat区</h4><p>fat区共有18个扇区，其中后9个扇区是前9个扇区的副本。fat12文件系统启动时，需要检查这两部分是否一样。我们将前9个扇区称为fat表。从名字中就可以看出，fat表是fat12文件系统的核心。</p>
+<p>在fat12文件系统中，文件存储是以簇为单位的，一般情况下，一个簇就是一个扇区，所以下文将簇与扇区划等号。对于一个文件，如果它的大小小于512字节，则在数据区中给它分配一个簇，将它的内容写进这个簇里，然后将fat表中这个簇对应的值(下文会详述这种对应的方式)修改为一个特殊的结束标志。</p>
+<p>如果它的大小大于等于512字节呢？首先还是分配簇a，将文件的前512个字节写进簇a里，然后再分配一个簇b，将fat表中簇a对应的值修改为一个值，通过这个值我们能找到b扇区，然后再分配一个簇c，将fat表中簇b对应的值修改为一个值，通过这个值我们能找到簇c……一直这样下去，直至文件结束，将分配的最后一个簇在fat表中对应的值修改为结束标志。</p>
+<p>这样，读文件时，只需知道这个文件开始的簇，就可以读下一个簇，下下个簇……直到在fat表里读到结束标志为止。</p>
+<p>下图是一个fat表的开头：(这个fat表不是刚才创建的软盘的fat表)<br><img src="https://i.loli.net/2020/03/30/NUZMQVGdKsD8uCb.png" alt="image.png"><br>fat12文件系统中的”12”是什么意思呢？12是指一个fat表中12个bit组成一个fat表项，而我们知道一个字节是8个bit，所以fat表中，3个字节组成两个fat表项。<br>既然如此，fat表该怎么读呢？如果你以为是顺着读，就太naive了。我们知道x86系统采用小端存储方式，就是说，低字节存储在高地址位中(高地址位就是地址值较小)。比如说，一个16位整数0000000011111111，在x86系统中会先存11111111(低字节),再存00000000(高字节)。<br>了解了这些，我们再来看fat表。前3个字节是 0xf0 0xff 0xff。我们把第二个字节的低四位拿出来，跟第一个字节拼在一起，组成0xff0(注意不是0xf0f)，它就是fat表的第一个表项了。再把第三个字节拿出来，和第二个字节的高四位拼在一起，组成 0xfff，它就是第二个表项了，如下图所示：<br>![CEU3__8__V6@DE2`GG9IHO1.png](<a href="https://i.loli.net/2020/03/30/7RItOHvzNwFl6D5.png" target="_blank" rel="noopener">https://i.loli.net/2020/03/30/7RItOHvzNwFl6D5.png</a>)<br>按这个规则读下去，第三个表项就是0xfff，第四个表项是0x004……</p>
+<p>现在我们知道如何读这个fat表了。但问题来了，读出来的值有什么用呢？fat表中读出的第一个值表示坏簇标志，一般为0xff0，第二个值是结束标志，一般为0xfff。后续的每个值代表这个簇的下个簇的簇号。如第三个值为0x004，代表第一个簇(前两个值不算)对应的下一个簇是第二个簇，第四个值为0xfff，表示这个文件到第二个簇这里就结束了。</p>
+<p>在程序中，我们定义一个fat结构体：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Fat</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="built_in">vector</span>&lt;bt&gt; bts;<span class="comment">//存储fat表的每一个字节</span></span><br><span class="line">    bt <span class="keyword">operator</span>[](<span class="keyword">int</span> i) &#123; <span class="keyword">return</span> bts[i]; &#125;<span class="comment">//按下标访问fat表中的字节</span></span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; cluster_numbers;<span class="comment">//将fat表转换成一个整数数组，前三个字节没有包含在内</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">(MBR mbr)</span></span>;<span class="comment">/*初始化，由于fat表的实际长度是大于数据区扇区数的，所以要将后面一部分切掉，这</span></span><br><span class="line"><span class="comment">    个长度需要MBR中的一些变量来确定*/</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">get_first_empty</span><span class="params">()</span></span>;<span class="comment">//从fat表中读出一个空的簇号</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">write_floopy</span><span class="params">()</span></span>;<span class="comment">//将fat表写回软盘</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">get_empty</span><span class="params">()</span></span>;<span class="comment">//得到fat表中有多少个未被使用的簇和坏簇，用于检查是否有"孤魂野鬼"簇</span></span><br><span class="line">&#125; fat;</span><br></pre></td></tr></table></figure>
+
+<p>程序开始时还是先把fat表读进来，并检查两个fat表是否一致，不一致就报错。然后统计空闲簇和坏簇的数量。</p>
+<h4 id="根目录区与数据区"><a href="#根目录区与数据区" class="headerlink" title="根目录区与数据区"></a>根目录区与数据区</h4><p>根目录区占14个扇区，由于前面已经用了19个扇区(引导扇区1个，fat18个)，所以根目录区是从第19个扇区开始的，起始位置是0x2600。根目录里每32字节构成了一个文件记录，记录了这个文件的基本信息，我们可以根据这个记录来找到文件的内容。</p>
+<p>在程序中，我们定义rootentry类来表示根目录区，它比较简单，只有一个bt类型的数组，也不需要检查什么东西。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">RootEntry</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="built_in">vector</span>&lt;bt&gt; bts;</span><br><span class="line"></span><br><span class="line">&#125; rootentry;</span><br></pre></td></tr></table></figure>
+
+<p>从第33个扇区往后的扇区都是数据区，每个扇区512字节。定义datas类表示数据区。数据区一般包含2847个扇区，所以定义一个sector数组。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Datas</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="built_in">vector</span>&lt;sector&gt; secs;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">write_floopy</span><span class="params">(<span class="keyword">int</span> clus_num, <span class="built_in">string</span> content)</span></span>;<span class="comment">/*这个函数用于写回软盘</span></span><br><span class="line"><span class="comment">    在程序种写回软盘是以扇区为单位的。第一个参数表示写的是数据区第几个扇区，content是一个512字节的数组表示要写的内容。*/</span></span><br><span class="line">&#125; datas;</span><br></pre></td></tr></table></figure>
+
+<h4 id="文件与文件夹"><a href="#文件与文件夹" class="headerlink" title="文件与文件夹"></a>文件与文件夹</h4><p>文件的读写是fat12文件系统的重点。我们先来了解文件是怎么组织的。<br>一个文件会有一个32个字节的文件记录，这个文件记录存储在这个文件所属的文件夹里，包含了这个文件的各种信息:</p>
+<p>第1-8个字节是文件名，如果长度不够就用空格填充；<br>第9-11个字节是文件后缀名，如果长度不够或者没有后缀就用空格填充；<br>第12个字节是文件属性，十分重要，一般的文件的文件属性就是0x00，文件夹的文件属性一般是0x10。<br>第13-22个字节是保留字节，没有作用；<br>第23,24字节是文件的创建时间<br>第25,26字节是文件的创建日期，精确到分钟<br>第27,28字节是文件的起始簇号<br>第29-32字节是文件的大小<br>我们以根目录为例：<br><img src="https://i.loli.net/2020/04/01/lA7fVIsEn14JSBh.png" alt="image.png"></p>
+<p>对于第一个文件，它的名字是NEW,后缀名是CPP，文件属性是0x00,说明它是一个普通文件。创建时间是0x89A4,换成二进制是<br>1000 1001 1010 0100。<br>其中前5位是小时，10001=17,说明创建时间是17点；后6位是分钟,001101=13，说明具体时间是17:13。后五位没有作用(因为5位最多表示32个数，而一分钟有60秒)<br>创建日期是0x507E,换成二进制是<br>0101 0000 0111 1110<br>前7位是年份与1980的差值， 01010000=40,40+1980=2020，说明文件创建于2020年；后面4位是月份，0011是3，说明是2020年的3月；后面5位11110=30说明日期是 2020-3-30<br>起始簇号是0x0002<br>大小是0x0000003c，说明它一共占60个字节。<br>现在我们知道了这个文件的基本信息，我们要怎么找到它的内容呢？这就需要我们看一下数据区了。</p>
+<p>从第33个扇区往后的扇区都是数据区，每个扇区512字节。上文的NEW.CPP文件的起始簇号是2，由于fat表前两个值有其他用途，所以簇号2代表的是第一个簇，或者说数据区的第一个扇区。<br>数据区的起始位置是0x4200，我们看看这里有什么：<br><img src="https://i.loli.net/2020/04/01/56owAs1WFaBnOgf.png" alt="image.png"><br>是60个a。<br>再来看根目录下的下一个文件，起始簇号是3，代表它开始于数据区的第一个扇区，即0x4400<br><img src="https://i.loli.net/2020/04/01/qMFOnw7YvjibfNh.png" alt="image.png"><br>它是一些奇奇怪怪的东西。<br>根据前文所述的读文件方法，我们可以把整个文件读出来，在此不再赘述。</p>
+<p>打开前面创建的软盘，点击上方的映像、创建文件夹，然后输入名字，就可以创建一个文件夹了。<br><img src="https://i.loli.net/2020/04/01/XJm7K58ohPzADF9.png" alt="image.png"><br>往里面拖两个文件<br><img src="https://i.loli.net/2020/04/01/XUI76AZpoPQs9uB.png" alt="image.png"><br>然后我们来看看根目录里发生了什么：<br><img src="https://i.loli.net/2020/04/01/yp4aPLAuk9rbUtG.png" alt="image.png"><br>可以看到它多了一个文件记录，名字是HOULAI，后缀是空的，文件属性是0x10，说明这是个文件夹，首簇号是0x2B，由于(0x2B-0x2)*0x200+0x4200=0x9400，我们只需要找到这个地址</p>
+<p><img src="https://i.loli.net/2020/04/14/CLgk7ZFD1Q6fNmp.png" alt="image.png"></p>
+<p>可以看到，这里也是一个个文件记录，其中有两个比较奇怪，第一个文件记录的名字是”.”,第二个文件记录的名字是”..”。事实上，除了根目录之外的每个文件夹都有这两个记录，”.”表示的是当前文件夹，”..”表示的是上一级文件夹。在程序中读取文件时它们会被忽略。</p>
+<p>在程序中，我们把文件和文件夹统一看成文件，用file类来表示它:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">File</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="built_in">string</span> content, path;<span class="comment">//分别是文件的内容和路径</span></span><br><span class="line">    <span class="built_in">string</span> name, suffix;<span class="comment">//分别是名字和后缀。文件夹没有后缀</span></span><br><span class="line">    <span class="keyword">int</span> attr, fstclus, size;<span class="comment">//分别是属性，首簇号，大小。文件夹的属性是0x10,普通文件的属性是0x00。</span></span><br><span class="line">    <span class="keyword">unsigned</span> short Time, Date;<span class="comment">//文件上一次修改的时间和日期</span></span><br><span class="line">    File *fa;<span class="comment">//它的上一级文件夹的指针。</span></span><br><span class="line">    <span class="built_in">map</span>&lt;<span class="built_in">string</span>, File *&gt; sons;<span class="comment">/*只有文件夹才有sons这个成员。</span></span><br><span class="line"><span class="comment">    记录了它的子文件和子文件夹，用名字+"."+后缀来当索引*/</span></span><br><span class="line">    File() &#123;&#125;<span class="comment">//默认构造函数</span></span><br><span class="line">    File(<span class="built_in">string</span> Name, File *now);<span class="comment">/*这个构造函数用于给now这个指针指向的文件夹</span></span><br><span class="line"><span class="comment">    添加一个子文件夹，Name指定了文件夹的名字*/</span></span><br><span class="line">    File(<span class="built_in">string</span> Name, <span class="built_in">string</span> Content, File *now);<span class="comment">/*这个构造函数用于给now这个指针指向的文件夹</span></span><br><span class="line"><span class="comment">    添加一个子文件，Name指定了文件的名字和后缀*/</span></span><br><span class="line">    File(File *from);<span class="comment">/*这个构造函数用于创建于from指向的文件内容相同的文件*/</span></span><br><span class="line">    <span class="function"><span class="keyword">unsigned</span> short <span class="title">get_Time</span><span class="params">(<span class="keyword">int</span> h, <span class="keyword">int</span> m)</span></span>;<span class="comment">//获得时间</span></span><br><span class="line">    <span class="function"><span class="keyword">unsigned</span> short <span class="title">get_Date</span><span class="params">(<span class="keyword">int</span> y, <span class="keyword">int</span> m, <span class="keyword">int</span> d)</span></span>;<span class="comment">//获得日期</span></span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">ToString</span><span class="params">()</span></span>;<span class="comment">//将时间和日期转换成string格式</span></span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">to_file_record</span><span class="params">()</span></span>;<span class="comment">//根据文件的信息得到文件的文件记录</span></span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">to_dir_record</span><span class="params">()</span></span>;<span class="comment">//根据文件夹的信息得到文件夹的文件记录</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add_file</span><span class="params">(File *tem_file)</span></span>;<span class="comment">//给文件夹添加一个子文件</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add_file_root</span><span class="params">(File *tem_file)</span></span>;<span class="comment">//跟根目录添加一个子文件</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">get_content</span><span class="params">()</span></span>;<span class="comment">//得到文件的内容</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">write_back</span><span class="params">(<span class="keyword">int</span> loc)</span></span>;<span class="comment">//将修改后的文件内容写回软盘</span></span><br><span class="line">    <span class="function">File *<span class="title">get_son</span><span class="params">(<span class="built_in">string</span> Name, <span class="keyword">bool</span> isn_folder)</span></span>;<span class="comment">//根据名字和后缀得到一个子文件(夹)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">dir</span><span class="params">()</span></span>;<span class="comment">//输出子文件的信息</span></span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; <span class="title">dir_recusive</span><span class="params">()</span></span>;<span class="comment">//递归得到所有子文件的信息</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span></span>;<span class="comment">//删除这个文件</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">get_content_deleted</span><span class="params">(<span class="keyword">int</span> loc)</span></span>;<span class="comment">/*对文件夹里已经被删除的目录项调用这个函数，</span></span><br><span class="line"><span class="comment">    使得被删除的簇能被捕获，避免出现"孤魂野鬼"*/</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">find_string</span><span class="params">(<span class="keyword">int</span> loc, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; &amp;b, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; &amp;ret)</span></span>;<span class="comment">/*从这个文件夹开始查找</span></span><br><span class="line"><span class="comment">    将输入的字符串转化成b,将返回的路径字符串放在ret里*/</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">create</span><span class="params">(File *tem)</span></span>;<span class="comment">//用于创建于tem指向的文件内容相同的文件//</span></span><br><span class="line">&#125; file;</span><br></pre></td></tr></table></figure>
+
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>本系统完成了要求的所有功能，此外还增加了find功能，具体情况请看下表:</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>功能</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>help</td>
+<td>输出提示信息</td>
+<td>无</td>
+</tr>
+<tr>
+<td>quit</td>
+<td>退出系统</td>
+<td>无</td>
+</tr>
+<tr>
+<td>cd [相对路径或绝对路径]</td>
+<td>进入指定的文件夹</td>
+<td>“..”表示上一级文件夹，”.”表示当前文件夹,用’/‘作分隔符</td>
+</tr>
+<tr>
+<td>dir</td>
+<td>展示当前文件夹下的文件信息</td>
+<td>会输出名字、后缀、修改时间和大小</td>
+</tr>
+<tr>
+<td>dir_r</td>
+<td>递归的展示当前文件夹下的所有文件</td>
+<td>只能看到名字和后缀</td>
+</tr>
+<tr>
+<td>print [相对路径或绝对路径]</td>
+<td>输出文件内容</td>
+<td>目标文件不能是文件夹</td>
+</tr>
+<tr>
+<td>gedit [相对路径或绝对路径]</td>
+<td>进入文本编辑器模式，编辑指定的文件</td>
+<td>无</td>
+</tr>
+<tr>
+<td>mk [文件名] [文件内容]</td>
+<td>在当前路径下创建一个文件</td>
+<td>文件名长度不能超过8，文件名不能包含非法字符，文件要有后缀，不能与已有文件同名</td>
+</tr>
+<tr>
+<td>mkdir [文件夹名]</td>
+<td>在当前路径下创建一个文件夹</td>
+<td>文件夹名长度不能超过8，文件夹名不能包含非法字符，不能与已有文件夹重名</td>
+</tr>
+<tr>
+<td>rm [相对路径或绝对路径]</td>
+<td>删除一个文件或文件夹</td>
+<td>删除操作不可逆，请谨慎操作</td>
+</tr>
+<tr>
+<td>find [相对路径或绝对路径]</td>
+<td>根据路径查找文件(夹)</td>
+<td>支持通配符’<em>‘和’?’。’</em>‘可以表示任意长度的字符串，’?’可以表示任意字符。系统会输出所有可能的路径</td>
+</tr>
+<tr>
+<td>cp [相对路径或绝对路径][文件夹的相对路径或绝对路径]</td>
+<td>复制文件(夹)</td>
+<td>将第一个参数复制到第二个参数指向的文件夹处</td>
+</tr>
+<tr>
+<td>mv [相对路径或绝对路径][文件夹的相对路径或绝对路径]</td>
+<td>剪切文件</td>
+<td>将第一个参数剪切到第二个参数指向的文件夹处</td>
+</tr>
+</tbody></table>
+<p>由于许多操作都需要按路径名找到文件，所有我们先来了解按路径名寻找文件的方法:</p>
+<h4 id="路径分析"><a href="#路径分析" class="headerlink" title="路径分析"></a>路径分析</h4><p>我们在file类中定义了一个map&lt;string,file*&gt;类型的成员变量sons，不用我说也能知道它的作用是什么。<br>在创建一个文件时，如果它是一个文件夹，则对应它的所有子文件，往sons里加入一个(pair){文件名+”.”+后缀，指向该文件的指针}。这样，我们就能很轻松地根据文件名和后缀找到对应的文件。</p>
+<p>我们定义path_analysis和path_analysis2函数。path_analysis2函数接受一个字符串，将它用’/‘分隔为一个字符串向量并返回。</p>
+<p>用户输入路径可以是绝对路径或相对路径，当第一个字符为’/‘时，我们认为这是绝对路径，从根目录开始找；否则认为这是相对路径，从当前文件夹下开始找。</p>
+<p>从根目录开始找的方法是:<br>设输入字符串向量为vec,根文件夹指针为f1。<br>遍历向量的每一个元素，查找f1的sons里是否有子文件(夹)的名字与之匹配，若有则修改f1为对应文件(夹)，否则直接返回NULL。<br>遍历完向量之后说明f1已经是需要的文件(夹)，返回f1即可。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">file *<span class="title">path_analysis</span><span class="params">(<span class="built_in">string</span> input, file *now, file *root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (input == <span class="string">""</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">bool</span> rt = (input[<span class="number">0</span>] == <span class="string">'/'</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> i : input)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">isalpha</span>(i) &amp;&amp; !<span class="built_in">isdigit</span>(i) &amp;&amp; i != <span class="string">'/'</span> &amp;&amp; i != <span class="string">'.'</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; folder_names = path_analysis2(input);</span><br><span class="line">    file *tem;</span><br><span class="line">    <span class="keyword">if</span> (rt)</span><br><span class="line">        tem = root;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        tem = now;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; folder_names.size(); i++)</span><br><span class="line">    &#123;</span><br><span class="line">        tem = tem-&gt;get_son(folder_names[i], i + <span class="number">1</span> == folder_names.size());</span><br><span class="line">        <span class="keyword">if</span> (tem == <span class="literal">NULL</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tem;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从当前目录开始找的方法与此基本相同，不再赘述。</p>
+<h4 id="cd操作的实现"><a href="#cd操作的实现" class="headerlink" title="cd操作的实现"></a>cd操作的实现</h4><p>既然了解了路径分析的方法，cd操作的实现也就呼之欲出了。我们在程序中定义两个指针，一个名为tem，指向当前所在的文件；一个名为root，指向根文件夹。只需要根据这两个指针和输入的字符串调用paht_analysis函数即可，如果函数返回NULL则报错，否则修改tem。</p>
+<p>代码如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (a == <span class="string">"cd"</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; b;</span><br><span class="line">    file *now = path_analysis(b, tem, root);</span><br><span class="line">    <span class="keyword">if</span> (now == <span class="literal">NULL</span> || now-&gt;attr != <span class="number">0x10</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"路径"</span> &lt;&lt; b &lt;&lt; <span class="string">"不合法\n"</span>;</span><br><span class="line">        <span class="comment">//注意，cd只能进入文件夹，进入一个文件是不可以的</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        tem = now;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="dir操作的实现"><a href="#dir操作的实现" class="headerlink" title="dir操作的实现"></a>dir操作的实现</h4><p>进行dir操作时，我们遍历sons，输出所有子文件(夹)的信息，包括文件名、后缀、修改时间和大小。由于这个操作十分简单，代码就不必展示了。</p>
+<h4 id="dir-r操作的实现"><a href="#dir-r操作的实现" class="headerlink" title="dir_r操作的实现"></a>dir_r操作的实现</h4><p>这个操作的实现需要用到递归的思想。<br>定义dir_recusive()函数，它返回一个字符串向量。它的实现方法是:<br>创建一个vector<string> ret用于返回。<br>遍历sons的每一个键值对，如果值(即file指针)指向一个普通文件，则把对应的键放进ret里;<br>如果指向的是一个文件夹，则对它调用dir_recusive()，把返回的字符串向量的每一个元素加上一个前缀”  “,都放进ret里。<br>为什么要加入一个前缀呢？想一想，当前文件夹下的文件名没有前缀，下一级文件夹下的文件名有一个前缀，再下一级文件夹下的文件名有两个前缀……这样看起来不就形成了树的结构吗？</p>
+<p>dir_recusive()函数代码如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; <span class="title">File::dir_recusive</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; vec, tem;</span><br><span class="line">    vec.push_back(name + (attr == <span class="number">0x10</span> ? <span class="string">""</span> : <span class="string">"."</span> + suffix) + <span class="string">"\n"</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> i : sons)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (i.first == <span class="string">"."</span> || i.first == <span class="string">".."</span>)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        tem = i.second-&gt;dir_recusive();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; tem.size(); j++)</span><br><span class="line">        &#123;</span><br><span class="line">            vec.push_back(<span class="string">"  "</span> + tem[j]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> vec;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="print操作的实现"><a href="#print操作的实现" class="headerlink" title="print操作的实现"></a>print操作的实现</h4><p>这个操作很简单，根据输入的路径找到相应的文件夹，然后输出它的内容即可。</p>
+<h4 id="mk操作的实现"><a href="#mk操作的实现" class="headerlink" title="mk操作的实现"></a>mk操作的实现</h4><p>这个操作是重点和难点。首先我们要根据第一个参数找到文件夹，根据第二个参数创建一个文件。怎么创建一个文件？</p>
+<p>我们知道文件是保存在数据区里的，那我们要在数据区里找到一个空闲的扇区，这可以在fat表里找(也可以用已删除的文件占用的扇区，这会在下文讲解)一个空闲簇号，找到之后将内容写到对应的扇区，将fat表对应的位置修改为一个结束标志。如果文件内容不止512个字节，则继续分配一个簇号，将内容写进去，将fat表中上一个簇号对应的位置修改为一个这个簇号，将这个簇号对应的文职修改为一个结束标志。一直这样下去，直到写完为止。<br>这部分代码如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (!Content.empty())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (Content.size() &gt; <span class="number">512</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        datas1.write_floopy(nowclus - <span class="number">2</span>, Content.substr(<span class="number">0</span>, <span class="number">512</span>));</span><br><span class="line">        Content = Content.substr(<span class="number">512</span>);</span><br><span class="line">        fat1.cluster_numbers[nowclus - <span class="number">2</span>] = fat1.get_first_empty() + <span class="number">2</span>;</span><br><span class="line">        nowclus = fat1.cluster_numbers[nowclus - <span class="number">2</span>];</span><br><span class="line">        fat1.cluster_numbers[nowclus - <span class="number">2</span>] = END_CLUSTER;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        datas1.write_floopy(nowclus - <span class="number">2</span>, Content);</span><br><span class="line">        Content = <span class="string">""</span>;</span><br><span class="line">        fat1.cluster_numbers[nowclus - <span class="number">2</span>] = END_CLUSTER;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建文件的其他操作就很简单了，注意要设置fa指针指向父文件夹。此外还要给文件生成一条文件记录，把它添加进父文件夹的内容里，给父文件夹的sons变量添加一个键值对。最后把fat表更新一遍。</p>
+<h4 id="mkdir操作的实现"><a href="#mkdir操作的实现" class="headerlink" title="mkdir操作的实现"></a>mkdir操作的实现</h4><p>搞定了mk操作后，mkdir也就差不多了。区别是创建出来的文件的内容是两条文件记录，记录”.”和”..”这两个”子”文件夹。</p>
+<h4 id="rm操作的实现"><a href="#rm操作的实现" class="headerlink" title="rm操作的实现"></a>rm操作的实现</h4><p>rm操作可能是最难的操作了。<br>我们定义一个queue&lt;pair&lt;file <em>, int&gt;&gt;类型的全局变量deleted_clusters。它的每一个元素是一个 file</em>,int 对。</p>
+<p>当我们删除某个文件夹下的一个文件时，我们将它的文件记录的第一个字符变成一个删除标志，同时需要将 指向文件夹的指针 和 这个文件记录的序号 组成一个pair，push进deleted_clusters里。</p>
+<p>这样做有什么好处呢？假设我们在删除操作完成后就退出系统，然后重新打开，读入文件夹时，我们如果读到一个首字符为删除标志的文件记录，就把指向文件夹的指针和文件记录的序号放进deleted_clusters里。</p>
+<p>此后，如果我们需要再创建一个文件，就可以去deleted_clusters找被删除的簇。怎么找呢？我们先通过deleted_culsters的front()方法得到一个pair，根据它找到之前删除文件的文件记录，它不是记录了这个文件在数据区的位置了吗？直接将这些位置覆盖就可以了。覆盖完之后将这个pair pop掉就可以了。</p>
+<p>这样就大功告成了吗？还没有，至少还有两个问题:</p>
+<p>1.如果被删除的文件占用两个扇区，而我这次创建的文件只有一个扇区，那我把删除文件的首扇区覆盖了，第二个扇区不就成了孤魂野鬼了？</p>
+<p>2.将被删除文件的内容覆盖了之后，我们并没有修改它的文件记录，这样，我们下一次启动系统，还是会将它对应的pair读到deleted_clusters里，这样就可能又把它覆盖了一遍，不是就乱套了吗？</p>
+<p>其实解决方法也很简单。</p>
+<p>第一个问题，只需将首扇区覆盖之后，看一下这个扇区在fat表中对应的值是否是结束标志，如果不是，就修改文件记录，使它的首扇区变成原来的第二个扇区。同时，由于这个文件还没有被完全覆盖，因此不必在deleted_clusters里把它对应的pair pop掉。</p>
+<p>第二个问题，只需要将文件记录里的首扇区标志改为0，此后读文件时遇到这种首扇区标志位0的文件记录就跳过即可。</p>
+<p>以上就是删除普通文件的基本方法。删除文件夹呢？也很简单，递归地把子文件都删除，再将文件夹也删除了就可以了。为什么是这样子？因为我的deleted_clusters是一个队列，由于子文件先删除，队列又是先进先出的，覆盖的时候便会先覆盖子文件，再覆盖文件夹。否则要是先把文件夹覆盖了，子文件的文件记录找不到了，就出现”孤魂野鬼”了。</p>
+<p>删除操作的代码如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">File::remove</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (attr == <span class="number">0x10</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> i : sons)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (i.first == <span class="string">"."</span> || i.first == <span class="string">".."</span>)</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            i.second-&gt;remove();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; fa-&gt;content.size(); j += <span class="number">32</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> ((fa-&gt;content[j + <span class="number">27</span>] &lt;&lt; <span class="number">8</span>) + fa-&gt;content[j + <span class="number">26</span>] == fstclus)</span><br><span class="line">        &#123;</span><br><span class="line">            fa-&gt;content[j] = DELETED_CLUSTER_SIGN;</span><br><span class="line">            fa-&gt;sons.erase(attr == <span class="number">16</span> ? name : name + <span class="string">"."</span> + suffix);</span><br><span class="line">            fa-&gt;write_back(j / SIZE_OF_SECTOR);</span><br><span class="line">            deleted_clusters.push(&#123;fa, j / <span class="number">32</span>&#125;);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="gedit操作的实现"><a href="#gedit操作的实现" class="headerlink" title="gedit操作的实现"></a>gedit操作的实现</h4><p>为了实现这个操作，我设计了一个简易的编辑器。它的原理是不断相应键盘的输入，每输入一次就把控制台刷新一次，然后输出。由于这个编辑器与fat12文件系统关系不大，我就不再赘述。</p>
+<p>这个操作也是根据输入的字符串找到相应的文件(注意这个文件不能是文件夹)，然后调用编辑器编辑它的内容，当用户按下ctrl+s则将修改后的内容保存回去。怎么保存呢？很简单，只需把原来的文件删掉，再创建一个同名而不同内容的文件即可。</p>
+<h4 id="find操作的实现"><a href="#find操作的实现" class="headerlink" title="find操作的实现"></a>find操作的实现</h4><p>find操作本事不算复杂，但为了使我的文件系统更有特色，我给它增加了’<em>‘和’?’这两个通配符。<br>‘</em>‘表示任意字符串(甚至可以是空的)。比如 “houlai”和”h*lai”是匹配的。<br>‘?’表示单个字符。比如”zhiqian”和”?hi?ian”是匹配的。<br>怎么实现字符串的带通配符匹配呢？一种方法是暴力法，即直接枚举通配符的每一种可能。但这样效率很低，在字符串很长的情况下根本配不出来。<br>另一种是动态规划法，即dp(dynamic planning)，对输出长度为n和m的字符串，它的时间复杂度是O(nm)的，效率很高。由于这部分内容与fat12文件系统关系不大，具体的dp方法就不必赘述，直接给出匹配的代码:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isMatch</span><span class="params">(<span class="built_in">string</span> a, <span class="built_in">string</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = a.size(), m = b.size();</span><br><span class="line">    <span class="keyword">bool</span> ok[n + <span class="number">1</span>][m + <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= m; j++)</span><br><span class="line">            ok[i][j] = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">bool</span> okk[m + <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= m; j++)</span><br><span class="line">        okk[j] = <span class="literal">false</span>;</span><br><span class="line">    okk[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    ok[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= m; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        ok[<span class="number">0</span>][j] == (ok[<span class="number">0</span>][j - <span class="number">1</span>] &amp;&amp; (b[j - <span class="number">1</span>] == <span class="string">'*'</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= m; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (b[j - <span class="number">1</span>] == <span class="string">'?'</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                ok[i][j] = ok[i - <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (b[j - <span class="number">1</span>] == <span class="string">'*'</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                ok[i][j] = okk[j - <span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//         cout &lt;&lt; ok[i - 1][j - 1] &lt;&lt; " " &lt;&lt; (a[i - 1] == b[j - 1]) &lt;&lt; endl;</span></span><br><span class="line">                ok[i][j] = (ok[i - <span class="number">1</span>][j - <span class="number">1</span>] &amp;&amp; (a[i - <span class="number">1</span>] == b[j - <span class="number">1</span>]));</span><br><span class="line">            &#125;</span><br><span class="line">            okk[j] = okk[j] || ok[i][j];</span><br><span class="line">            <span class="comment">//cout &lt;&lt; i &lt;&lt; " " &lt;&lt; j &lt;&lt; " " &lt;&lt; ok[i][j] &lt;&lt; endl;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ok[n][m];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>搞定了单个字符串的匹配方法，find操作的实现也就简单了，只需像之间路径分析一样搜索下去，找到了就将路径放进一个vector&lt;string&gt;里。不同的是这里的find可以找到多个路径，因此需要用dfs的方法；而之前的路径分析最多只有一个结果，因此直接找就可以了。<br>具体代码如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">File::find_string</span><span class="params">(<span class="keyword">int</span> loc, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; &amp;b, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; &amp;ret)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (loc == b.size())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//        cout&lt;&lt;name&lt;&lt;" "&lt;&lt;path&lt;&lt;endl;</span></span><br><span class="line">        ret.push_back(path);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> i : sons)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (isMatch(i.first, b[loc]))</span><br><span class="line">        &#123;</span><br><span class="line">            i.second-&gt;find_string(loc + <span class="number">1</span>, b, ret);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="cp操作和mv操作"><a href="#cp操作和mv操作" class="headerlink" title="cp操作和mv操作"></a>cp操作和mv操作</h4><p>在明确了如何找文件，如何删除文件之后，这两个操作也就非常简单了，没有进行解释的必要。</p>
+<h3 id="代码架构"><a href="#代码架构" class="headerlink" title="代码架构"></a>代码架构</h3><p>总共有12个文件，分别是:</p>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>fun.cpp</td>
+<td>定义了各种通用的函数</td>
+</tr>
+<tr>
+<td>byte.h</td>
+<td>定义了byte类</td>
+</tr>
+<tr>
+<td>byte.cpp</td>
+<td>byte类的实现和与之相关的函数</td>
+</tr>
+<tr>
+<td>sector.h</td>
+<td>定义了sector类和它的实现</td>
+</tr>
+<tr>
+<td>mbr.h</td>
+<td>定义了MBR类</td>
+</tr>
+<tr>
+<td>mbr.cpp</td>
+<td>MBR类的实现</td>
+</tr>
+<tr>
+<td>file.h</td>
+<td>定义了file类、fat类、rootentry类和datas类。</td>
+</tr>
+<tr>
+<td>file.cpp</td>
+<td>上述几个类的实现和相应的函数。</td>
+</tr>
+<tr>
+<td>getch.cpp</td>
+<td>定义了一个函数</td>
+</tr>
+<tr>
+<td>my_editor.h</td>
+<td>定义了my_editor类和一些函数</td>
+</tr>
+<tr>
+<td>interface.cpp</td>
+<td>给出了my_editor类的大部分实现，定义了一些与用户交互的函数</td>
+</tr>
+<tr>
+<td>main.cpp</td>
+<td>包括了程序开始时的检查和根文件夹的读入</td>
+</tr>
+</tbody></table>
+<p>总计约1900行代码</p>
+<h2 id="结果展示"><a href="#结果展示" class="headerlink" title="结果展示"></a>结果展示</h2><p>使用dir_r可以展示目录树:<br><img src="https://i.loli.net/2020/04/15/XELPIqom6kZd8sw.png" alt="image.png"><br>使用print可以显示文件内容:<br><img src="https://i.loli.net/2020/04/15/RhFQNvI4Yn2kfZA.png" alt="image.png"><br>使用gedit可以编辑文件:<br><img src="https://i.loli.net/2020/04/15/UliEz8pGcV1tS9L.png" alt="image.png"><br><img src="https://i.loli.net/2020/04/15/GIBgNKhYoRkCXb8.png" alt="image.png"><br>使用dir命令可以查看当前文件夹下的内容:<br><img src="https://i.loli.net/2020/04/15/3sncS9lR1XybkoK.png" alt="image.png"><br>使用cd命令可以进入文件夹:<br><img src="https://i.loli.net/2020/04/15/IUi8WJgtXZH2bCR.png" alt="image.png"><br>使用mk命令可以创建文件,使用rm文件可以删除文件:<br><img src="https://i.loli.net/2020/04/15/KIqjTfQX3vzHZsP.png" alt="image.png"><br>使用mkdir命令可以创建文件夹:<br><img src="https://i.loli.net/2020/04/15/LGyKaSrANFbP497.png" alt="image.png"><br>使用cp命令可以复制文件:<br><img src="https://i.loli.net/2020/04/15/iDcPjqfGAby87de.png" alt="image.png"><br>使用mv命令可以剪切文件:<br><img src="https://i.loli.net/2020/04/15/dlXBxtUIA4VnTzH.png" alt="image.png"><br>使用rm命令还可以删除文件夹:<br><img src="https://i.loli.net/2020/04/15/cFNKIGk6BWAuCoH.png" alt="image.png"></p>
+<p>详情请看演示视频。</p>
+<h2 id="实验总结"><a href="#实验总结" class="headerlink" title="实验总结"></a>实验总结</h2><p>这次实验可以说是我做过最难的实验了，代码量大，编程难度高，还用到了搜索、动态规划等算法。但从最后的完成情况来看，我还是比较满意的（<del>虽然还是有很多bug</del>），实现了要求的功能，还增加了自己的创意。不过还是存在代码不够规范的问题，不同文件、不同类糅杂在一起，以至于我自己都不清楚我的代码文件是怎么组织的。</p>
+<p>在完成这次实验的过程中，最大的困难是编写删除操作的代码。我会思考了很久才想出一种很复杂的方法，这也带来了大量的代码和bug，不过好在还是写出来了。但在跟其他同学交流之后，似乎他们的方法更为简单，而我的方法理论上在性能方面会更优秀(我也不太确定)，为了偷个懒我也没有改。</p>
+<p>还有一个遗憾是没有用到汇编语言。事实上大部分代码是用c++编写的，还用到了stl和linux的各种头文件里的很多内容，可能会导致代码的可移植性有点差。</p>
+<p>这次实验的收获也是很明显的，我锻炼了编写较大规模程序的能力，对文件系统和操作系统有了更深入的了解，也激发了我进一步学习操作系统的兴趣。</p>
+<p>总的来说，这次实验完成的十分艰难，但也是收获满满，有一些做的不错的地方，也有不少改进的空间。希望在接下来的课程中也能有这么有趣的实验。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/14/tem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/14/tem/" class="post-title-link" itemprop="url">tem</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-14 13:18:49" itemprop="dateCreated datePublished" datetime="2020-04-14T13:18:49+08:00">2020-04-14</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="共享内存模型"><a href="#共享内存模型" class="headerlink" title="共享内存模型"></a>共享内存模型</h1><h2 id="抽象概念"><a href="#抽象概念" class="headerlink" title="抽象概念"></a>抽象概念</h2><p>单节点上有多个处理器或多个核心，它们可以直接访问任何内存。通信方式是隐式的通信，通过内存读写来进行。</p>
+<p>内存的位置是透明的，不一定是在一个节点上，但内存地址空间一定是统一的。</p>
+<p>进程是操作系统的资源分配单位，它有虚拟的地址空间和单个或多个线程。有些内存是不同进程共享的，有些则是私有的。进程与进程之间的通信靠的是管道。</p>
+<p>同步是通过锁来实现。锁也是一种共享变量。</p>
+<p>编程时不需要考虑变量是属于谁的，只需考虑同步即可。</p>
+<p>有一个比较大的缺点，是很难控制数据的局部性，可能会导致更多的cache-misses和缺页。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>可以靠编译器和硬件实现内存的共享，这一般适用于单节点上。</p>
+<p>还可以通过网络和各种特殊的软件，这一般适用于多节点。</p>
+<h3 id="SMP"><a href="#SMP" class="headerlink" title="SMP"></a>SMP</h3>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/10/CUDA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/10/CUDA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">CUDA学习笔记</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-10 15:32:21" itemprop="dateCreated datePublished" datetime="2020-04-10T15:32:21+08:00">2020-04-10</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="CUDA-学习笔记"><a href="#CUDA-学习笔记" class="headerlink" title="CUDA 学习笔记"></a>CUDA 学习笔记</h1><p>主要参考《GPU高性能编程CUDA实战》</p>
+<p>一般将CPU及其系统的内存称为主机，将GPU及其内存称为设备。<br>在GPU设备上执行的函数通常称为核函数(Kernal);</p>
+<p>一个简单的程序:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">__global__ <span class="keyword">void</span> <span class="title">kernel</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    kernel&lt;&lt;&lt;<span class="number">1</span>,<span class="number">1</span>&gt;&gt;&gt;();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Hello world\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>global</strong>修饰符告诉编译器，函数应该被编译为在设备上而不是在主机上运行。于是，kernel()函数将被交给编译设备代码的编译器，而main()函数将被交给主机编译器。<br>尖括号表示要将一些参数传递给运行时系统，用以告诉运行时如何启动设备代码。</p>
+<p>再来看一个更复杂的程序:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cuda_runtime.h&gt;</span></span></span><br><span class="line"><span class="function">__global__ <span class="keyword">void</span> <span class="title">add</span><span class="params">( <span class="keyword">int</span> a, <span class="keyword">int</span> b, <span class="keyword">int</span> *c )</span> </span>&#123;</span><br><span class="line">    *c = a + b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">( <span class="keyword">void</span> )</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> c;</span><br><span class="line">    <span class="keyword">int</span> *dev_c;</span><br><span class="line">    <span class="comment">//cudaMalloc()</span></span><br><span class="line">    cudaMalloc( (<span class="keyword">void</span>**)&amp;dev_c, <span class="keyword">sizeof</span>(<span class="keyword">int</span>) );</span><br><span class="line">    <span class="comment">//核函数执行</span></span><br><span class="line">    add&lt;&lt;&lt;<span class="number">1</span>,<span class="number">1</span>&gt;&gt;&gt;( <span class="number">2</span>, <span class="number">7</span>, dev_c );</span><br><span class="line">    <span class="comment">//cudaMemcpy()</span></span><br><span class="line">    cudaMemcpy( &amp;c, dev_c, <span class="keyword">sizeof</span>(<span class="keyword">int</span>),cudaMemcpyDeviceToHost ) ;</span><br><span class="line">    <span class="built_in">printf</span>( <span class="string">"2 + 7 = %d\n"</span>, c );</span><br><span class="line">    <span class="comment">//cudaFree()</span></span><br><span class="line">    cudaFree( dev_c );</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>cudaMalloc()用于分配内存，但与malloc()不同的是，它是在GPU上分配内存。由于分配的地址时在GPU上，所以程序员一定不能在主机代码中对这个指针进行解引用。同样的，也不能用free()函数来释放这些内存，只能用cudaFree()。<br>为了让主机代码能得到GPU计算的结果，可以用cudaMemcpy()函数，它的第四个参数数据移动的方向，是从主机到设备、设备到主机还是设备到设备。</p>
+<p>上面说的这些内容好像对加快程序的执行速度没什么帮助，我们用下面这个向量求和的例子来了解CUDA如何让程序变得更快:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;book.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> N 10</span></span><br><span class="line"><span class="function">__global__ <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span>* a,<span class="keyword">int</span>* b,<span class="keyword">int</span>* c)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> tid=blockIdx.x;</span><br><span class="line">  <span class="keyword">if</span>(tid&lt;N)c[tid]=a[tid]+b[tid];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> a[N],b[N],c[N];</span><br><span class="line">  <span class="keyword">int</span>* dev_a,*dev_b,*dev_c;</span><br><span class="line">  HANDLE_ERROR(cudaMalloc((<span class="keyword">void</span>**)&amp;dev_a,N*<span class="keyword">sizeof</span>(<span class="keyword">int</span>)));</span><br><span class="line">  HANDLE_ERROR(cudaMalloc((<span class="keyword">void</span>**)&amp;dev_b,N*<span class="keyword">sizeof</span>(<span class="keyword">int</span>)));</span><br><span class="line">  HANDLE_ERROR(cudaMalloc((<span class="keyword">void</span>**)&amp;dev_c,N*<span class="keyword">sizeof</span>(<span class="keyword">int</span>)));</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)a[i]=-i,b[i]=i*i;</span><br><span class="line">  HANDLE_ERROR(cudaMemcpy(dev_a,a,N*<span class="keyword">sizeof</span>(<span class="keyword">int</span>),cudaMemcpyHostToDevice));</span><br><span class="line">  HANDLE_ERROR(cudaMemcpy(dev_b,b,N*<span class="keyword">sizeof</span>(<span class="keyword">int</span>),cudaMemcpyHostToDevice));</span><br><span class="line">  HANDLE_ERROR(cudaMemcpy(dev_c,c,N*<span class="keyword">sizeof</span>(<span class="keyword">int</span>),cudaMemcpyHostToDevice));</span><br><span class="line">  add&lt;&lt;&lt;N,<span class="number">1</span>&gt;&gt;&gt;(dev_a,dev_b,dev_c);</span><br><span class="line">  HANDLE_ERROR(cudaMemcpy(c,dev_c,N*<span class="keyword">sizeof</span>(<span class="keyword">int</span>),cudaMemcpyDeviceToHost));</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)<span class="built_in">printf</span>(<span class="string">"%d %d\n"</span>,i,c[i]);</span><br><span class="line">  cudaFree(dev_a),cudaFree(dev_b),cudaFree(dev_c);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意到，我们用了add&lt;&lt;&lt;N,1&gt;&gt;&gt;。N代表了设备在执行核函数时使用的并行线程块(Block)的数量。当启动核函数时，我们告诉运行时，我们想要一个一维线程格(Grid)，其中包含N个线程块。<br>如何在代码中知道当前正在运行的是哪个线程块？可以通过blockIdx.x得到，它是一个内置变量。这样，我们就把向量求和并行化，达到了加速的效果。</p>
+<p>在上面的例子中，我们启动了多个线程块，但每个线程块只有1个线程。要想在每个线程块里启动多个线程，可以这样写:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;book.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> N 100</span></span><br><span class="line"><span class="function">__global__ <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span>* a,<span class="keyword">int</span>* b,<span class="keyword">int</span>* c)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> tid=threadIdx.x+blockIdx.x*blockDim.x;</span><br><span class="line">  <span class="keyword">if</span>(tid&lt;N)c[tid]=a[tid]+b[tid];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> a[N],b[N],c[N];</span><br><span class="line">  <span class="keyword">int</span>* dev_a,*dev_b,*dev_c;</span><br><span class="line">  HANDLE_ERROR(cudaMalloc((<span class="keyword">void</span>**)&amp;dev_a,N*<span class="keyword">sizeof</span>(<span class="keyword">int</span>)));</span><br><span class="line">  HANDLE_ERROR(cudaMalloc((<span class="keyword">void</span>**)&amp;dev_b,N*<span class="keyword">sizeof</span>(<span class="keyword">int</span>)));</span><br><span class="line">  HANDLE_ERROR(cudaMalloc((<span class="keyword">void</span>**)&amp;dev_c,N*<span class="keyword">sizeof</span>(<span class="keyword">int</span>)));</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)a[i]=-i,b[i]=i*i;</span><br><span class="line">  HANDLE_ERROR(cudaMemcpy(dev_a,a,N*<span class="keyword">sizeof</span>(<span class="keyword">int</span>),cudaMemcpyHostToDevice));</span><br><span class="line">  HANDLE_ERROR(cudaMemcpy(dev_b,b,N*<span class="keyword">sizeof</span>(<span class="keyword">int</span>),cudaMemcpyHostToDevice));</span><br><span class="line">  HANDLE_ERROR(cudaMemcpy(dev_c,c,N*<span class="keyword">sizeof</span>(<span class="keyword">int</span>),cudaMemcpyHostToDevice));</span><br><span class="line">  add&lt;&lt;&lt;(N+<span class="number">127</span>)/<span class="number">128</span>,<span class="number">128</span>&gt;&gt;&gt;(dev_a,dev_b,dev_c);</span><br><span class="line">  HANDLE_ERROR(cudaMemcpy(c,dev_c,N*<span class="keyword">sizeof</span>(<span class="keyword">int</span>),cudaMemcpyDeviceToHost));</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)<span class="built_in">printf</span>(<span class="string">"%d %d\n"</span>,i,c[i]);</span><br><span class="line">  cudaFree(dev_a),cudaFree(dev_b),cudaFree(dev_c);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意到启动核函数时用的是&lt;&lt;&lt;(N+127)/128,128&gt;&gt;&gt;,(N+127)/128是对N/128向上取整，得到线程块的数量。第二个128代表一个线程块有128个线程。这样子可能会导致线程数量大于N，但没有关系，我们会在核函数里判断线程索引是否越界。<br>在核函数中，线程索引通过$tid=threadIdx.x+blockIdx.x*blockDim.x$得到。<br>为了避免使用过多的线程块，我们直接指定线程块的数量，然后在核函数中用while循环对下表递增，如下所示:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__global__ <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span>* a,<span class="keyword">int</span>* b,<span class="keyword">int</span>* c)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> tid=threadIdx.x+blockIdx.x*blockDim.x;</span><br><span class="line">  <span class="keyword">while</span>(tid&lt;N)c[tid]=a[tid]+b[tid],tid+=blockDim.x*gridDim.x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/09/%E5%AE%89%E5%8D%93%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/09/%E5%AE%89%E5%8D%93%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B03/" class="post-title-link" itemprop="url">安卓开发笔记3</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-09 21:11:14" itemprop="dateCreated datePublished" datetime="2020-04-09T21:11:14+08:00">2020-04-09</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="安卓开发笔记3"><a href="#安卓开发笔记3" class="headerlink" title="安卓开发笔记3"></a>安卓开发笔记3</h1><p><del>(随手写的，不具有参考价值)</del></p>
+<h2 id="给EditText自定义边框"><a href="#给EditText自定义边框" class="headerlink" title="给EditText自定义边框"></a>给EditText自定义边框</h2><p>(主要参考这篇博客:<a href="https://www.cnblogs.com/johnsonwei/p/5785055.html" target="_blank" rel="noopener">https://www.cnblogs.com/johnsonwei/p/5785055.html</a>)</p>
+<p>需要在drawable文件夹下面自定义一个xml文件:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">layer-list</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">shape</span></span></span><br><span class="line"><span class="tag">            <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:shape</span>=<span class="string">"rectangle"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">solid</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:color</span>=<span class="string">"#EEEEEF"</span>/&gt;</span>//内部颜色</span><br><span class="line">            <span class="tag">&lt;<span class="name">corners</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:radius</span>=<span class="string">"15dip"</span>//用于指定边框<span class="attr">4</span>个角的弯曲程度</span></span><br><span class="line"><span class="tag">                /&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">stroke</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:width</span>=<span class="string">"0.5px"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:color</span>=<span class="string">"#225050"</span>/&gt;</span>//边框颜色</span><br><span class="line">        <span class="tag">&lt;/<span class="name">shape</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">layer-list</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后指定EditText的background:</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;EditText</span><br><span class="line">    android:<span class="attribute">layout_width</span>=<span class="string">"200dp"</span></span><br><span class="line">    android:<span class="attribute">layout_height</span>=<span class="string">"wrap_content"</span></span><br><span class="line">    android:<span class="attribute">inputType</span>=<span class="string">"phone"</span></span><br><span class="line">    android:<span class="attribute">text</span>=<span class="string">""</span></span><br><span class="line">    android:<span class="attribute">id</span>=<span class="string">"@android:id/edit"</span></span><br><span class="line">    android:<span class="attribute">background</span>=<span class="string">"@drawable/edit_bg"</span>/&gt;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/08/%E5%AE%89%E5%8D%93%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -715,395 +1223,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/12/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="reeeeeeeeeein">
-      <meta itemprop="description" content="SYSU 计算机专业大二在读">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="reeeeeeeeeein的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/12/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A1/" class="post-title-link" itemprop="url">并行与分布式计算作业1</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-03-12 22:42:47" itemprop="dateCreated datePublished" datetime="2020-03-12T22:42:47+08:00">2020-03-12</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="并行与分布式计算作业1"><a href="#并行与分布式计算作业1" class="headerlink" title="并行与分布式计算作业1"></a>并行与分布式计算作业1</h1><h2 id="作业题目"><a href="#作业题目" class="headerlink" title="作业题目"></a>作业题目</h2><p>现代处理器如Intel、ARM、AMD、Power以及国产CPU如华为鲲鹏等，均包含了并行指令集合，① 请调查这些处理器中的并行指 令集，并选择其中一种进行编程练习，计算两个各包含10^6个整数的向量之和。 此外，② 现代操作系统为了发挥多核的优势，支持多线程并行编程模型，请将问题①用多线程的方式实现，线程实现的语言不限，可以是Java，也可以是 C/C++。</p>
-<h2 id="用串行的方法完成向量之和计算"><a href="#用串行的方法完成向量之和计算" class="headerlink" title="用串行的方法完成向量之和计算"></a>用串行的方法完成向量之和计算</h2><p>为了进行对照，先写一个串行的程序：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Size 1000000</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> a[Size],b[Size],c[Size];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">tv</span>,<span class="title">tv2</span>;</span></span><br><span class="line">    gettimeofday(&amp;tv,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Size;i++)c[i]=a[i]+b[i];</span><br><span class="line">    gettimeofday(&amp;tv2,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"time: %d\n"</span>,tv2.tv_sec*<span class="number">1000000</span> + tv2.tv_usec - tv.tv_sec*<span class="number">1000000</span> - tv.tv_usec);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>进行了5次实验，结果如下：<br><img src="https://i.loli.net/2020/03/02/ftERVcS28Zq1O5h.png" alt="image.png"><br>平均耗时：3,276.2μs</p>
-<h2 id="用并行指令集axv来完成向量之和计算"><a href="#用并行指令集axv来完成向量之和计算" class="headerlink" title="用并行指令集axv来完成向量之和计算"></a>用并行指令集axv来完成向量之和计算</h2><p>首先在<a href="https://github.com/chen0031/AVX-AVX2-Example-Code" target="_blank" rel="noopener">https://github.com/chen0031/AVX-AVX2-Example-Code</a>中下载文件夹，在wsl中cd进入文件夹，即可用make命令进行编译，用make run命令运行。</p>
-<p><img src="https://i.loli.net/2020/03/02/d2uWqbMJlsU5T6P.png" alt="image.png"></p>
-<p><img src="https://i.loli.net/2020/03/02/a4PGxXndvMmhOpg.png" alt="image.png"></p>
-<p>然后执行 cd ./Arithmetic_Intrinsics/src，将其中的add.c文件修改为：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Author:  TripleZ&lt;me@triplez.cn&gt;</span></span><br><span class="line"><span class="comment"> * Date:    2018-08-17</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Size 1000000</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;immintrin.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line">__m256i my_int_vec_0[Size/<span class="number">8</span>+<span class="number">3</span>];<span class="comment">//数组每个元素存8个整数，故数组的大小为Size/8,+3是为了防止越界</span></span><br><span class="line">__m256i my_int_vec_1[Size/<span class="number">8</span>+<span class="number">3</span>];</span><br><span class="line">__m256i my_int_result[Size/<span class="number">8</span>+<span class="number">3</span>];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Size/<span class="number">8</span>;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">8</span>;j++)&#123;</span><br><span class="line">        my_int_vec_0[i][j]=rand();</span><br><span class="line">        my_int_vec_1[i][j]=rand();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">tv</span>,<span class="title">tv2</span>;</span></span><br><span class="line">    gettimeofday(&amp;tv,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Size/<span class="number">8</span>;i++)&#123;</span><br><span class="line">      my_int_result[i]=_mm256_add_epi32(my_int_vec_0[i],my_int_vec_1[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    gettimeofday(&amp;tv2,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n\n\n\n\n\ntime: %dμs\n\n\n\n\n\n"</span>,tv2.tv_sec*<span class="number">1000000</span> + tv2.tv_usec - tv.tv_sec*<span class="number">1000000</span> - tv.tv_usec);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>即可进行计算。</p>
-<p>分别进行5次实验，耗时分别为(单位为μs)：<br>1491，1329，1178，2009，1470<br>平均耗时：1,495.4μs<br>可以发现，用并行指令集进行计算会快很多，加速比大概是2.19</p>
-<h2 id="用多线程来完成向量之和计算"><a href="#用多线程来完成向量之和计算" class="headerlink" title="用多线程来完成向量之和计算"></a>用多线程来完成向量之和计算</h2><p>使用mpi来实现多线程完成向量之和，代码如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mpi.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX_size 10000000</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> a[MAX_size], b[MAX_size], c[MAX_size];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">//cout&lt;&lt;"???\n";</span></span><br><span class="line">  <span class="keyword">int</span> numprocs, myid, source;</span><br><span class="line">  MPI_Status status;</span><br><span class="line">  MPI_Init(&amp;argc, &amp;argv);</span><br><span class="line">  MPI_Comm_rank(MPI_COMM_WORLD, &amp;myid);</span><br><span class="line">  MPI_Comm_size(MPI_COMM_WORLD, &amp;numprocs);</span><br><span class="line">  <span class="keyword">int</span> sub_size=MAX_size / (numprocs - <span class="number">1</span>);</span><br><span class="line"><span class="comment">//  cout&lt;&lt;"???\n";</span></span><br><span class="line">  <span class="keyword">if</span> (myid == <span class="number">0</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">tv</span>,<span class="title">tv2</span>;</span></span><br><span class="line">    gettimeofday(&amp;tv,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="comment">//cout&lt;&lt;"???\n";</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; numprocs; i++)</span><br><span class="line">    &#123;</span><br><span class="line">      MPI_Send(a + (i - <span class="number">1</span>) * sub_size, sub_size,</span><br><span class="line">               MPI_INT, i, i, MPI_COMM_WORLD);</span><br><span class="line">      MPI_Send(b + (i - <span class="number">1</span>) * sub_size, sub_size,</span><br><span class="line">               MPI_INT, i, i, MPI_COMM_WORLD);</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="comment">//  cout&lt;&lt;"???\n";</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; numprocs; i++)</span><br><span class="line">    &#123;</span><br><span class="line">      MPI_Recv(c + (i - <span class="number">1</span>) * sub_size, sub_size,</span><br><span class="line">               MPI_INT, i, i, MPI_COMM_WORLD, &amp;status);</span><br><span class="line">    &#125;</span><br><span class="line">    gettimeofday(&amp;tv2,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"time: %d\n"</span>,tv2.tv_sec*<span class="number">1000000</span> + tv2.tv_usec - tv.tv_sec*<span class="number">1000000</span> - tv.tv_usec);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">int</span> *tema = <span class="keyword">new</span> <span class="keyword">int</span>[sub_size];</span><br><span class="line">    <span class="keyword">int</span> *temb = <span class="keyword">new</span> <span class="keyword">int</span>[sub_size];</span><br><span class="line">    <span class="keyword">int</span> *temc = <span class="keyword">new</span> <span class="keyword">int</span>[sub_size];</span><br><span class="line">    MPI_Recv(tema, sub_size,</span><br><span class="line">             MPI_INT, <span class="number">0</span>, myid, MPI_COMM_WORLD, &amp;status);</span><br><span class="line">    MPI_Recv(temb, sub_size,</span><br><span class="line">            MPI_INT, <span class="number">0</span>, myid, MPI_COMM_WORLD,&amp;status);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;sub_size;i++)temc[i]=tema[i]+temb[i];</span><br><span class="line"><span class="comment">//    cout&lt;&lt;"?????\n";</span></span><br><span class="line">    MPI_Send(temc,sub_size,MPI_INT,<span class="number">0</span>,myid,MPI_COMM_WORLD);</span><br><span class="line">  &#125;</span><br><span class="line">  MPI_Finalize();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>分别对线程数量为3,5,6,9,11(即将数组分为2,4,5,8,10份)进行了实验，结果如下：</p>
-<p><img src="https://i.loli.net/2020/03/02/e4tHBE5ODVrqAh3.png" alt="image.png"></p>
-<p>可以发现消耗的时间比前面用并行指令集多很多，这应该是因为线程之间通信次数很多，消耗了很多时间，而本身要计算的任务并不复杂，因此多线程的优势并不能得以发挥。</p>
-<p>再使用OpenMP来进行多线程计算，这只需将串行的代码稍作修改即可。<br>代码如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> x;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sttoi</span><span class="params">(<span class="keyword">char</span>* s)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> ret=<span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;s[i]!=<span class="string">'\0'</span>;i++)&#123;</span><br><span class="line">    ret*=<span class="number">10</span>;</span><br><span class="line">    ret+=s[i]<span class="number">-48</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX=<span class="number">1e6</span>;</span><br><span class="line"><span class="keyword">int</span> a[MAX],b[MAX],c[MAX];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span>** argv)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> num=sttoi(argv[<span class="number">1</span>]);</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">begin</span>,<span class="title">end</span>;</span></span><br><span class="line">  gettimeofday(&amp;begin ,<span class="literal">NULL</span>);</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for num_threads(num)</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;MAX;i++)c[i]=a[i]+b[i];</span><br><span class="line">  gettimeofday(&amp;end ,<span class="literal">NULL</span>);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%d\n"</span>,end.tv_sec*<span class="number">1000000</span>+end.tv_usec-begin.tv_sec*<span class="number">1000000</span>-begin.tv_usec);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>对线程数分别为1-11做了5次实验，分别取平均值，绘图如下:<br>运行结果如下：<br><img src="https://i.loli.net/2020/03/12/dpemj3nNCBYA146.png" alt="image.png"><br>可以看到当线程数为4时，运行时间最短，大概是1500μs，当线程数增多时，运行时间变化并不规律。<br>绘制对应的加速比图像如下:<br><img src="https://i.loli.net/2020/03/12/6pNoCGa2KUWqEhT.png" alt="image.png"><br>当线程数为4时，加速比大概是2.3，略强于用并行指令集的情况。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/11/openmp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="reeeeeeeeeein">
-      <meta itemprop="description" content="SYSU 计算机专业大二在读">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="reeeeeeeeeein的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/11/openmp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">openmp学习笔记</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-03-11 14:03:51 / 修改时间：22:27:00" itemprop="dateCreated datePublished" datetime="2020-03-11T14:03:51+08:00">2020-03-11</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="openmp学习笔记"><a href="#openmp学习笔记" class="headerlink" title="openmp学习笔记"></a>openmp学习笔记</h1><p>主要参考这两篇博客:<br><a href="https://blog.csdn.net/ArrowYL/article/details/81094837" target="_blank" rel="noopener">https://blog.csdn.net/ArrowYL/article/details/81094837</a><br><a href="https://blog.csdn.net/YUNXIN221/article/details/103964460" target="_blank" rel="noopener">https://blog.csdn.net/YUNXIN221/article/details/103964460</a><br>在此向两位博主表示感谢。</p>
-<h2 id="几种常用的子句"><a href="#几种常用的子句" class="headerlink" title="几种常用的子句"></a>几种常用的子句</h2><p>openmp 指令一般以 #pragma omp 开头,后面接其他的子句。常用子句有:</p>
-<h3 id="parallel"><a href="#parallel" class="headerlink" title="parallel"></a>parallel</h3><p>用于指定接下来的代码块被并行执行，如<br><img src="https://i.loli.net/2020/03/11/besO4RPr27iI8f6.png" alt="image.png"><br>但如果把大括号去掉，则只有第一句被并行执行:<br><img src="https://i.loli.net/2020/03/11/eEFXiGguhsDRa3N.png" alt="image.png"></p>
-<h3 id="for"><a href="#for" class="headerlink" title="for"></a>for</h3><p>for子句一般与parallel一起用，可以使一段for循环被分配到多线程处理。注意，用户需要保证for循环中没有数据依赖问题，否则会得到错误结果。<br>正确示范:<br><img src="https://i.loli.net/2020/03/11/SNUovmHKAc8eDrs.png" alt="image.png"></p>
-<p>错误示范:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> fib[<span class="number">101</span>]=&#123;<span class="number">1</span>,<span class="number">1</span>&#125;;</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=<span class="number">20</span>;i++)fib[i]=fib[i<span class="number">-1</span>]+fib[i<span class="number">-2</span>];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;=<span class="number">20</span>;i++)<span class="built_in">printf</span>(<span class="string">"%d "</span>,fib[i]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果为<br><img src="https://i.loli.net/2020/03/11/9AEN8UZJCh1lpik.png" alt="image.png"><br>可以看到,只有前几项是正确的结果，后面的数都是0,这是因为openmp将for循环分给多个线程执行,后面的线程执行的时候fib[i-1]和fib[i-2]还没被算出来。</p>
-<p>此外，需注意的是使用for子句还对for循环有很多要求:<br>1/循环的变量变量（就是i）必须是整形，其他的(double等)都不行。<br>2.循环的比较条件必须是&lt; &lt;= &gt; &gt;=中的一种<br>3.循环的增量部分必须是增减一个不变的值（即每次循环是不变的）。<br>4.如果比较符号是&lt; &lt;=，那每次循环i应该增加，反之应该减小<br>5.循环必须是没有奇奇怪怪的东西，不能从内部循环跳到外部循环，goto和break只能在循环内部跳转，异常必须在循环内部被捕获。</p>
-<h3 id="sections和section"><a href="#sections和section" class="headerlink" title="sections和section"></a>sections和section</h3><p>sections 子句将每个section分给一个线程执行，不同section之间是并行的。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel sections<span class="comment">//注意这里一定要换行不然会报错</span></span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp section</span></span><br><span class="line">    &#123;<span class="comment">//这里也要换行</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"section 1 threadid=%d\n"</span>,omp_get_thread_num());</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp section</span></span><br><span class="line">    &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"kjaenknfe\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp section</span></span><br><span class="line">    &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"section 3 threadid=%d\n"</span>,omp_get_thread_num());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp section</span></span><br><span class="line">    &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"section 4 threadid=%d\n"</span>,omp_get_thread_num());  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="private-firstprivate-lastprivate"><a href="#private-firstprivate-lastprivate" class="headerlink" title="private,firstprivate,lastprivate"></a>private,firstprivate,lastprivate</h3><p>private(x)子句为每个线程声明一个私有变量x，不同线程的x之间没有联系，即使前面的程序中有x这个变量也不会干扰。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> x=<span class="number">100</span>;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">"x="</span>&lt;&lt;x&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel private(x)</span></span><br><span class="line">  &#123;</span><br><span class="line">    x=omp_get_thread_num();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"In thread %d,x=%d\n"</span>,omp_get_thread_num(),x);</span><br><span class="line">  &#125;</span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;<span class="string">"x="</span>&lt;&lt;x&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果:<br><img src="https://i.loli.net/2020/03/11/1WIVObn7YHBd8XU.png" alt="image.png"><br>firstprivate(x)子句使子线程的x继承主线程中的x值,不同线程之间的x没有联系,而子线程中改变x的值并不会导致主线程中的x的值改变。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> x=<span class="number">100</span>;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">"x="</span>&lt;&lt;x&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel firstprivate(x)</span></span><br><span class="line">  &#123;</span><br><span class="line">    x+=omp_get_thread_num();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"In thread %d,x=%d\n"</span>,omp_get_thread_num(),x);</span><br><span class="line">  &#125;</span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;<span class="string">"x="</span>&lt;&lt;x&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果:<br><img src="https://i.loli.net/2020/03/11/1WIVObn7YHBd8XU.png" alt="image.png"><br>lastprivate(x)子句的作用与firstprivate相反，它为每个子线程中声明变量x，但x并不继承主程序中x的值。当子线程结束之后，把子线程的x的值赋给主线程中的x。</p>
-<p>在for循环中使用lastprivate:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> x=<span class="number">100</span>;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">"x="</span>&lt;&lt;x&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for firstprivate(x),lastprivate(x)</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">20</span>;i++)&#123;</span><br><span class="line">      x+=i;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"%d %d\n"</span>,omp_get_thread_num(),x);</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;<span class="string">"x="</span>&lt;&lt;x&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>注意，如果是在for循环中使用lastprivate(x)，则会将最后一个线程的x的最终值赋给主变量中的x。这里的最后一个线程指的是逻辑上的最后一个，而不是最后一个结束的，如这里线程号为11的线程是最后一个，它的x的值最终是119，所以把119赋给主程序中的x。</p>
-<p><img src="https://i.loli.net/2020/03/11/iQYW82pEv3VL1fH.png" alt="image.png"></p>
-<p>在sections中使用lastprivate:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> x=<span class="number">100</span>;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">"x="</span>&lt;&lt;x&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel sections lastprivate(x)</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp section</span></span><br><span class="line">    &#123;</span><br><span class="line">      x=omp_get_thread_num();</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"section 1:x=%d\n"</span>,x);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp section</span></span><br><span class="line">    &#123;</span><br><span class="line">      x=omp_get_thread_num();</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"section 2:x=%d\n"</span>,x);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp section</span></span><br><span class="line">    &#123;</span><br><span class="line">      x=omp_get_thread_num();</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"section 3:x=%d\n"</span>,x);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp section</span></span><br><span class="line">    &#123;</span><br><span class="line">      x=omp_get_thread_num();</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"section 4:x=%d\n"</span>,x);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;<span class="string">"x="</span>&lt;&lt;x&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>而如果是在sections里使用,则会把最后一个section的x赋值回去。<br><img src="https://i.loli.net/2020/03/11/4bous52hvGQnXFw.png" alt="image.png"></p>
-<h3 id="threadprivate"><a href="#threadprivate" class="headerlink" title="threadprivate"></a>threadprivate</h3><p>threadprivate(x)将x(一般是全局变量)复制到各个子线程，在其他线程中修改x的值不会影响主程序中x的值，但第0个线程中修改x的值会导致主程序中x的值一并修改。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> global_x = <span class="number">10</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> omp threadprivate(global_x)</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">100</span>;i++)&#123;</span><br><span class="line">  global_x=i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> omp parallel</span></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"in thread%d: %d\n"</span>,omp_get_thread_num(),global_x);</span><br><span class="line"></span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;<span class="string">"In main thread: "</span>&lt;&lt;global_x&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果：<br><img src="https://i.loli.net/2020/03/11/L7F9v5nJyb8mj6B.png" alt="image.png"></p>
-<h3 id="copyin"><a href="#copyin" class="headerlink" title="copyin"></a>copyin</h3><p>copyin(x)等于把threadprivate变量x全局变量广播一遍，让所有线程的x值与主进程相同。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> A=<span class="number">100</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> omp threadprivate(A)</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">omp_set_dynamic(<span class="number">0</span>);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">100</span>;i++)&#123;</span><br><span class="line">  A=i;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> omp parallel</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"The value of A in thread without copyin %d: %d\n"</span>,omp_get_thread_num(),A);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> omp parallel copyin(A)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"The value of A in thread %d: %d\n"</span>,omp_get_thread_num(),A);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果:<br><img src="https://i.loli.net/2020/03/11/A3b75vxRLMZIFha.png" alt="image.png"></p>
-<h2 id="openmp中的任务调度问题"><a href="#openmp中的任务调度问题" class="headerlink" title="openmp中的任务调度问题"></a>openmp中的任务调度问题</h2><p>对于一个for循环，编译器要考虑将不同的部分调度给不同的线程执行。默认情况下openmp大多采用静态调度方法，即假设循环需要进行n次,有k个线程，则前$n%k$个线程执行 $\left\lceil\dfrac{n}{k}\right\rceil$次,后$n-n%k$个线程执行$\left\lfloor\dfrac{n}{k}\right\rfloor$次。</p>
-<p>OpenMP提供了schedule子句来实现任务的调度。schedule子句格式：schedule(type,[size])。</p>
-<p>　　参数type是指调度的类型，可以取值为static，dynamic，guided，runtime四种值。其中runtime允许在运行时确定调度类型，因此实际调度策略只有前面三种。</p>
-<p>1 静态调度static<br>如果参数[size]为空，则采用默认的调度方式;否则将循环的前size次由第一个线程执行，size+1 —— 2<em>size 次由第二个线程执行……第(k-1)</em>size+1——k*size次由第k个线程执行。如果k*size&lt;n，则再分配size次给第一个线程、分配size个给第二个线程……</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for schedule(static,3)</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">50</span>;i++)&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d: Thread %d\n"</span>,i,omp_get_thread_num());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果:<br><img src="https://i.loli.net/2020/03/11/MCRYrqjWoINFJlz.png" alt="image.png"></p>
-<p>2 动态调度dynamic<br>动态调度依赖于运行时的状态动态确定线程所执行的迭代，也就是线程执行完已经分配的任务后，会去领取还有的任务（与静态调度最大的不同，每个线程完成的任务数量可能不一样）。由于线程启动和执行完的时间不确定，所以迭代被分配到哪个线程是无法事先知道的。</p>
-<p>　　当不使用size 时，是将迭代逐个地分配到各个线程。当使用size 时，逐个分配size个迭代给各个线程，这个用法类似静态调度。</p>
-<p>3 启发式调度guided<br> 　　采用启发式调度方法进行调度，每次分配给线程迭代次数不同，开始比较大，以后逐渐减小。开始时每个线程会分配到较大的迭代块，之后分配到的迭代块会逐渐递减。迭代块的大小会按指数级下降到指定的size大小，如果没有指定size参数，那么迭代块大小最小会降到1。</p>
-<p>　　size表示每次分配的迭代次数的最小值，由于每次分配的迭代次数会逐渐减少，少到size时，将不再减少。具体采用哪一种启发式算法，需要参考具体的编译器和相关手册的信息。</p>
-<h2 id="一点小建议"><a href="#一点小建议" class="headerlink" title="一点小建议"></a>一点小建议</h2><p>尽量不要用在并行执行的程序块里cout。原因很简单，比如cout&lt;&lt;a&lt;&lt;b,可能第一个线程刚输出了a还没输出b，第二个线程由输出了a，就乱套了，比如下面的例子:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)<span class="built_in">cout</span>&lt;&lt;<span class="string">"Thread:"</span>&lt;&lt;omp_get_thread_num()&lt;&lt;<span class="string">"\n"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://i.loli.net/2020/03/11/Yt3jJ8muiwck7We.png" alt="image.png"></p>
-<p>但如果是使用printf就这个问题:<br><img src="https://i.loli.net/2020/03/11/vesrBXNMtDYklVi.png" alt="image.png"></p>
-<p>如果要统计一段openmp并行化的程序的运行时间，不要用clock()函数。这是因为clock()得到的是cpu时间，会把多个核的时间加在一起;而我们想要的一般是现实中经过的时间，所以要用omp_get_wtime()函数。<br>举个例子:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> x;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">300000000</span>;i++);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="keyword">double</span> t1=omp_get_wtime();</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">12</span>;i++)f();</span><br><span class="line">  <span class="keyword">double</span> t2=omp_get_wtime();</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;t2-t1&lt;&lt;<span class="string">"s\n"</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">double</span> t3=clock();</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">12</span>;i++)f();</span><br><span class="line">  <span class="keyword">double</span> t4=clock();</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;(t4-t3)/<span class="number">1e6</span>&lt;&lt;<span class="string">"s\n"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果如下：<br><img src="https://i.loli.net/2020/03/11/MSaNuED2nRJBQVW.png" alt="image.png"><br>用clock()统计出来的时间有6.9s，但事实上程序运行的时间不到2s。openmp在我的电脑上默认使用12线程，所以大概是clock()函数会把每个线程的时间都加起来。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/10/MPI%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="reeeeeeeeeein">
-      <meta itemprop="description" content="SYSU 计算机专业大二在读">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="reeeeeeeeeein的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/10/MPI%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">MPI学习笔记</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-03-10 17:24:12" itemprop="dateCreated datePublished" datetime="2020-03-10T17:24:12+08:00">2020-03-10</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>利用MPI可以加速排序算法。<br>调用c++标准库的sort对1e7的数据进行排序，大约需要2.2秒的时间。</p>
-<p><img src="https://i.loli.net/2020/02/27/Qxu9tKsT3dfvIAL.png" alt="15826979841.jpg"></p>
-<p>使用MPI将程序并行化，可以大大加快速度。</p>
-<h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><p>将主线程待排序的数组分为两部分，送到两个子线程排序，排完之后再送到主线程，将它们合并起来。</p>
-<p>代码如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;mpi.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX_size=<span class="number">1e7</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> numprocs, myid, source;</span><br><span class="line">    MPI_Status status;</span><br><span class="line">    MPI_Init(&amp;argc, &amp;argv);</span><br><span class="line">    MPI_Comm_rank(MPI_COMM_WORLD, &amp;myid);</span><br><span class="line">    MPI_Comm_size(MPI_COMM_WORLD, &amp;numprocs);  </span><br><span class="line">    <span class="keyword">int</span> siz=MAX_size/<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span>(myid==<span class="number">0</span>)&#123;</span><br><span class="line">      <span class="keyword">int</span> *nums=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size+<span class="number">3</span>];</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;MAX_size;i++)&#123;</span><br><span class="line">        nums[i]=rand();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">int</span> t1=clock();</span><br><span class="line">      MPI_Send(nums,siz,MPI_INT,<span class="number">1</span>,<span class="number">1</span>,MPI_COMM_WORLD);</span><br><span class="line">      MPI_Send(nums+siz,siz,MPI_INT,<span class="number">2</span>,<span class="number">2</span>,MPI_COMM_WORLD);</span><br><span class="line">      <span class="keyword">int</span>* rec1=<span class="keyword">new</span> <span class="keyword">int</span>[siz+<span class="number">3</span>],*rec2=<span class="keyword">new</span> <span class="keyword">int</span>[siz+<span class="number">3</span>];</span><br><span class="line">      MPI_Recv(rec1,siz,MPI_INT,<span class="number">1</span>,<span class="number">1</span>,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      MPI_Recv(rec2,siz,MPI_INT,<span class="number">2</span>,<span class="number">2</span>,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      <span class="keyword">int</span> i=<span class="number">0</span>,j=<span class="number">0</span>,loc=<span class="number">0</span>;</span><br><span class="line">      <span class="keyword">while</span>(i&lt;siz&amp;&amp;j&lt;siz)&#123;</span><br><span class="line">        <span class="keyword">if</span>(rec1[i]&lt;rec2[j])nums[loc++]=rec1[i++];</span><br><span class="line">        <span class="keyword">else</span> nums[loc++]=rec2[j++];</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">while</span>(i&lt;siz)nums[loc++]=rec1[i++];</span><br><span class="line">      <span class="keyword">while</span>(j&lt;siz)nums[loc++]=rec2[j++];</span><br><span class="line">      <span class="keyword">int</span> t2=clock();</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;t2-t1&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="keyword">int</span>* rec=<span class="keyword">new</span> <span class="keyword">int</span>[siz+<span class="number">3</span>];</span><br><span class="line">      MPI_Recv(rec,siz,MPI_INT,<span class="number">0</span>,myid,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      sort(rec,rec+siz);</span><br><span class="line">      MPI_Send(rec,siz,MPI_INT,<span class="number">0</span>,myid,MPI_COMM_WORLD);</span><br><span class="line">    &#125;</span><br><span class="line">    MPI_Finalize();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>大概需要1.2秒的时间：<br><img src="https://i.loli.net/2020/02/27/OB5tGf1Q9z38EwJ.png" alt="1582699014283.png"></p>
-<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>将数组分为4部分，在4个子线程里排序，再两个两个合并起来，最后再送到主线程里合并。总共有7个线程。<br>代码如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mpi.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX_size=<span class="number">1e7</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get_state</span><span class="params">(<span class="keyword">int</span> myid)</span></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(myid==<span class="number">0</span>)<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span>(myid&lt;<span class="number">3</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> numprocs, myid, source;</span><br><span class="line">    MPI_Status status;</span><br><span class="line">    MPI_Init(&amp;argc, &amp;argv);</span><br><span class="line">    MPI_Comm_rank(MPI_COMM_WORLD, &amp;myid);</span><br><span class="line">    MPI_Comm_size(MPI_COMM_WORLD, &amp;numprocs);</span><br><span class="line">    <span class="keyword">int</span> state=get_state(myid);</span><br><span class="line">    <span class="keyword">if</span>(state==<span class="number">1</span>)&#123;</span><br><span class="line">      <span class="keyword">int</span>* nums=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size+<span class="number">3</span>];</span><br><span class="line">      <span class="keyword">int</span> son1=(myid&lt;&lt;<span class="number">1</span>)+<span class="number">1</span>,son2=(myid&lt;&lt;<span class="number">1</span>)+<span class="number">2</span>;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;MAX_size;i++)nums[i]=rand();</span><br><span class="line">      <span class="keyword">int</span> t1=clock();</span><br><span class="line">      MPI_Send(nums,MAX_size/<span class="number">2</span>,MPI_INT,son1,myid*numprocs+son1,MPI_COMM_WORLD);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      MPI_Send(nums+MAX_size/<span class="number">2</span>,MAX_size/<span class="number">2</span>,MPI_INT,son2,myid*numprocs+son2,MPI_COMM_WORLD);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      <span class="keyword">int</span>* rec1=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size/<span class="number">2</span>+<span class="number">3</span>],*rec2=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size/<span class="number">2</span>+<span class="number">3</span>];</span><br><span class="line">      MPI_Recv(rec1,MAX_size/<span class="number">2</span>,MPI_INT,son1,myid*numprocs+son1,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      MPI_Recv(rec2,MAX_size/<span class="number">2</span>,MPI_INT,son2,myid*numprocs+son2,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      <span class="keyword">int</span> i=<span class="number">0</span>,j=<span class="number">0</span>,size=MAX_size/<span class="number">2</span>,loc=<span class="number">0</span>;</span><br><span class="line">      <span class="keyword">while</span>(i&lt;size&amp;&amp;j&lt;size)&#123;</span><br><span class="line">        <span class="keyword">if</span>(rec1[i]&lt;rec2[j])&#123;</span><br><span class="line">          nums[loc++]=rec1[i++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">          nums[loc++]=rec2[j++];</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">while</span>(i&lt;size)&#123;nums[loc++]=rec1[i++];&#125;</span><br><span class="line">      <span class="keyword">while</span>(j&lt;size)&#123;nums[loc++]=rec2[j++];&#125;</span><br><span class="line"><span class="comment">//      for(int i=0;i&lt;MAX_size;i++)cout&lt;&lt;nums[i]&lt;&lt;endl;</span></span><br><span class="line">      <span class="keyword">int</span> t2=clock();</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;t2-t1&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(state==<span class="number">0</span>)&#123;</span><br><span class="line">      <span class="keyword">int</span>* nums=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size/<span class="number">2</span>+<span class="number">3</span>];</span><br><span class="line">      <span class="keyword">int</span>* rec1=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size/<span class="number">4</span>+<span class="number">3</span>],*rec2=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size/<span class="number">4</span>+<span class="number">3</span>];</span><br><span class="line">      <span class="keyword">int</span> son1=(myid&lt;&lt;<span class="number">1</span>)+<span class="number">1</span>,son2=(myid&lt;&lt;<span class="number">1</span>)+<span class="number">2</span>,fa=(myid<span class="number">-1</span>)&gt;&gt;<span class="number">1</span>;</span><br><span class="line">      MPI_Recv(nums,MAX_size/<span class="number">2</span>,MPI_INT,fa,fa*numprocs+myid,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      MPI_Send(nums,MAX_size/<span class="number">4</span>,MPI_INT,son1,myid*numprocs+son1,MPI_COMM_WORLD);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      MPI_Send(nums+MAX_size/<span class="number">4</span>,MAX_size/<span class="number">4</span>,MPI_INT,son2,myid*numprocs+son2,MPI_COMM_WORLD);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      MPI_Recv(rec1,MAX_size/<span class="number">4</span>,MPI_INT,son1,myid*numprocs+son1,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      MPI_Recv(rec2,MAX_size/<span class="number">4</span>,MPI_INT,son2,myid*numprocs+son2,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      <span class="keyword">int</span> i=<span class="number">0</span>,j=<span class="number">0</span>,size=MAX_size/<span class="number">4</span>,loc=<span class="number">0</span>;</span><br><span class="line">      <span class="keyword">while</span>(i&lt;size&amp;&amp;j&lt;size)&#123;</span><br><span class="line">        <span class="keyword">if</span>(rec1[i]&lt;rec2[j])&#123;</span><br><span class="line">          nums[loc++]=rec1[i++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">          nums[loc++]=rec2[j++];</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">while</span>(i&lt;size)&#123;nums[loc++]=rec1[i++];&#125;</span><br><span class="line">      <span class="keyword">while</span>(j&lt;size)&#123;nums[loc++]=rec2[j++];&#125;</span><br><span class="line">      MPI_Send(nums,MAX_size/<span class="number">2</span>,MPI_INT,fa,fa*numprocs+myid,MPI_COMM_WORLD);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="keyword">int</span>* nums=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size/<span class="number">4</span>+<span class="number">3</span>];</span><br><span class="line">      <span class="keyword">int</span> fa=(myid<span class="number">-1</span>)&gt;&gt;<span class="number">1</span>;</span><br><span class="line">      MPI_Recv(nums,MAX_size/<span class="number">4</span>,MPI_INT,fa,fa*numprocs+myid,MPI_COMM_WORLD,&amp;status)；</span><br><span class="line"><span class="comment">//      cout&lt;&lt;myid&lt;&lt;endl;</span></span><br><span class="line">      sort(nums,nums+MAX_size/<span class="number">4</span>);</span><br><span class="line">      MPI_Send(nums,MAX_size/<span class="number">4</span>,MPI_INT,fa,fa*numprocs+myid,MPI_COMM_WORLD);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//    cout&lt;&lt;"??\n";</span></span><br><span class="line">    MPI_Finalize();</span><br><span class="line">  <span class="comment">//  cout&lt;&lt;myid&lt;&lt;"end\n";</span></span><br><span class="line">&#125; <span class="comment">/* end main */</span></span><br></pre></td></tr></table></figure>
-
-<p>这种方法大约需要0.87秒：<br><img src="https://i.loli.net/2020/02/27/puQ9KAsJ7VDLr2W.png" alt="1582699491051.png"></p>
-<h2 id="方法三"><a href="#方法三" class="headerlink" title="方法三"></a>方法三</h2><p>将数组分到多个线程里排序，再送回主线程，直接进行排序：<br>代码如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;mpi.h&gt;</span></span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX_size=<span class="number">1e7</span>;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> numprocs, myid, source;</span><br><span class="line">    MPI_Status status;</span><br><span class="line">    MPI_Init(&amp;argc, &amp;argv);</span><br><span class="line">    MPI_Comm_rank(MPI_COMM_WORLD, &amp;myid);</span><br><span class="line">    MPI_Comm_size(MPI_COMM_WORLD, &amp;numprocs);  </span><br><span class="line">    <span class="keyword">int</span> sub_size=MAX_size/(numprocs<span class="number">-1</span>);</span><br><span class="line">    <span class="keyword">int</span> siz[<span class="number">104</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;numprocs;i++)siz[i]=MAX_size/(numprocs<span class="number">-1</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=MAX_size%(numprocs<span class="number">-1</span>);i++)siz[i]++;</span><br><span class="line">    <span class="keyword">if</span>(!myid)&#123;</span><br><span class="line">      <span class="keyword">int</span>* num=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size];</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;MAX_size;i++)num[i]=rand();</span><br><span class="line">      <span class="keyword">int</span> t1=clock();</span><br><span class="line">      <span class="keyword">int</span> loc[numprocs]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>,*tem=num;i&lt;numprocs;i++,tem+=siz[i])&#123;</span><br><span class="line">  <span class="comment">//      cout&lt;&lt;i&lt;&lt;endl;</span></span><br><span class="line">        MPI_Send(tem,siz[i],MPI_INT,i,i,MPI_COMM_WORLD);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">int</span>** ans=<span class="keyword">new</span> <span class="keyword">int</span>*[numprocs];</span><br><span class="line"><span class="comment">//      cout&lt;&lt;"??\n";</span></span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;numprocs;i++)&#123;</span><br><span class="line">        ans[i]=<span class="keyword">new</span> <span class="keyword">int</span>[siz[i]+<span class="number">3</span>];</span><br><span class="line">        MPI_Recv(ans[i],siz[i],MPI_INT,i,i,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;MAX_size;i++)&#123;</span><br><span class="line">        <span class="keyword">int</span> minval=(<span class="number">1l</span>l&lt;&lt;<span class="number">31</span>)<span class="number">-1</span>,locc=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;numprocs;i++)&#123;</span><br><span class="line">          <span class="keyword">if</span>(loc[i]&lt;siz[i]&amp;&amp;ans[i][loc[i]]&lt;minval)minval=ans[i][loc[i]],locc=i;</span><br><span class="line">        &#125;</span><br><span class="line">        num[i]=minval,loc[locc]++;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">int</span> t2=clock();</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;t2-t1&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="keyword">int</span>* num=<span class="keyword">new</span> <span class="keyword">int</span>[siz[myid]+<span class="number">3</span>];</span><br><span class="line">      MPI_Recv(num,siz[myid],MPI_INT,<span class="number">0</span>,myid,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      sort(num,num+siz[myid]);</span><br><span class="line">      MPI_Send(num,siz[myid],MPI_INT,<span class="number">0</span>,myid,MPI_COMM_WORLD);</span><br><span class="line">    &#125;</span><br><span class="line">    MPI_Finalize();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>对线程数量分别为4,5,6,7,8的情况做了5次实验，结果如下(单位为μs)：</p>
-<table>
-<thead>
-<tr>
-<th>线程数</th>
-<th>平均用时</th>
-<th>最短用时</th>
-<th>最长用时</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>4</td>
-<td>996875</td>
-<td>984375</td>
-<td>1015625</td>
-</tr>
-<tr>
-<td>5</td>
-<td>868750</td>
-<td>843750</td>
-<td>890625</td>
-</tr>
-<tr>
-<td>6</td>
-<td>865625</td>
-<td>843750</td>
-<td>890625</td>
-</tr>
-<tr>
-<td>7</td>
-<td>890625</td>
-<td>875000</td>
-<td>906250</td>
-</tr>
-<tr>
-<td>8</td>
-<td>906250</td>
-<td>859375</td>
-<td>953125</td>
-</tr>
-</tbody></table>
-<p><img src="https://i.loli.net/2020/02/27/wOnageDTA9Ktvux.png" alt="1582702015001.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/05/MPI%E5%85%A5%E9%97%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="reeeeeeeeeein">
-      <meta itemprop="description" content="SYSU 计算机专业大二在读">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="reeeeeeeeeein的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/05/MPI%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">MPI入门</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-03-05 21:58:15" itemprop="dateCreated datePublished" datetime="2020-03-05T21:58:15+08:00">2020-03-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-28 16:57:31" itemprop="dateModified" datetime="2020-02-28T16:57:31+08:00">2020-02-28</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在WSL里安装MPI非常方便，只需执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install -y build-essential mpich</span><br></pre></td></tr></table></figure>
-
-<p>即可。<br>这样就可以在终端中使用mpi了，但为了方便使用，还需在VSCode中添加路径。<br>在c_cpp_properties.json的includePath中添加”/usr/include/mpich”即可。</p>
-<p>用mpi编写一个helloworld程序：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;mpi.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span> **argv)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> numprocs, myid;</span><br><span class="line">    MPI_Status status;</span><br><span class="line">    MPI_Init(&amp;argc, &amp;argv);<span class="comment">//</span></span><br><span class="line">    MPI_Comm_rank(MPI_COMM_WORLD, &amp;myid);<span class="comment">//这里myid表示这个线程是第几个线程，如果myid是0则是第一个线程</span></span><br><span class="line">    MPI_Comm_size(MPI_COMM_WORLD, &amp;numprocs);  <span class="comment">//numprocs表示总的线程数量</span></span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"helloworld\n"</span>;</span><br><span class="line">    MPI_Finalize();<span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上述代码由许多值得注意的地方：</p>
-<p>1.注意不能使用 bits/stdc++ 这个库，否则会出错。</p>
-<p>2.main函数要带命令行参数。</p>
-<p>3.MPI_Init函数表示从这一行开始，后面的代码会被并行执行，即在每个线程中执行一次。其他的MPI<br>函数必须在MPI_Init函数之后。</p>
-<p>4.MPI_Comm_rank函数获得本线程是第几个线程，把线程号存储在myid中。第1个线程(也称为主线程)对应的myid是0，<br>第二个线程对应的myid是1……以此类推。</p>
-<p>5.MPI_Comm_size得到线程的数量。</p>
-<p>6.在网上查阅资料了解到，MPI_Finalize函数将并行部分终止，除了主线程外的线程都会被终止，主线程的串行部分还可以正常执行。但事实上我在本地运行程序时，MPI_Finalize函数之后的部分还是会被并行执行，我也不知道为什么。</p>
-<p>写完之后，就可以在终端执行程序了。</p>
-<p><img src="https://i.loli.net/2020/02/28/ApG7uIckXLoWZKF.png" alt="image.png"></p>
-<p>用mpic++编译源代码，生成一个名为hw的可执行文件。再用mpirun运行文件，4表示4个线程，所以输出时4个helloworld。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1173,7 +1292,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

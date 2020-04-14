@@ -21,15 +21,15 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="并行与分布式计算笔记2">
+  <meta name="description" content="并行与分布式计算笔记2主函数之外的变量是全局的，被所有线程共享，一般用于通信。在堆上申请的，可能是共享的。栈上的变量一般是私有的，只有某个线程能够使用。 线程是有限的，如果创建的线程太多，对操作系统而言是个灾难。创建一个线程大概要1e4个cpu时钟，线程间切换大概要1e3个cpu时钟。 线程的调度取决于:操作系统的硬件，如果线程太多会执行不过来。调度器的设计。程序员的干预，可以设定线程跑在哪个CP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="并行与分布式计算笔记2">
 <meta property="og:url" content="http://yoursite.com/2020/03/16/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E7%AC%94%E8%AE%B02/index.html">
 <meta property="og:site_name" content="reeeeeeeeeein的博客">
-<meta property="og:description" content="并行与分布式计算笔记2">
+<meta property="og:description" content="并行与分布式计算笔记2主函数之外的变量是全局的，被所有线程共享，一般用于通信。在堆上申请的，可能是共享的。栈上的变量一般是私有的，只有某个线程能够使用。 线程是有限的，如果创建的线程太多，对操作系统而言是个灾难。创建一个线程大概要1e4个cpu时钟，线程间切换大概要1e3个cpu时钟。 线程的调度取决于:操作系统的硬件，如果线程太多会执行不过来。调度器的设计。程序员的干预，可以设定线程跑在哪个CP">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-03-15T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-03-16T02:05:16.382Z">
+<meta property="article:modified_time" content="2020-03-17T09:29:33.831Z">
 <meta property="article:author" content="reeeeeeeeeein">
 <meta property="article:tag" content="并行与分布式计算">
 <meta name="twitter:card" content="summary">
@@ -190,10 +190,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-03-16 00:00:00 / 修改时间：10:05:16" itemprop="dateCreated datePublished" datetime="2020-03-16T00:00:00+08:00">2020-03-16</time>
+              <time title="创建时间：2020-03-16 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-16T00:00:00+08:00">2020-03-16</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-17 17:29:33" itemprop="dateModified" datetime="2020-03-17T17:29:33+08:00">2020-03-17</time>
+              </span>
 
           
             <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
@@ -213,7 +219,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="并行与分布式计算笔记2"><a href="#并行与分布式计算笔记2" class="headerlink" title="并行与分布式计算笔记2"></a>并行与分布式计算笔记2</h1>
+        <h1 id="并行与分布式计算笔记2"><a href="#并行与分布式计算笔记2" class="headerlink" title="并行与分布式计算笔记2"></a>并行与分布式计算笔记2</h1><p>主函数之外的变量是全局的，被所有线程共享，一般用于通信。<br>在堆上申请的，可能是共享的。<br>栈上的变量一般是私有的，只有某个线程能够使用。</p>
+<p>线程是有限的，如果创建的线程太多，对操作系统而言是个灾难。<br>创建一个线程大概要1e4个cpu时钟，线程间切换大概要1e3个cpu时钟。</p>
+<p>线程的调度取决于:<br>操作系统的硬件，如果线程太多会执行不过来。<br>调度器的设计。<br>程序员的干预，可以设定线程跑在哪个CPU核心。</p>
+<p>有一些硬件本身支持多线程，线程间切换会快很多，大概10左右cpu时钟。<br>线程切换:<br>执行一定指令后切换(细粒度)<br>当线程遇到需要花很多时间的操作如cache miss切换，线程会off-cpu。‘；(粗粒度)</p>
+<p>将ILP和TLP结合<br>TLP是将几个指令流同时进行，可以把这里的指令换成ILP的指令。<br>这种方法称为同时多线程(Simultaneous Multi-threading),Intel称之为超线程。</p>
+<p>内存系统的latency和bandwidth<br>latency是请求的发出到返回的时间。<br>bandwidth是单位时间内能从内存中取出的数据量。</p>
+
     </div>
 
     
@@ -234,7 +246,10 @@
     <a href="/2020/03/12/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A1/" rel="prev" title="并行与分布式计算作业1">
       <i class="fa fa-chevron-left"></i> 并行与分布式计算作业1
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/28/fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" rel="next" title="fat12文件系统">
+      fat12文件系统 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -307,12 +322,12 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
