@@ -165,6 +165,156 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/16/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E7%AC%94%E8%AE%B02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/16/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E7%AC%94%E8%AE%B02/" class="post-title-link" itemprop="url">并行与分布式计算笔记2</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-16 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-16T00:00:00+08:00">2020-03-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-17 17:29:33" itemprop="dateModified" datetime="2020-03-17T17:29:33+08:00">2020-03-17</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="并行与分布式计算笔记2"><a href="#并行与分布式计算笔记2" class="headerlink" title="并行与分布式计算笔记2"></a>并行与分布式计算笔记2</h1><p>主函数之外的变量是全局的，被所有线程共享，一般用于通信。<br>在堆上申请的，可能是共享的。<br>栈上的变量一般是私有的，只有某个线程能够使用。</p>
+<p>线程是有限的，如果创建的线程太多，对操作系统而言是个灾难。<br>创建一个线程大概要1e4个cpu时钟，线程间切换大概要1e3个cpu时钟。</p>
+<p>线程的调度取决于:<br>操作系统的硬件，如果线程太多会执行不过来。<br>调度器的设计。<br>程序员的干预，可以设定线程跑在哪个CPU核心。</p>
+<p>有一些硬件本身支持多线程，线程间切换会快很多，大概10左右cpu时钟。<br>线程切换:<br>执行一定指令后切换(细粒度)<br>当线程遇到需要花很多时间的操作如cache miss切换，线程会off-cpu。‘；(粗粒度)</p>
+<p>将ILP和TLP结合<br>TLP是将几个指令流同时进行，可以把这里的指令换成ILP的指令。<br>这种方法称为同时多线程(Simultaneous Multi-threading),Intel称之为超线程。</p>
+<p>内存系统的latency和bandwidth<br>latency是请求的发出到返回的时间。<br>bandwidth是单位时间内能从内存中取出的数据量。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/12/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/12/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A1/" class="post-title-link" itemprop="url">并行与分布式计算作业1</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-12 22:42:47" itemprop="dateCreated datePublished" datetime="2020-03-12T22:42:47+08:00">2020-03-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="并行与分布式计算作业1"><a href="#并行与分布式计算作业1" class="headerlink" title="并行与分布式计算作业1"></a>并行与分布式计算作业1</h1><h2 id="作业题目"><a href="#作业题目" class="headerlink" title="作业题目"></a>作业题目</h2><p>现代处理器如Intel、ARM、AMD、Power以及国产CPU如华为鲲鹏等，均包含了并行指令集合，① 请调查这些处理器中的并行指 令集，并选择其中一种进行编程练习，计算两个各包含10^6个整数的向量之和。 此外，② 现代操作系统为了发挥多核的优势，支持多线程并行编程模型，请将问题①用多线程的方式实现，线程实现的语言不限，可以是Java，也可以是 C/C++。</p>
+<h2 id="用串行的方法完成向量之和计算"><a href="#用串行的方法完成向量之和计算" class="headerlink" title="用串行的方法完成向量之和计算"></a>用串行的方法完成向量之和计算</h2><p>为了进行对照，先写一个串行的程序：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Size 1000000</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> a[Size],b[Size],c[Size];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">tv</span>,<span class="title">tv2</span>;</span></span><br><span class="line">    gettimeofday(&amp;tv,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Size;i++)c[i]=a[i]+b[i];</span><br><span class="line">    gettimeofday(&amp;tv2,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"time: %d\n"</span>,tv2.tv_sec*<span class="number">1000000</span> + tv2.tv_usec - tv.tv_sec*<span class="number">1000000</span> - tv.tv_usec);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>进行了5次实验，结果如下：<br><img src="https://i.loli.net/2020/03/02/ftERVcS28Zq1O5h.png" alt="image.png"><br>平均耗时：3,276.2μs</p>
+<h2 id="用并行指令集axv来完成向量之和计算"><a href="#用并行指令集axv来完成向量之和计算" class="headerlink" title="用并行指令集axv来完成向量之和计算"></a>用并行指令集axv来完成向量之和计算</h2><p>首先在<a href="https://github.com/chen0031/AVX-AVX2-Example-Code" target="_blank" rel="noopener">https://github.com/chen0031/AVX-AVX2-Example-Code</a>中下载文件夹，在wsl中cd进入文件夹，即可用make命令进行编译，用make run命令运行。</p>
+<p><img src="https://i.loli.net/2020/03/02/d2uWqbMJlsU5T6P.png" alt="image.png"></p>
+<p><img src="https://i.loli.net/2020/03/02/a4PGxXndvMmhOpg.png" alt="image.png"></p>
+<p>然后执行 cd ./Arithmetic_Intrinsics/src，将其中的add.c文件修改为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Author:  TripleZ&lt;me@triplez.cn&gt;</span></span><br><span class="line"><span class="comment"> * Date:    2018-08-17</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Size 1000000</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;immintrin.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line">__m256i my_int_vec_0[Size/<span class="number">8</span>+<span class="number">3</span>];<span class="comment">//数组每个元素存8个整数，故数组的大小为Size/8,+3是为了防止越界</span></span><br><span class="line">__m256i my_int_vec_1[Size/<span class="number">8</span>+<span class="number">3</span>];</span><br><span class="line">__m256i my_int_result[Size/<span class="number">8</span>+<span class="number">3</span>];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Size/<span class="number">8</span>;i++)&#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">8</span>;j++)&#123;</span><br><span class="line">        my_int_vec_0[i][j]=rand();</span><br><span class="line">        my_int_vec_1[i][j]=rand();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">tv</span>,<span class="title">tv2</span>;</span></span><br><span class="line">    gettimeofday(&amp;tv,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Size/<span class="number">8</span>;i++)&#123;</span><br><span class="line">      my_int_result[i]=_mm256_add_epi32(my_int_vec_0[i],my_int_vec_1[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    gettimeofday(&amp;tv2,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n\n\n\n\n\ntime: %dμs\n\n\n\n\n\n"</span>,tv2.tv_sec*<span class="number">1000000</span> + tv2.tv_usec - tv.tv_sec*<span class="number">1000000</span> - tv.tv_usec);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>即可进行计算。</p>
+<p>分别进行5次实验，耗时分别为(单位为μs)：<br>1491，1329，1178，2009，1470<br>平均耗时：1,495.4μs<br>可以发现，用并行指令集进行计算会快很多，加速比大概是2.19</p>
+<h2 id="用多线程来完成向量之和计算"><a href="#用多线程来完成向量之和计算" class="headerlink" title="用多线程来完成向量之和计算"></a>用多线程来完成向量之和计算</h2><p>使用mpi来实现多线程完成向量之和，代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mpi.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX_size 10000000</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> a[MAX_size], b[MAX_size], c[MAX_size];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">//cout&lt;&lt;"???\n";</span></span><br><span class="line">  <span class="keyword">int</span> numprocs, myid, source;</span><br><span class="line">  MPI_Status status;</span><br><span class="line">  MPI_Init(&amp;argc, &amp;argv);</span><br><span class="line">  MPI_Comm_rank(MPI_COMM_WORLD, &amp;myid);</span><br><span class="line">  MPI_Comm_size(MPI_COMM_WORLD, &amp;numprocs);</span><br><span class="line">  <span class="keyword">int</span> sub_size=MAX_size / (numprocs - <span class="number">1</span>);</span><br><span class="line"><span class="comment">//  cout&lt;&lt;"???\n";</span></span><br><span class="line">  <span class="keyword">if</span> (myid == <span class="number">0</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">tv</span>,<span class="title">tv2</span>;</span></span><br><span class="line">    gettimeofday(&amp;tv,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="comment">//cout&lt;&lt;"???\n";</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; numprocs; i++)</span><br><span class="line">    &#123;</span><br><span class="line">      MPI_Send(a + (i - <span class="number">1</span>) * sub_size, sub_size,</span><br><span class="line">               MPI_INT, i, i, MPI_COMM_WORLD);</span><br><span class="line">      MPI_Send(b + (i - <span class="number">1</span>) * sub_size, sub_size,</span><br><span class="line">               MPI_INT, i, i, MPI_COMM_WORLD);</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="comment">//  cout&lt;&lt;"???\n";</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; numprocs; i++)</span><br><span class="line">    &#123;</span><br><span class="line">      MPI_Recv(c + (i - <span class="number">1</span>) * sub_size, sub_size,</span><br><span class="line">               MPI_INT, i, i, MPI_COMM_WORLD, &amp;status);</span><br><span class="line">    &#125;</span><br><span class="line">    gettimeofday(&amp;tv2,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"time: %d\n"</span>,tv2.tv_sec*<span class="number">1000000</span> + tv2.tv_usec - tv.tv_sec*<span class="number">1000000</span> - tv.tv_usec);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">int</span> *tema = <span class="keyword">new</span> <span class="keyword">int</span>[sub_size];</span><br><span class="line">    <span class="keyword">int</span> *temb = <span class="keyword">new</span> <span class="keyword">int</span>[sub_size];</span><br><span class="line">    <span class="keyword">int</span> *temc = <span class="keyword">new</span> <span class="keyword">int</span>[sub_size];</span><br><span class="line">    MPI_Recv(tema, sub_size,</span><br><span class="line">             MPI_INT, <span class="number">0</span>, myid, MPI_COMM_WORLD, &amp;status);</span><br><span class="line">    MPI_Recv(temb, sub_size,</span><br><span class="line">            MPI_INT, <span class="number">0</span>, myid, MPI_COMM_WORLD,&amp;status);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;sub_size;i++)temc[i]=tema[i]+temb[i];</span><br><span class="line"><span class="comment">//    cout&lt;&lt;"?????\n";</span></span><br><span class="line">    MPI_Send(temc,sub_size,MPI_INT,<span class="number">0</span>,myid,MPI_COMM_WORLD);</span><br><span class="line">  &#125;</span><br><span class="line">  MPI_Finalize();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分别对线程数量为3,5,6,9,11(即将数组分为2,4,5,8,10份)进行了实验，结果如下：</p>
+<p><img src="https://i.loli.net/2020/03/02/e4tHBE5ODVrqAh3.png" alt="image.png"></p>
+<p>可以发现消耗的时间比前面用并行指令集多很多，这应该是因为线程之间通信次数很多，消耗了很多时间，而本身要计算的任务并不复杂，因此多线程的优势并不能得以发挥。</p>
+<p>再使用OpenMP来进行多线程计算，这只需将串行的代码稍作修改即可。<br>代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> x;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sttoi</span><span class="params">(<span class="keyword">char</span>* s)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> ret=<span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;s[i]!=<span class="string">'\0'</span>;i++)&#123;</span><br><span class="line">    ret*=<span class="number">10</span>;</span><br><span class="line">    ret+=s[i]<span class="number">-48</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX=<span class="number">1e6</span>;</span><br><span class="line"><span class="keyword">int</span> a[MAX],b[MAX],c[MAX];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span>** argv)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> num=sttoi(argv[<span class="number">1</span>]);</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">begin</span>,<span class="title">end</span>;</span></span><br><span class="line">  gettimeofday(&amp;begin ,<span class="literal">NULL</span>);</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for num_threads(num)</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;MAX;i++)c[i]=a[i]+b[i];</span><br><span class="line">  gettimeofday(&amp;end ,<span class="literal">NULL</span>);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%d\n"</span>,end.tv_sec*<span class="number">1000000</span>+end.tv_usec-begin.tv_sec*<span class="number">1000000</span>-begin.tv_usec);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对线程数分别为1-11做了5次实验，分别取平均值，绘图如下:<br>运行结果如下：<br><img src="https://i.loli.net/2020/03/12/dpemj3nNCBYA146.png" alt="image.png"><br>可以看到当线程数为4时，运行时间最短，大概是1500μs，当线程数增多时，运行时间变化并不规律。<br>绘制对应的加速比图像如下:<br><img src="https://i.loli.net/2020/03/12/6pNoCGa2KUWqEhT.png" alt="image.png"><br>当线程数为4时，加速比大概是2.3，略强于用并行指令集的情况。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/11/openmp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -260,201 +410,6 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> x;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">300000000</span>;i++);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="keyword">double</span> t1=omp_get_wtime();</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">12</span>;i++)f();</span><br><span class="line">  <span class="keyword">double</span> t2=omp_get_wtime();</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;t2-t1&lt;&lt;<span class="string">"s\n"</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">double</span> t3=clock();</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">12</span>;i++)f();</span><br><span class="line">  <span class="keyword">double</span> t4=clock();</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;(t4-t3)/<span class="number">1e6</span>&lt;&lt;<span class="string">"s\n"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>结果如下：<br><img src="https://i.loli.net/2020/03/11/MSaNuED2nRJBQVW.png" alt="image.png"><br>用clock()统计出来的时间有6.9s，但事实上程序运行的时间不到2s。openmp在我的电脑上默认使用12线程，所以大概是clock()函数会把每个线程的时间都加起来。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/10/MPI%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="reeeeeeeeeein">
-      <meta itemprop="description" content="SYSU 计算机专业大二在读">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="reeeeeeeeeein的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/10/MPI%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">MPI学习笔记</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-03-10 17:24:12" itemprop="dateCreated datePublished" datetime="2020-03-10T17:24:12+08:00">2020-03-10</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>利用MPI可以加速排序算法。<br>调用c++标准库的sort对1e7的数据进行排序，大约需要2.2秒的时间。</p>
-<p><img src="https://i.loli.net/2020/02/27/Qxu9tKsT3dfvIAL.png" alt="15826979841.jpg"></p>
-<p>使用MPI将程序并行化，可以大大加快速度。</p>
-<h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><p>将主线程待排序的数组分为两部分，送到两个子线程排序，排完之后再送到主线程，将它们合并起来。</p>
-<p>代码如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;mpi.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX_size=<span class="number">1e7</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> numprocs, myid, source;</span><br><span class="line">    MPI_Status status;</span><br><span class="line">    MPI_Init(&amp;argc, &amp;argv);</span><br><span class="line">    MPI_Comm_rank(MPI_COMM_WORLD, &amp;myid);</span><br><span class="line">    MPI_Comm_size(MPI_COMM_WORLD, &amp;numprocs);  </span><br><span class="line">    <span class="keyword">int</span> siz=MAX_size/<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span>(myid==<span class="number">0</span>)&#123;</span><br><span class="line">      <span class="keyword">int</span> *nums=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size+<span class="number">3</span>];</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;MAX_size;i++)&#123;</span><br><span class="line">        nums[i]=rand();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">int</span> t1=clock();</span><br><span class="line">      MPI_Send(nums,siz,MPI_INT,<span class="number">1</span>,<span class="number">1</span>,MPI_COMM_WORLD);</span><br><span class="line">      MPI_Send(nums+siz,siz,MPI_INT,<span class="number">2</span>,<span class="number">2</span>,MPI_COMM_WORLD);</span><br><span class="line">      <span class="keyword">int</span>* rec1=<span class="keyword">new</span> <span class="keyword">int</span>[siz+<span class="number">3</span>],*rec2=<span class="keyword">new</span> <span class="keyword">int</span>[siz+<span class="number">3</span>];</span><br><span class="line">      MPI_Recv(rec1,siz,MPI_INT,<span class="number">1</span>,<span class="number">1</span>,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      MPI_Recv(rec2,siz,MPI_INT,<span class="number">2</span>,<span class="number">2</span>,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      <span class="keyword">int</span> i=<span class="number">0</span>,j=<span class="number">0</span>,loc=<span class="number">0</span>;</span><br><span class="line">      <span class="keyword">while</span>(i&lt;siz&amp;&amp;j&lt;siz)&#123;</span><br><span class="line">        <span class="keyword">if</span>(rec1[i]&lt;rec2[j])nums[loc++]=rec1[i++];</span><br><span class="line">        <span class="keyword">else</span> nums[loc++]=rec2[j++];</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">while</span>(i&lt;siz)nums[loc++]=rec1[i++];</span><br><span class="line">      <span class="keyword">while</span>(j&lt;siz)nums[loc++]=rec2[j++];</span><br><span class="line">      <span class="keyword">int</span> t2=clock();</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;t2-t1&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="keyword">int</span>* rec=<span class="keyword">new</span> <span class="keyword">int</span>[siz+<span class="number">3</span>];</span><br><span class="line">      MPI_Recv(rec,siz,MPI_INT,<span class="number">0</span>,myid,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      sort(rec,rec+siz);</span><br><span class="line">      MPI_Send(rec,siz,MPI_INT,<span class="number">0</span>,myid,MPI_COMM_WORLD);</span><br><span class="line">    &#125;</span><br><span class="line">    MPI_Finalize();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>大概需要1.2秒的时间：<br><img src="https://i.loli.net/2020/02/27/OB5tGf1Q9z38EwJ.png" alt="1582699014283.png"></p>
-<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>将数组分为4部分，在4个子线程里排序，再两个两个合并起来，最后再送到主线程里合并。总共有7个线程。<br>代码如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mpi.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX_size=<span class="number">1e7</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get_state</span><span class="params">(<span class="keyword">int</span> myid)</span></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(myid==<span class="number">0</span>)<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span>(myid&lt;<span class="number">3</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> numprocs, myid, source;</span><br><span class="line">    MPI_Status status;</span><br><span class="line">    MPI_Init(&amp;argc, &amp;argv);</span><br><span class="line">    MPI_Comm_rank(MPI_COMM_WORLD, &amp;myid);</span><br><span class="line">    MPI_Comm_size(MPI_COMM_WORLD, &amp;numprocs);</span><br><span class="line">    <span class="keyword">int</span> state=get_state(myid);</span><br><span class="line">    <span class="keyword">if</span>(state==<span class="number">1</span>)&#123;</span><br><span class="line">      <span class="keyword">int</span>* nums=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size+<span class="number">3</span>];</span><br><span class="line">      <span class="keyword">int</span> son1=(myid&lt;&lt;<span class="number">1</span>)+<span class="number">1</span>,son2=(myid&lt;&lt;<span class="number">1</span>)+<span class="number">2</span>;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;MAX_size;i++)nums[i]=rand();</span><br><span class="line">      <span class="keyword">int</span> t1=clock();</span><br><span class="line">      MPI_Send(nums,MAX_size/<span class="number">2</span>,MPI_INT,son1,myid*numprocs+son1,MPI_COMM_WORLD);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      MPI_Send(nums+MAX_size/<span class="number">2</span>,MAX_size/<span class="number">2</span>,MPI_INT,son2,myid*numprocs+son2,MPI_COMM_WORLD);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      <span class="keyword">int</span>* rec1=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size/<span class="number">2</span>+<span class="number">3</span>],*rec2=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size/<span class="number">2</span>+<span class="number">3</span>];</span><br><span class="line">      MPI_Recv(rec1,MAX_size/<span class="number">2</span>,MPI_INT,son1,myid*numprocs+son1,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      MPI_Recv(rec2,MAX_size/<span class="number">2</span>,MPI_INT,son2,myid*numprocs+son2,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      <span class="keyword">int</span> i=<span class="number">0</span>,j=<span class="number">0</span>,size=MAX_size/<span class="number">2</span>,loc=<span class="number">0</span>;</span><br><span class="line">      <span class="keyword">while</span>(i&lt;size&amp;&amp;j&lt;size)&#123;</span><br><span class="line">        <span class="keyword">if</span>(rec1[i]&lt;rec2[j])&#123;</span><br><span class="line">          nums[loc++]=rec1[i++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">          nums[loc++]=rec2[j++];</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">while</span>(i&lt;size)&#123;nums[loc++]=rec1[i++];&#125;</span><br><span class="line">      <span class="keyword">while</span>(j&lt;size)&#123;nums[loc++]=rec2[j++];&#125;</span><br><span class="line"><span class="comment">//      for(int i=0;i&lt;MAX_size;i++)cout&lt;&lt;nums[i]&lt;&lt;endl;</span></span><br><span class="line">      <span class="keyword">int</span> t2=clock();</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;t2-t1&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(state==<span class="number">0</span>)&#123;</span><br><span class="line">      <span class="keyword">int</span>* nums=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size/<span class="number">2</span>+<span class="number">3</span>];</span><br><span class="line">      <span class="keyword">int</span>* rec1=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size/<span class="number">4</span>+<span class="number">3</span>],*rec2=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size/<span class="number">4</span>+<span class="number">3</span>];</span><br><span class="line">      <span class="keyword">int</span> son1=(myid&lt;&lt;<span class="number">1</span>)+<span class="number">1</span>,son2=(myid&lt;&lt;<span class="number">1</span>)+<span class="number">2</span>,fa=(myid<span class="number">-1</span>)&gt;&gt;<span class="number">1</span>;</span><br><span class="line">      MPI_Recv(nums,MAX_size/<span class="number">2</span>,MPI_INT,fa,fa*numprocs+myid,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      MPI_Send(nums,MAX_size/<span class="number">4</span>,MPI_INT,son1,myid*numprocs+son1,MPI_COMM_WORLD);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      MPI_Send(nums+MAX_size/<span class="number">4</span>,MAX_size/<span class="number">4</span>,MPI_INT,son2,myid*numprocs+son2,MPI_COMM_WORLD);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      MPI_Recv(rec1,MAX_size/<span class="number">4</span>,MPI_INT,son1,myid*numprocs+son1,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      MPI_Recv(rec2,MAX_size/<span class="number">4</span>,MPI_INT,son2,myid*numprocs+son2,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      <span class="comment">//cout&lt;&lt;myid&lt;&lt;" "&lt;&lt;son1&lt;&lt;" "&lt;&lt;son2&lt;&lt;endl;</span></span><br><span class="line">      <span class="keyword">int</span> i=<span class="number">0</span>,j=<span class="number">0</span>,size=MAX_size/<span class="number">4</span>,loc=<span class="number">0</span>;</span><br><span class="line">      <span class="keyword">while</span>(i&lt;size&amp;&amp;j&lt;size)&#123;</span><br><span class="line">        <span class="keyword">if</span>(rec1[i]&lt;rec2[j])&#123;</span><br><span class="line">          nums[loc++]=rec1[i++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">          nums[loc++]=rec2[j++];</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">while</span>(i&lt;size)&#123;nums[loc++]=rec1[i++];&#125;</span><br><span class="line">      <span class="keyword">while</span>(j&lt;size)&#123;nums[loc++]=rec2[j++];&#125;</span><br><span class="line">      MPI_Send(nums,MAX_size/<span class="number">2</span>,MPI_INT,fa,fa*numprocs+myid,MPI_COMM_WORLD);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="keyword">int</span>* nums=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size/<span class="number">4</span>+<span class="number">3</span>];</span><br><span class="line">      <span class="keyword">int</span> fa=(myid<span class="number">-1</span>)&gt;&gt;<span class="number">1</span>;</span><br><span class="line">      MPI_Recv(nums,MAX_size/<span class="number">4</span>,MPI_INT,fa,fa*numprocs+myid,MPI_COMM_WORLD,&amp;status)；</span><br><span class="line"><span class="comment">//      cout&lt;&lt;myid&lt;&lt;endl;</span></span><br><span class="line">      sort(nums,nums+MAX_size/<span class="number">4</span>);</span><br><span class="line">      MPI_Send(nums,MAX_size/<span class="number">4</span>,MPI_INT,fa,fa*numprocs+myid,MPI_COMM_WORLD);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//    cout&lt;&lt;"??\n";</span></span><br><span class="line">    MPI_Finalize();</span><br><span class="line">  <span class="comment">//  cout&lt;&lt;myid&lt;&lt;"end\n";</span></span><br><span class="line">&#125; <span class="comment">/* end main */</span></span><br></pre></td></tr></table></figure>
-
-<p>这种方法大约需要0.87秒：<br><img src="https://i.loli.net/2020/02/27/puQ9KAsJ7VDLr2W.png" alt="1582699491051.png"></p>
-<h2 id="方法三"><a href="#方法三" class="headerlink" title="方法三"></a>方法三</h2><p>将数组分到多个线程里排序，再送回主线程，直接进行排序：<br>代码如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;mpi.h&gt;</span></span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX_size=<span class="number">1e7</span>;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> numprocs, myid, source;</span><br><span class="line">    MPI_Status status;</span><br><span class="line">    MPI_Init(&amp;argc, &amp;argv);</span><br><span class="line">    MPI_Comm_rank(MPI_COMM_WORLD, &amp;myid);</span><br><span class="line">    MPI_Comm_size(MPI_COMM_WORLD, &amp;numprocs);  </span><br><span class="line">    <span class="keyword">int</span> sub_size=MAX_size/(numprocs<span class="number">-1</span>);</span><br><span class="line">    <span class="keyword">int</span> siz[<span class="number">104</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;numprocs;i++)siz[i]=MAX_size/(numprocs<span class="number">-1</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=MAX_size%(numprocs<span class="number">-1</span>);i++)siz[i]++;</span><br><span class="line">    <span class="keyword">if</span>(!myid)&#123;</span><br><span class="line">      <span class="keyword">int</span>* num=<span class="keyword">new</span> <span class="keyword">int</span>[MAX_size];</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;MAX_size;i++)num[i]=rand();</span><br><span class="line">      <span class="keyword">int</span> t1=clock();</span><br><span class="line">      <span class="keyword">int</span> loc[numprocs]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>,*tem=num;i&lt;numprocs;i++,tem+=siz[i])&#123;</span><br><span class="line">  <span class="comment">//      cout&lt;&lt;i&lt;&lt;endl;</span></span><br><span class="line">        MPI_Send(tem,siz[i],MPI_INT,i,i,MPI_COMM_WORLD);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">int</span>** ans=<span class="keyword">new</span> <span class="keyword">int</span>*[numprocs];</span><br><span class="line"><span class="comment">//      cout&lt;&lt;"??\n";</span></span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;numprocs;i++)&#123;</span><br><span class="line">        ans[i]=<span class="keyword">new</span> <span class="keyword">int</span>[siz[i]+<span class="number">3</span>];</span><br><span class="line">        MPI_Recv(ans[i],siz[i],MPI_INT,i,i,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;MAX_size;i++)&#123;</span><br><span class="line">        <span class="keyword">int</span> minval=(<span class="number">1l</span>l&lt;&lt;<span class="number">31</span>)<span class="number">-1</span>,locc=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;numprocs;i++)&#123;</span><br><span class="line">          <span class="keyword">if</span>(loc[i]&lt;siz[i]&amp;&amp;ans[i][loc[i]]&lt;minval)minval=ans[i][loc[i]],locc=i;</span><br><span class="line">        &#125;</span><br><span class="line">        num[i]=minval,loc[locc]++;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">int</span> t2=clock();</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;t2-t1&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="keyword">int</span>* num=<span class="keyword">new</span> <span class="keyword">int</span>[siz[myid]+<span class="number">3</span>];</span><br><span class="line">      MPI_Recv(num,siz[myid],MPI_INT,<span class="number">0</span>,myid,MPI_COMM_WORLD,&amp;status);</span><br><span class="line">      sort(num,num+siz[myid]);</span><br><span class="line">      MPI_Send(num,siz[myid],MPI_INT,<span class="number">0</span>,myid,MPI_COMM_WORLD);</span><br><span class="line">    &#125;</span><br><span class="line">    MPI_Finalize();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>对线程数量分别为4,5,6,7,8的情况做了5次实验，结果如下(单位为μs)：</p>
-<table>
-<thead>
-<tr>
-<th>线程数</th>
-<th>平均用时</th>
-<th>最短用时</th>
-<th>最长用时</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>4</td>
-<td>996875</td>
-<td>984375</td>
-<td>1015625</td>
-</tr>
-<tr>
-<td>5</td>
-<td>868750</td>
-<td>843750</td>
-<td>890625</td>
-</tr>
-<tr>
-<td>6</td>
-<td>865625</td>
-<td>843750</td>
-<td>890625</td>
-</tr>
-<tr>
-<td>7</td>
-<td>890625</td>
-<td>875000</td>
-<td>906250</td>
-</tr>
-<tr>
-<td>8</td>
-<td>906250</td>
-<td>859375</td>
-<td>953125</td>
-</tr>
-</tbody></table>
-<p><img src="https://i.loli.net/2020/02/27/wOnageDTA9Ktvux.png" alt="1582702015001.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/05/MPI%E5%85%A5%E9%97%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="reeeeeeeeeein">
-      <meta itemprop="description" content="SYSU 计算机专业大二在读">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="reeeeeeeeeein的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/05/MPI%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">MPI入门</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-03-05 21:58:15" itemprop="dateCreated datePublished" datetime="2020-03-05T21:58:15+08:00">2020-03-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-28 16:57:31" itemprop="dateModified" datetime="2020-02-28T16:57:31+08:00">2020-02-28</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在WSL里安装MPI非常方便，只需执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install -y build-essential mpich</span><br></pre></td></tr></table></figure>
-
-<p>即可。<br>这样就可以在终端中使用mpi了，但为了方便使用，还需在VSCode中添加路径。<br>在c_cpp_properties.json的includePath中添加”/usr/include/mpich”即可。</p>
-<p>用mpi编写一个helloworld程序：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;mpi.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span> **argv)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> numprocs, myid;</span><br><span class="line">    MPI_Status status;</span><br><span class="line">    MPI_Init(&amp;argc, &amp;argv);<span class="comment">//</span></span><br><span class="line">    MPI_Comm_rank(MPI_COMM_WORLD, &amp;myid);<span class="comment">//这里myid表示这个线程是第几个线程，如果myid是0则是第一个线程</span></span><br><span class="line">    MPI_Comm_size(MPI_COMM_WORLD, &amp;numprocs);  <span class="comment">//numprocs表示总的线程数量</span></span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"helloworld\n"</span>;</span><br><span class="line">    MPI_Finalize();<span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上述代码由许多值得注意的地方：</p>
-<p>1.注意不能使用 bits/stdc++ 这个库，否则会出错。</p>
-<p>2.main函数要带命令行参数。</p>
-<p>3.MPI_Init函数表示从这一行开始，后面的代码会被并行执行，即在每个线程中执行一次。其他的MPI<br>函数必须在MPI_Init函数之后。</p>
-<p>4.MPI_Comm_rank函数获得本线程是第几个线程，把线程号存储在myid中。第1个线程(也称为主线程)对应的myid是0，<br>第二个线程对应的myid是1……以此类推。</p>
-<p>5.MPI_Comm_size得到线程的数量。</p>
-<p>6.在网上查阅资料了解到，MPI_Finalize函数将并行部分终止，除了主线程外的线程都会被终止，主线程的串行部分还可以正常执行。但事实上我在本地运行程序时，MPI_Finalize函数之后的部分还是会被并行执行，我也不知道为什么。</p>
-<p>写完之后，就可以在终端执行程序了。</p>
-<p><img src="https://i.loli.net/2020/02/28/ApG7uIckXLoWZKF.png" alt="image.png"></p>
-<p>用mpic++编译源代码，生成一个名为hw的可执行文件。再用mpirun运行文件，4表示4个线程，所以输出时4个helloworld。</p>
 
       
     </div>
