@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="pytorch 学习笔记1参考自《深度学习框架PyTorch入门与实践》 TensorTensor是pytorch里最基础的数据结构，可以认为是一个高级数组。它可以包含一个数，一个一维数组，一个二维矩阵或更高维的数组。 Tensor的创建创建一个Tensor的方法: 123import torch as tx&#x3D;t.Tensor(5,3)x  这种情况下，会生成一个内容全为0的Tensor: 随机生">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pytorch学习笔记1">
+<meta property="og:url" content="http://yoursite.com/2020/04/19/pytorch%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/index.html">
+<meta property="og:site_name" content="reeeeeeeeeein的博客">
+<meta property="og:description" content="pytorch 学习笔记1参考自《深度学习框架PyTorch入门与实践》 TensorTensor是pytorch里最基础的数据结构，可以认为是一个高级数组。它可以包含一个数，一个一维数组，一个二维矩阵或更高维的数组。 Tensor的创建创建一个Tensor的方法: 123import torch as tx&#x3D;t.Tensor(5,3)x  这种情况下，会生成一个内容全为0的Tensor: 随机生">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/WtVqcS1Re8uTBkY.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/VXACsqmWzt1eySY.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/S5RCF4BJg9xXPNn.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/RtMaVJzdsASTm2W.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/pHzPvm9Z23ngUxb.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/T5GEgdj9xseiNrC.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/sNmATBf4jkZvKor.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/ihVlkI1KHtDRNBb.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/ohkZBf2L4yNX7v1.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/cjLrkSo37uFNYxd.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/Nq4dSk1gPAbuyYa.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/LhJGUiXtSzNsVP5.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/PFeDHjOtIfwJ4GM.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/2BUZDOilLbWQK9z.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/jvrHShXGe5PJNa6.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/SaGqQTxindgX7Ls.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/6Sz2rVmIsYRKj7A.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/zpnGxdiSQDK18bX.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/Z5s9chJX4d1YtxC.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/eHPAQtow1Cqi8kM.png">
+<meta property="article:published_time" content="2020-04-19T15:06:50.418Z">
+<meta property="article:modified_time" content="2020-04-19T15:06:50.418Z">
+<meta property="article:author" content="reeeeeeeeeein">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/19/WtVqcS1Re8uTBkY.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/04/19/pytorch%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>pytorch学习笔记1 | reeeeeeeeeein的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+<div class="bg_content">
+<canvas id="canvas"></canvas>
+</div>
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">reeeeeeeeeein的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/19/pytorch%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          pytorch学习笔记1
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-19 23:06:50" itemprop="dateCreated datePublished" datetime="2020-04-19T23:06:50+08:00">2020-04-19</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="pytorch-学习笔记1"><a href="#pytorch-学习笔记1" class="headerlink" title="pytorch 学习笔记1"></a>pytorch 学习笔记1</h1><p>参考自《深度学习框架PyTorch入门与实践》</p>
+<h2 id="Tensor"><a href="#Tensor" class="headerlink" title="Tensor"></a>Tensor</h2><p>Tensor是pytorch里最基础的数据结构，可以认为是一个高级数组。它可以包含一个数，一个一维数组，一个二维矩阵或更高维的数组。</p>
+<h3 id="Tensor的创建"><a href="#Tensor的创建" class="headerlink" title="Tensor的创建"></a>Tensor的创建</h3><p>创建一个Tensor的方法:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch <span class="keyword">as</span> t</span><br><span class="line">x=t.Tensor(<span class="number">5</span>,<span class="number">3</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
+
+<p>这种情况下，会生成一个内容全为0的Tensor:<br><img src="https://i.loli.net/2020/04/19/WtVqcS1Re8uTBkY.png" alt="image.png"></p>
+<p>随机生成Tensor的方法:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x=t.rand(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
+
+<p>这样，Tensor里的每一个值都是一个0到1之间的随机数:<br><img src="https://i.loli.net/2020/04/19/VXACsqmWzt1eySY.png" alt="image.png"></p>
+<p>用t.ones()能生成全为1的Tensor，用t.zeros()能生成全为0的Tensor:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x=t.ones(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">y=t.zeros(<span class="number">5</span>,<span class="number">2</span>)</span><br><span class="line">print(x)</span><br><span class="line">print(y)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/19/S5RCF4BJg9xXPNn.png" alt="image.png"></p>
+<p>得到Tensor的大小:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(x.size())</span><br><span class="line">x.size(<span class="number">0</span>),x.size(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/19/RtMaVJzdsASTm2W.png" alt="image.png"></p>
+<h3 id="Tensor运算"><a href="#Tensor运算" class="headerlink" title="Tensor运算"></a>Tensor运算</h3><p>Tensor之间的运算可以用 ‘+’、’-‘、’*’、’/‘等符号实现，也可以用add,sub等函数实现。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x=t.rand(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">y=t.rand(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">print(x)</span><br><span class="line">print(y)</span><br><span class="line">print(x+y)</span><br><span class="line">print(x.add(y))</span><br><span class="line">print(x)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/19/pHzPvm9Z23ngUxb.png" alt="image.png"></p>
+<p>值得注意的是，add函数并不会修改x的值，要实现x+=y,要用add_()函数:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x=t.rand(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">y=t.rand(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">print(x)</span><br><span class="line">print(y)</span><br><span class="line">print(x+y)</span><br><span class="line">print(x.add_(y))</span><br><span class="line">print(x)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/19/T5GEgdj9xseiNrC.png" alt="image.png"></p>
+<h3 id="Tensor与numpy的关系"><a href="#Tensor与numpy的关系" class="headerlink" title="Tensor与numpy的关系"></a>Tensor与numpy的关系</h3><p>Tensor的很多操作跟numpy差不多，它们也可以互相转换:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">x=np.ones(<span class="number">3</span>)</span><br><span class="line">y=t.from_numpy(x)</span><br><span class="line">print(y)</span><br><span class="line">z=y.numpy()</span><br><span class="line">print(z)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/19/sNmATBf4jkZvKor.png" alt="image.png"></p>
+<p>值得注意的是，Tensor与nump对象的内存是共享的，因此其中一个改变的时候，另一个也会改变:<br><img src="https://i.loli.net/2020/04/19/ihVlkI1KHtDRNBb.png" alt="image.png"></p>
+<h3 id="将Tensor转移到cuda上"><a href="#将Tensor转移到cuda上" class="headerlink" title="将Tensor转移到cuda上"></a>将Tensor转移到cuda上</h3><p>可以通过.cuda方法把Tensor转移到GPU上:<br><img src="https://i.loli.net/2020/04/19/ohkZBf2L4yNX7v1.png" alt="image.png"></p>
+<h2 id="Autograd"><a href="#Autograd" class="headerlink" title="Autograd"></a>Autograd</h2><p>pytorch的Autograd模块提供了反向传播的功能。</p>
+<p>autograd.Variable是Autograd中的核心类，它可以理解为Tensor的升级版。它的backward()方法能够自动计算梯度，提供了反向传播的功能。<br><img src="https://i.loli.net/2020/04/19/cjLrkSo37uFNYxd.png" alt="image.png"><br><img src="https://i.loli.net/2020/04/19/Nq4dSk1gPAbuyYa.png" alt="image.png"></p>
+<p>由于y对x的每一个元素的偏导数都是1，所以x.grad是一个2*2的全为1的矩阵。<br>如果我们在调用一次y.backward(),会怎么样？<br><img src="https://i.loli.net/2020/04/19/LhJGUiXtSzNsVP5.png" alt="image.png"></p>
+<p>我们发现grad在反向传播的过程中是累加的，所以我们要将grad清零:<br><img src="https://i.loli.net/2020/04/19/PFeDHjOtIfwJ4GM.png" alt="image.png"></p>
+<h2 id="神经网络"><a href="#神经网络" class="headerlink" title="神经网络"></a>神经网络</h2><p>torch.nn是专门为神经网络设计的模块化接口，可以用来定义和运行神经网络。nn.Module是nn中最重要的类，可以看成是神经网络的封装。</p>
+<h3 id="定义网络"><a href="#定义网络" class="headerlink" title="定义网络"></a>定义网络</h3><p>一个网络需要继承nn.Module，并实现它的forward方法，并把具有可学习参数的层放在构造函数<strong>init</strong>中:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Net</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Net,self).__init__()</span><br><span class="line">        self.conv1=nn.Conv2d(<span class="number">1</span>,<span class="number">6</span>,<span class="number">5</span>)<span class="comment">#第一个参数是输入通道数，</span></span><br><span class="line">        <span class="comment">#第二个参数是输出通道数，第三个参数是卷积核的大小。</span></span><br><span class="line">        self.conv2=nn.Conv2d(<span class="number">6</span>,<span class="number">16</span>,<span class="number">5</span>)</span><br><span class="line">        self.fc1=nn.Linear(<span class="number">16</span>*<span class="number">5</span>*<span class="number">5</span>,<span class="number">120</span>)</span><br><span class="line">        self.fc2=nn.Linear(<span class="number">120</span>,<span class="number">84</span>)</span><br><span class="line">        self.fc3=nn.Linear(<span class="number">84</span>,<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,x)</span>:</span></span><br><span class="line">        x=F.max_pool2d(F.relu(self.conv1(x)),(<span class="number">2</span>,<span class="number">2</span>))</span><br><span class="line">        x=F.max_pool2d(F.relu(self.conv1(x)),<span class="number">2</span>)<span class="comment"># 这里的2跟(2,2)的效果是一样的</span></span><br><span class="line">        x=x.view(x.size()[<span class="number">0</span>],<span class="number">-1</span>)</span><br><span class="line">        x=F.relu(self.fc1(x))</span><br><span class="line">        x=F.relu(self.fc2(x))</span><br><span class="line">        x=self.fc3(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">net=Net()</span><br><span class="line">print(net)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/19/2BUZDOilLbWQK9z.png" alt="image.png"></p>
+<p>只要实现了forward方法，backward方法就会被自动实现。<br>网络的可学习参数可以通过net.parameters()得到:<br><img src="https://i.loli.net/2020/04/19/jvrHShXGe5PJNa6.png" alt="image.png"></p>
+<p><img src="https://i.loli.net/2020/04/19/SaGqQTxindgX7Ls.png" alt="image.png"></p>
+<p>forward函数的输入和输出都是Variable，因此在输入的时候要把Tensor变成Variable:<br><img src="https://i.loli.net/2020/04/19/6Sz2rVmIsYRKj7A.png" alt="image.png"></p>
+<p>注意，input是一个4维的向量，其中第一维是batch的大小，神经网络的输入是一个batch，里面可以有很多张图像。第二维是图像的通道数。第三维第四维是图像的大小。</p>
+<h3 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h3><p>nn里定义了很多损失函数，如MSELoss用来计算均方误差，CrossEntropyLoss用来计算交叉熵损失。<br><img src="https://i.loli.net/2020/04/19/zpnGxdiSQDK18bX.png" alt="image.png"></p>
+<h3 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h3><p>torch.optim 中实现了很多优化方法，可以用它们来对网络的参数进行更新:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line">optimizer=optim.SGD(net.parameters(),lr=<span class="number">0.01</span>)</span><br><span class="line">optimizer.zero_grad()</span><br><span class="line">output=net(input)</span><br><span class="line">loss=criterion(output,target)</span><br><span class="line">loss.backward()</span><br><span class="line">optimizer.step()</span><br></pre></td></tr></table></figure>
+
+<h3 id="CIFAR-10-分类"><a href="#CIFAR-10-分类" class="headerlink" title="CIFAR-10 分类"></a>CIFAR-10 分类</h3><p>CIFAR-10是一个常用的彩色图片数据集，共有10个类别，每张图片的大小都是3<em>32</em>32。<br>我们利用torchvision提供的CIFAR-10数据集来训练一个神经网络，并让它对测试图片进行预测。</p>
+<p>首先进行一些准备工作:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch <span class="keyword">as</span> t</span><br><span class="line"><span class="keyword">import</span> torchvision <span class="keyword">as</span> tv</span><br><span class="line"><span class="keyword">import</span> torchvision.transforms <span class="keyword">as</span> transforms</span><br><span class="line"><span class="keyword">from</span> torchvision.transforms <span class="keyword">import</span> ToPILImage</span><br><span class="line">show=ToPILImage()</span><br><span class="line"><span class="comment">#show用于将Tensor对象转化为图片，以便于观察结果</span></span><br><span class="line">transform = transforms.Compose([transforms.ToTensor(),transforms.Normalize((<span class="number">0.5</span>,<span class="number">0.5</span>,<span class="number">0.5</span>),(<span class="number">0.5</span>,<span class="number">0.5</span>,<span class="number">0.5</span>))])</span><br><span class="line"><span class="comment">#transform 用于对输入图像进行预处理</span></span><br><span class="line">trainset=tv.datasets.CIFAR10(root=<span class="string">'/home/cy/data/'</span>,train=<span class="literal">True</span>,download=<span class="literal">True</span>,transform=transform)</span><br><span class="line">trainloader=t.utils.data.DataLoader(trainset,batch_size=<span class="number">4</span>,shuffle=<span class="literal">True</span>,num_workers=<span class="number">2</span>)</span><br><span class="line"><span class="comment">#用trainloader加载训练数据，batch_size=4说明一个batch是4张图片,num_worker=2说明用两个线程</span></span><br><span class="line">testset=tv.datasets.CIFAR10(<span class="string">'/home/cy/data/'</span>,train=<span class="literal">False</span>,download=<span class="literal">True</span>,transform=transform)</span><br><span class="line">testloader=t.utils.data.DataLoader(testset,batch_size=<span class="number">4</span>,shuffle=<span class="literal">False</span>,num_workers=<span class="number">2</span>)</span><br><span class="line">classes=(<span class="string">'plane'</span>,<span class="string">'car'</span>,<span class="string">'bird'</span>,<span class="string">'cat'</span>,<span class="string">'deer'</span>,<span class="string">'dog'</span>,<span class="string">'frog'</span>,<span class="string">'horse'</span>,<span class="string">'ship'</span>,<span class="string">'truck'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>查看某一张照片:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(data,label)=trainset[<span class="number">100</span>]</span><br><span class="line">print(classes[label])</span><br><span class="line">show((data+<span class="number">1</span>)/<span class="number">2</span>).resize((<span class="number">100</span>,<span class="number">100</span>))</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/19/Z5s9chJX4d1YtxC.png" alt="image.png"></p>
+<p>定义一个网络:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Net</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Net,self).__init__()</span><br><span class="line">        self.conv1=nn.Conv2d(<span class="number">3</span>,<span class="number">6</span>,<span class="number">5</span>)<span class="comment">#第一个参数是输入通道数，</span></span><br><span class="line">        <span class="comment">#第二个参数是输出通道数，第三个参数是卷积核的大小。</span></span><br><span class="line">        self.conv2=nn.Conv2d(<span class="number">6</span>,<span class="number">16</span>,<span class="number">5</span>)</span><br><span class="line">        self.fc1=nn.Linear(<span class="number">16</span>*<span class="number">5</span>*<span class="number">5</span>,<span class="number">120</span>)</span><br><span class="line">        self.fc2=nn.Linear(<span class="number">120</span>,<span class="number">84</span>)</span><br><span class="line">        self.fc3=nn.Linear(<span class="number">84</span>,<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,x)</span>:</span></span><br><span class="line">        x=F.max_pool2d(F.relu(self.conv1(x)),(<span class="number">2</span>,<span class="number">2</span>))</span><br><span class="line">        x=F.max_pool2d(F.relu(self.conv2(x)),<span class="number">2</span>)<span class="comment"># 这里的2跟(2,2)的效果是一样的</span></span><br><span class="line">        x=x.view(x.size()[<span class="number">0</span>],<span class="number">-1</span>)</span><br><span class="line">        x=F.relu(self.fc1(x))</span><br><span class="line">        x=F.relu(self.fc2(x))</span><br><span class="line">        x=self.fc3(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">net=Net()</span><br><span class="line">print(net)</span><br></pre></td></tr></table></figure>
+
+<p>定义一个损失函数和优化器</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> optim</span><br><span class="line">criterion = nn.CrossEntropyLoss()</span><br><span class="line">optimizer=optim.SGD(net.parameters(),lr=<span class="number">0.001</span>,momentum=<span class="number">0.9</span>)</span><br></pre></td></tr></table></figure>
+
+<p>开始训练:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(<span class="number">2</span>):</span><br><span class="line">    runnint_loss=<span class="number">0.0</span></span><br><span class="line">    <span class="keyword">for</span> i,data <span class="keyword">in</span> enumerate(trainloader,<span class="number">0</span>):</span><br><span class="line">        inputs,labels=data</span><br><span class="line">        inputs,labels=Variable(inputs),Variable(labels)</span><br><span class="line">        <span class="comment">#注意要将输入数据转化成Variable类型，不然无法训练</span></span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        outputs=net(inputs)</span><br><span class="line">        loss=criterion(outputs,labels)</span><br><span class="line">        loss.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line">        runnint_loss+=loss.item()</span><br><span class="line">        <span class="keyword">if</span> i%<span class="number">2000</span>==<span class="number">1999</span>:</span><br><span class="line">            print(<span class="string">"[%d,%5d] loss: %3f"</span>%(epoch+<span class="number">1</span>,i+<span class="number">1</span>,runnint_loss/<span class="number">2000</span>))</span><br><span class="line">            runnint_loss=<span class="number">0.0</span></span><br><span class="line">print(<span class="string">"Finish trainning"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>查看第一个batch的数据和标签:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dataiter=iter(testloader)</span><br><span class="line">images,labels=dataiter.next()</span><br><span class="line">print(<span class="string">"实际的label:"</span>,<span class="string">" "</span>.join(<span class="string">"%08s"</span>%classes[labels[j]] <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">4</span>)))</span><br><span class="line">show(tv.utils.make_grid(images/<span class="number">2</span><span class="number">-0.5</span>)).resize((<span class="number">400</span>,<span class="number">100</span>))</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/19/eHPAQtow1Cqi8kM.png" alt="image.png"></p>
+<p>查看它们的预测结果:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">outputs=net(Variable(images))</span><br><span class="line">_,predicted=t.max(outputs.data,<span class="number">1</span>)</span><br><span class="line">print(<span class="string">"预测结果:"</span>,<span class="string">""</span>.join(<span class="string">"%8s"</span>%classes[predicted[j]] <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">4</span>)))</span><br></pre></td></tr></table></figure>
+
+<p>查看总正确率:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">correct=<span class="number">0</span></span><br><span class="line">total=<span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> data <span class="keyword">in</span> testloader:</span><br><span class="line">    images,labels=data</span><br><span class="line">    outputs=net(Variable(images))</span><br><span class="line">    _,predicted=t.max(outputs.data,<span class="number">1</span>)</span><br><span class="line">    <span class="comment">#output.data是一个数组，max返回两个值，第一个是最大值，第二个是最大值所在的位置</span></span><br><span class="line">    total+=labels.size(<span class="number">0</span>)</span><br><span class="line">    correct+=(predicted==labels).sum()</span><br><span class="line">    <span class="comment">#根据最大值所在的位置是否跟labels相等可以判断分类是否正确</span></span><br><span class="line">print(<span class="string">"正确率为:%d %%"</span>%(<span class="number">100</span>*correct/total))</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/19/Pthread%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/" rel="prev" title="Pthread学习笔记1">
+      <i class="fa fa-chevron-left"></i> Pthread学习笔记1
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#pytorch-学习笔记1"><span class="nav-number">1.</span> <span class="nav-text">pytorch 学习笔记1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tensor"><span class="nav-number">1.1.</span> <span class="nav-text">Tensor</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Tensor的创建"><span class="nav-number">1.1.1.</span> <span class="nav-text">Tensor的创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tensor运算"><span class="nav-number">1.1.2.</span> <span class="nav-text">Tensor运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tensor与numpy的关系"><span class="nav-number">1.1.3.</span> <span class="nav-text">Tensor与numpy的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将Tensor转移到cuda上"><span class="nav-number">1.1.4.</span> <span class="nav-text">将Tensor转移到cuda上</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Autograd"><span class="nav-number">1.2.</span> <span class="nav-text">Autograd</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#神经网络"><span class="nav-number">1.3.</span> <span class="nav-text">神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义网络"><span class="nav-number">1.3.1.</span> <span class="nav-text">定义网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#损失函数"><span class="nav-number">1.3.2.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化器"><span class="nav-number">1.3.3.</span> <span class="nav-text">优化器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CIFAR-10-分类"><span class="nav-number">1.3.4.</span> <span class="nav-text">CIFAR-10 分类</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">reeeeeeeeeein</p>
+  <div class="site-description" itemprop="description">SYSU 计算机专业大二在读</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">reeeeeeeeeein</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
