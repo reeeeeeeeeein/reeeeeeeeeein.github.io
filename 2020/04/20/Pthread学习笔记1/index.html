@@ -21,17 +21,19 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="# Pthreads学习笔记1  Pthreads用共享内存模型进行并行编程。一般地，程序会启动一个主线程，执行main函数中的代码，然后由主线程启动其他的线程。  ## Pthreads的hello world程序  123456789101112131415161718192021222324#include&lt;pthread.h&gt;#include&lt;stdio.h&gt;#in">
+  <meta name="description" content="Pthreads学习笔记1Pthreads用共享内存模型进行并行编程。一般地，程序会启动一个主线程，执行main函数中的代码，然后由主线程启动其他的线程。 Pthreads的hello world程序123456789101112131415161718192021222324#include&lt;pthread.h&gt;#include&lt;stdio.h&gt;#include&lt;s">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Pthread学习笔记1">
 <meta property="og:url" content="http://yoursite.com/2020/04/20/Pthread%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/index.html">
 <meta property="og:site_name" content="reeeeeeeeeein的博客">
-<meta property="og:description" content="# Pthreads学习笔记1  Pthreads用共享内存模型进行并行编程。一般地，程序会启动一个主线程，执行main函数中的代码，然后由主线程启动其他的线程。  ## Pthreads的hello world程序  123456789101112131415161718192021222324#include&lt;pthread.h&gt;#include&lt;stdio.h&gt;#in">
+<meta property="og:description" content="Pthreads学习笔记1Pthreads用共享内存模型进行并行编程。一般地，程序会启动一个主线程，执行main函数中的代码，然后由主线程启动其他的线程。 Pthreads的hello world程序123456789101112131415161718192021222324#include&lt;pthread.h&gt;#include&lt;stdio.h&gt;#include&lt;s">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/04/19/mG2nkLtZyCTsDXW.png">
 <meta property="article:published_time" content="2020-04-20T11:59:47.282Z">
 <meta property="article:modified_time" content="2020-04-20T11:59:47.282Z">
 <meta property="article:author" content="reeeeeeeeeein">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/19/mG2nkLtZyCTsDXW.png">
 
 <link rel="canonical" href="http://yoursite.com/2020/04/20/Pthread%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/">
 
@@ -211,77 +213,160 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        # Pthreads学习笔记1
+        <h1 id="Pthreads学习笔记1"><a href="#Pthreads学习笔记1" class="headerlink" title="Pthreads学习笔记1"></a>Pthreads学习笔记1</h1><p>Pthreads用共享内存模型进行并行编程。一般地，程序会启动一个主线程，执行main函数中的代码，然后由主线程启动其他的线程。</p>
+<h2 id="Pthreads的hello-world程序"><a href="#Pthreads的hello-world程序" class="headerlink" title="Pthreads的hello world程序"></a>Pthreads的hello world程序</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> thread_count;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">Hello</span><span class="params">(<span class="keyword">void</span>* rank)</span></span>&#123;</span><br><span class="line">  <span class="keyword">long</span> my_rank=(<span class="keyword">long</span>)rank;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"Hello from thread %ld of %d\n"</span>,my_rank,thread_count);</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span>** argv)</span></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(argc!=<span class="number">2</span>)<span class="built_in">abort</span>();</span><br><span class="line">  <span class="keyword">long</span> thread;</span><br><span class="line">  <span class="keyword">pthread_t</span>* thread_handles;</span><br><span class="line">  thread_count=strtol(argv[<span class="number">1</span>],<span class="literal">NULL</span>,<span class="number">10</span>);</span><br><span class="line">  thread_handles=<span class="built_in">malloc</span>(thread_count*<span class="keyword">sizeof</span>(<span class="keyword">pthread_t</span>));</span><br><span class="line">  <span class="keyword">for</span>(thread=<span class="number">0</span>;thread&lt;thread_count;thread++)pthread_create(&amp;thread_handles[thread],<span class="literal">NULL</span>,Hello,(<span class="keyword">void</span>*)thread);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"Hello from the main thread\n"</span>);</span><br><span class="line">  <span class="keyword">for</span>(thread=<span class="number">0</span>;thread&lt;thread_count;thread++)pthread_join(thread_handles[thread],<span class="literal">NULL</span>);</span><br><span class="line">  <span class="built_in">free</span>(thread_handles);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-Pthreads用共享内存模型进行并行编程。一般地，程序会启动一个主线程，执行main函数中的代码，然后由主线程启动其他的线程。
-
-## Pthreads的hello world程序
-
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> thread_count;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">Hello</span><span class="params">(<span class="keyword">void</span>* rank)</span></span>&#123;</span><br><span class="line">  <span class="keyword">long</span> my_rank=(<span class="keyword">long</span>)rank;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"Hello from thread %ld of %d\n"</span>,my_rank,thread_count);</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span>** argv)</span></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(argc!=<span class="number">2</span>)<span class="built_in">abort</span>();</span><br><span class="line">  <span class="keyword">long</span> thread;</span><br><span class="line">  <span class="keyword">pthread_t</span>* thread_handles;</span><br><span class="line">  thread_count=strtol(argv[<span class="number">1</span>],<span class="literal">NULL</span>,<span class="number">10</span>);</span><br><span class="line">  thread_handles=<span class="built_in">malloc</span>(thread_count*<span class="keyword">sizeof</span>(<span class="keyword">pthread_t</span>));</span><br><span class="line">  <span class="keyword">for</span>(thread=<span class="number">0</span>;thread&lt;thread_count;thread++)pthread_create(&amp;thread_handles[thread],<span class="literal">NULL</span>,Hello,(<span class="keyword">void</span>*)thread);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"Hello from the main thread\n"</span>);</span><br><span class="line">  <span class="keyword">for</span>(thread=<span class="number">0</span>;thread&lt;thread_count;thread++)pthread_join(thread_handles[thread],<span class="literal">NULL</span>);</span><br><span class="line">  <span class="built_in">free</span>(thread_handles);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-这个程序里值得注意的是第16行至第22行。
-第16行定义了一个pthread_t类型的指针。pthread_t用来存储线程的专有信息，可以作为线程的唯一标识，它的数据是由系统进行绑定的，用户无法访问。
-在第17行，我们用命令行参数来得到线程数量。
-18行给thread_handles分配了 thread_cound 个 pthread_t 对象的地址空间。
-19行调用pthread_create()函数,它的原型为:
-
+<p>这个程序里值得注意的是第16行至第22行。<br>第16行定义了一个pthread_t类型的指针。pthread_t用来存储线程的专有信息，可以作为线程的唯一标识，它的数据是由系统进行绑定的，用户无法访问。<br>在第17行，我们用命令行参数来得到线程数量。<br>18行给thread_handles分配了 thread_cound 个 pthread_t 对象的地址空间。<br>19行调用pthread_create()函数,它的原型为:</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_create</span><span class="params">(<span class="keyword">pthread_t</span>* thread_p,<span class="keyword">const</span> <span class="keyword">pthread_attr_t</span>* attr_p,<span class="keyword">void</span>* (*start_routine)(<span class="keyword">void</span>*),<span class="keyword">void</span>* arg_p)</span></span>;</span><br></pre></td></tr></table></figure>
 
-第一个参数是一个指向pthread_t对象的指针，且必须提前为它分配地址，以便pthread_create修改它指向的内容。第二个参数一般就是NULL，不用管。
-
-第三个参数是一个指针，指向一个函数，这个函数只有一个参数，是一个指向void类型的指针，返回值也是一个指向void类型的指针。
-
-第四个参数是一个指向void类型的指针，用它来给第三个参数指向的函数提供参数。
-
-通过pthread_create()函数我们创建了一个线程，它要做的就是执行第三个参数指向的函数。在第19行里，我们给它的第三个参数是Hello函数，第四个参数是(void*)thread。
-
-在这里，thread变量可以用来标志线程号，把它转化为(void*)指针是为了跟Hello函数的参数列表匹配。此后，在Hello函数里，我们又把它转化为long类型，这样我们就可以得到这个线程的线程号。
-
-第21行调用了pthread_join()函数，顾名思义，它用来等待那个线程的结束。
-
-第22行用来free掉thread_handles数组。
-
-运行的结果如下:
-![image.png](https://i.loli.net/2020/04/19/mG2nkLtZyCTsDXW.png)
-注意，main函数执行第20行时，其他线程已经启动，所以输出的顺序是不确定的。
-
-## 矩阵向量乘
-
-用pthreads编写一个矩阵向量乘的程序：
-
+<p>第一个参数是一个指向pthread_t对象的指针，且必须提前为它分配地址，以便pthread_create修改它指向的内容。第二个参数一般就是NULL，不用管。</p>
+<p>第三个参数是一个指针，指向一个函数，这个函数只有一个参数，是一个指向void类型的指针，返回值也是一个指向void类型的指针。</p>
+<p>第四个参数是一个指向void类型的指针，用它来给第三个参数指向的函数提供参数。</p>
+<p>通过pthread_create()函数我们创建了一个线程，它要做的就是执行第三个参数指向的函数。在第19行里，我们给它的第三个参数是Hello函数，第四个参数是(void*)thread。</p>
+<p>在这里，thread变量可以用来标志线程号，把它转化为(void*)指针是为了跟Hello函数的参数列表匹配。此后，在Hello函数里，我们又把它转化为long类型，这样我们就可以得到这个线程的线程号。</p>
+<p>第21行调用了pthread_join()函数，顾名思义，它用来等待那个线程的结束。</p>
+<p>第22行用来free掉thread_handles数组。</p>
+<p>运行的结果如下:<br><img src="https://i.loli.net/2020/04/19/mG2nkLtZyCTsDXW.png" alt="image.png"><br>注意，main函数执行第20行时，其他线程已经启动，所以输出的顺序是不确定的。</p>
+<h2 id="矩阵向量乘"><a href="#矩阵向量乘" class="headerlink" title="矩阵向量乘"></a>矩阵向量乘</h2><p>用pthreads编写一个矩阵向量乘的程序：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="keyword">int</span> thread_count,n,m;</span><br><span class="line"><span class="keyword">double</span>** A,*x,*y;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">Pth_mat_vect</span><span class="params">(<span class="keyword">void</span>* rank)</span></span>&#123;</span><br><span class="line">  <span class="keyword">long</span> my_rank=(<span class="keyword">long</span>)rank;</span><br><span class="line">  <span class="keyword">int</span> i,j,local_m=m/thread_count;</span><br><span class="line">  <span class="keyword">int</span> my_first_row=my_rank*local_m,my_last_row=my_first_row+local_m;</span><br><span class="line">  <span class="keyword">for</span>(i=my_first_row;i&lt;my_last_row;i++)&#123;</span><br><span class="line">    <span class="keyword">double</span> tem=<span class="number">0.0</span>,*A2=A[i];</span><br><span class="line">    <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;n;j++)&#123;</span><br><span class="line">      tem+=A2[j]*x[j];</span><br><span class="line">    &#125;</span><br><span class="line">    y[i]=tem;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span>** argv)</span></span>&#123;</span><br><span class="line">  freopen(<span class="string">"out2.txt"</span>,<span class="string">"a"</span>,<span class="built_in">stdout</span>);</span><br><span class="line">  <span class="keyword">if</span>(argc!=<span class="number">4</span>)<span class="built_in">abort</span>();</span><br><span class="line">  <span class="keyword">long</span> thread;</span><br><span class="line">  <span class="keyword">pthread_t</span>* thread_handles;</span><br><span class="line">  thread_count=strtol(argv[<span class="number">1</span>],<span class="literal">NULL</span>,<span class="number">10</span>);</span><br><span class="line">  m=strtol(argv[<span class="number">2</span>],<span class="literal">NULL</span>,<span class="number">10</span>);</span><br><span class="line">  n=strtol(argv[<span class="number">3</span>],<span class="literal">NULL</span>,<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">  A=(<span class="keyword">double</span>**)<span class="built_in">malloc</span>(m*<span class="keyword">sizeof</span>(<span class="keyword">double</span>*));</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m;i++)A[i]=(<span class="keyword">double</span>*)<span class="built_in">malloc</span>(n*<span class="keyword">sizeof</span>(<span class="keyword">double</span>));</span><br><span class="line">  x=(<span class="keyword">double</span>*)<span class="built_in">malloc</span>(n*<span class="keyword">sizeof</span>(<span class="keyword">double</span>));</span><br><span class="line">  y=(<span class="keyword">double</span>*)<span class="built_in">malloc</span>(m*<span class="keyword">sizeof</span>(<span class="keyword">double</span>));</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m;i++)&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;n;j++)&#123;</span><br><span class="line">      A[i][j]=(<span class="keyword">double</span>)rand()/RAND_MAX;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)x[i]=(<span class="keyword">double</span>)rand()/RAND_MAX;</span><br><span class="line"></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">tv</span>,<span class="title">tv2</span>;</span></span><br><span class="line">  gettimeofday(&amp;tv,<span class="literal">NULL</span>);</span><br><span class="line">  thread_handles=<span class="built_in">malloc</span>(thread_count*<span class="keyword">sizeof</span>(<span class="keyword">pthread_t</span>));</span><br><span class="line">  <span class="keyword">for</span>(thread=<span class="number">0</span>;thread&lt;thread_count;thread++)pthread_create(&amp;thread_handles[thread],<span class="literal">NULL</span>,Pth_mat_vect,(<span class="keyword">void</span>*)thread);</span><br><span class="line">  <span class="comment">//printf("Hello from the main thread\n");</span></span><br><span class="line">  <span class="keyword">for</span>(thread=<span class="number">0</span>;thread&lt;thread_count;thread++)pthread_join(thread_handles[thread],<span class="literal">NULL</span>);</span><br><span class="line"><span class="comment">//  for(int i=0;i&lt;m;i++)printf("%f\n",y[i]);</span></span><br><span class="line">  gettimeofday(&amp;tv2,<span class="literal">NULL</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,tv2.tv_sec*<span class="number">1000000</span> + tv2.tv_usec - tv.tv_sec*<span class="number">1000000</span> - tv.tv_usec);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">free</span>(thread_handles);</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m;i++)<span class="built_in">free</span>(A[i]);</span><br><span class="line">  <span class="built_in">free</span>(A),<span class="built_in">free</span>(x),<span class="built_in">free</span>(y);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-平均用时如下:(单位μs)
-|矩阵大小\线程数|1|2|4|5|8|10|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|200|337 |282| 378 |895 |698| 969 |
-|500|803 |562| 625 |543| 829 |956|
-|1000|2716| 2499 |961 |1349| 1048| 1389|
-|2000|15894 |5466 |2855 |3469 |2559| 2778|
-|5000|65230 |30717 |26828 |20336 |13326| 14294|
-|10000|294865| 133474| 65650 |77883 |50221| 53250|
-
-加速比如下:
-
-|矩阵大小\线程数|1|2|4|5|8|10|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|200|1|1.19504|0.891534|0.376536|0.482808|0.347781|
-|500|1|1.42883|1.2848|1.47882|0.968637|0.839958|
-|1000|1|1.08683|2.82622|2.01334|2.5916|1.95536|
-|2000|1|2.90779|5.56708|4.58172|6.21102|5.72138|
-|5000|1|2.12358|2.43141|3.20761|4.89494|4.56345|
-|10000|1|2.20916|4.49147|3.786|5.87135|5.53737|
-
-效率如下:
-
-|矩阵大小\线程数|1|2|4|5|8|10|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|200|1|0.59752|0.22288|0.075307|0.060351|0.034778|
-|500|1|0.71441|0.3212|0.29576|0.12108|0.083996|
-|1000|1|0.54342|0.70656|0.40267|0.32395|0.19554|
-|2000|1|1.4539|1.3918|0.91634|0.77638|0.57214|
-|5000|1|1.0618|0.60785|0.64152|0.61187|0.45635|
-|10000|1|1.1046|1.1229|0.7572|0.73392|0.55374|
+<p>平均用时如下:(单位μs)<br>|矩阵大小\线程数|1|2|4|5|8|10|<br>|:-:|:-:|:-:|:-:|:-:|:-:|:-:|<br>|200|337 |282| 378 |895 |698| 969 |<br>|500|803 |562| 625 |543| 829 |956|<br>|1000|2716| 2499 |961 |1349| 1048| 1389|<br>|2000|15894 |5466 |2855 |3469 |2559| 2778|<br>|5000|65230 |30717 |26828 |20336 |13326| 14294|<br>|10000|294865| 133474| 65650 |77883 |50221| 53250|</p>
+<p>加速比如下:</p>
+<table>
+<thead>
+<tr>
+<th align="center">矩阵大小\线程数</th>
+<th align="center">1</th>
+<th align="center">2</th>
+<th align="center">4</th>
+<th align="center">5</th>
+<th align="center">8</th>
+<th align="center">10</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">200</td>
+<td align="center">1</td>
+<td align="center">1.19504</td>
+<td align="center">0.891534</td>
+<td align="center">0.376536</td>
+<td align="center">0.482808</td>
+<td align="center">0.347781</td>
+</tr>
+<tr>
+<td align="center">500</td>
+<td align="center">1</td>
+<td align="center">1.42883</td>
+<td align="center">1.2848</td>
+<td align="center">1.47882</td>
+<td align="center">0.968637</td>
+<td align="center">0.839958</td>
+</tr>
+<tr>
+<td align="center">1000</td>
+<td align="center">1</td>
+<td align="center">1.08683</td>
+<td align="center">2.82622</td>
+<td align="center">2.01334</td>
+<td align="center">2.5916</td>
+<td align="center">1.95536</td>
+</tr>
+<tr>
+<td align="center">2000</td>
+<td align="center">1</td>
+<td align="center">2.90779</td>
+<td align="center">5.56708</td>
+<td align="center">4.58172</td>
+<td align="center">6.21102</td>
+<td align="center">5.72138</td>
+</tr>
+<tr>
+<td align="center">5000</td>
+<td align="center">1</td>
+<td align="center">2.12358</td>
+<td align="center">2.43141</td>
+<td align="center">3.20761</td>
+<td align="center">4.89494</td>
+<td align="center">4.56345</td>
+</tr>
+<tr>
+<td align="center">10000</td>
+<td align="center">1</td>
+<td align="center">2.20916</td>
+<td align="center">4.49147</td>
+<td align="center">3.786</td>
+<td align="center">5.87135</td>
+<td align="center">5.53737</td>
+</tr>
+</tbody></table>
+<p>效率如下:</p>
+<table>
+<thead>
+<tr>
+<th align="center">矩阵大小\线程数</th>
+<th align="center">1</th>
+<th align="center">2</th>
+<th align="center">4</th>
+<th align="center">5</th>
+<th align="center">8</th>
+<th align="center">10</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">200</td>
+<td align="center">1</td>
+<td align="center">0.59752</td>
+<td align="center">0.22288</td>
+<td align="center">0.075307</td>
+<td align="center">0.060351</td>
+<td align="center">0.034778</td>
+</tr>
+<tr>
+<td align="center">500</td>
+<td align="center">1</td>
+<td align="center">0.71441</td>
+<td align="center">0.3212</td>
+<td align="center">0.29576</td>
+<td align="center">0.12108</td>
+<td align="center">0.083996</td>
+</tr>
+<tr>
+<td align="center">1000</td>
+<td align="center">1</td>
+<td align="center">0.54342</td>
+<td align="center">0.70656</td>
+<td align="center">0.40267</td>
+<td align="center">0.32395</td>
+<td align="center">0.19554</td>
+</tr>
+<tr>
+<td align="center">2000</td>
+<td align="center">1</td>
+<td align="center">1.4539</td>
+<td align="center">1.3918</td>
+<td align="center">0.91634</td>
+<td align="center">0.77638</td>
+<td align="center">0.57214</td>
+</tr>
+<tr>
+<td align="center">5000</td>
+<td align="center">1</td>
+<td align="center">1.0618</td>
+<td align="center">0.60785</td>
+<td align="center">0.64152</td>
+<td align="center">0.61187</td>
+<td align="center">0.45635</td>
+</tr>
+<tr>
+<td align="center">10000</td>
+<td align="center">1</td>
+<td align="center">1.1046</td>
+<td align="center">1.1229</td>
+<td align="center">0.7572</td>
+<td align="center">0.73392</td>
+<td align="center">0.55374</td>
+</tr>
+</tbody></table>
 
     </div>
 
@@ -363,6 +448,7 @@ Pthreads用共享内存模型进行并行编程。一般地，程序会启动一
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Pthreads学习笔记1"><span class="nav-number">1.</span> <span class="nav-text">Pthreads学习笔记1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Pthreads的hello-world程序"><span class="nav-number">1.1.</span> <span class="nav-text">Pthreads的hello world程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#矩阵向量乘"><span class="nav-number">1.2.</span> <span class="nav-text">矩阵向量乘</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -485,8 +571,6 @@ Pthreads用共享内存模型进行并行编程。一般地，程序会启动一
 
 
 
-
-  
 
   
 
