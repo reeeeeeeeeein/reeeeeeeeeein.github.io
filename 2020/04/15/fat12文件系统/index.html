@@ -21,38 +21,17 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="fat12文件系统仿真实验报告实验目的&amp;#8195;&amp;#8195;本实验目的在于学习fat12文件系统，增强编写C语言、C++语言和汇编语言程序的的能力，为进一步学习操作系统相关知识做好准备。 实验要求总体要求&amp;#8195;&amp;#8195;用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的FAT12文件系统仿真程序 具体要求&amp;#8195;&amp;#8195;用c、c++或汇编与c组合，编">
+  <meta name="description" content="# fat12文件系统仿真实验报告   ## 实验目的  &amp;#8195;&amp;#8195;本实验目的在于学习fat12文件系统，增强编写C语言、C++语言和汇编语言程序的的能力，为进一步学习操作系统相关知识做好准备。  ## 实验要求  ### 总体要求  &amp;#8195;&amp;#8195;用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的FAT12文件系统仿真程序  ### 具体要求">
 <meta property="og:type" content="article">
 <meta property="og:title" content="fat12文件系统">
 <meta property="og:url" content="http://yoursite.com/2020/04/15/fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/index.html">
 <meta property="og:site_name" content="reeeeeeeeeein的博客">
-<meta property="og:description" content="fat12文件系统仿真实验报告实验目的&amp;#8195;&amp;#8195;本实验目的在于学习fat12文件系统，增强编写C语言、C++语言和汇编语言程序的的能力，为进一步学习操作系统相关知识做好准备。 实验要求总体要求&amp;#8195;&amp;#8195;用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的FAT12文件系统仿真程序 具体要求&amp;#8195;&amp;#8195;用c、c++或汇编与c组合，编">
+<meta property="og:description" content="# fat12文件系统仿真实验报告   ## 实验目的  &amp;#8195;&amp;#8195;本实验目的在于学习fat12文件系统，增强编写C语言、C++语言和汇编语言程序的的能力，为进一步学习操作系统相关知识做好准备。  ## 实验要求  ### 总体要求  &amp;#8195;&amp;#8195;用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的FAT12文件系统仿真程序  ### 具体要求">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i.loli.net/2020/04/01/SsDBwxbyukm4Hvo.png">
-<meta property="og:image" content="https://i.loli.net/2020/03/30/NUZMQVGdKsD8uCb.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/01/lA7fVIsEn14JSBh.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/01/56owAs1WFaBnOgf.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/01/qMFOnw7YvjibfNh.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/01/XJm7K58ohPzADF9.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/01/XUI76AZpoPQs9uB.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/01/yp4aPLAuk9rbUtG.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/14/CLgk7ZFD1Q6fNmp.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/15/XELPIqom6kZd8sw.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/15/RhFQNvI4Yn2kfZA.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/15/UliEz8pGcV1tS9L.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/15/GIBgNKhYoRkCXb8.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/15/3sncS9lR1XybkoK.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/15/IUi8WJgtXZH2bCR.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/15/KIqjTfQX3vzHZsP.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/15/LGyKaSrANFbP497.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/15/iDcPjqfGAby87de.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/15/dlXBxtUIA4VnTzH.png">
-<meta property="og:image" content="https://i.loli.net/2020/04/15/cFNKIGk6BWAuCoH.png">
 <meta property="article:published_time" content="2020-04-15T04:45:27.974Z">
 <meta property="article:modified_time" content="2020-04-15T04:45:27.974Z">
 <meta property="article:author" content="reeeeeeeeeein">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2020/04/01/SsDBwxbyukm4Hvo.png">
 
 <link rel="canonical" href="http://yoursite.com/2020/04/15/fat12%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">
 
@@ -232,260 +211,407 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="fat12文件系统仿真实验报告"><a href="#fat12文件系统仿真实验报告" class="headerlink" title="fat12文件系统仿真实验报告"></a>fat12文件系统仿真实验报告</h1><h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><p>&#8195;&#8195;本实验目的在于学习fat12文件系统，增强编写C语言、C++语言和汇编语言程序的的能力，为进一步学习操作系统相关知识做好准备。</p>
-<h2 id="实验要求"><a href="#实验要求" class="headerlink" title="实验要求"></a>实验要求</h2><h3 id="总体要求"><a href="#总体要求" class="headerlink" title="总体要求"></a>总体要求</h3><p>&#8195;&#8195;用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的FAT12文件系统仿真程序</p>
-<h3 id="具体要求"><a href="#具体要求" class="headerlink" title="具体要求"></a>具体要求</h3><p>&#8195;&#8195;用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的程序:</p>
-<p>&#8195;&#8195;1.查看fdd144虚拟软盘的第一个扇区内容是否符合FAT12格式。<br>&#8195;&#8195;2.检查fdd144虚拟软盘的FAT12格式各部分信息是否一致完整。<br>&#8195;&#8195;3.列出fdd144虚拟软盘中根目录文件目录内容。<br>&#8195;&#8195;4.列出fdd144虚拟软盘中目录树。<br>&#8195;&#8195;5.提供一个输入框，输入任意字符，创建一个文件保存这些输入的字符。<br>&#8195;&#8195;6.删除根目录的一个指定文件<br>&#8195;&#8195;7.实现按路径名操作文件<br>&#8195;&#8195;8.显示一个文件的内容<br>&#8195;&#8195;9.编辑文件的内容<br>&#8195;&#8195;10.复制文件，2个文件合并为一个文件。<br>&#8195;&#8195;11.建立子目录<br>&#8195;&#8195;12.删除子目录<br>&#8195;&#8195;13.其他</p>
-<h2 id="实验方案与过程"><a href="#实验方案与过程" class="headerlink" title="实验方案与过程"></a>实验方案与过程</h2><h3 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h3><p>&#8195;&#8195;首先通过WinImage软件创建一个虚拟软盘，往里面添加文件，保存后得到一个fat12格式的软盘。为了方便验证结果是否正确，我使用了HexView工具来查看软盘的内容。编写代码时，我主要在WSL(一个可以在windows操作系统下运行的linux简化版)系统下使用VSCode编辑器，用c语言和c++语言进行编程。</p>
-<h3 id="fat12文件系统相关知识"><a href="#fat12文件系统相关知识" class="headerlink" title="fat12文件系统相关知识"></a>fat12文件系统相关知识</h3><p>&#8195;&#8195;一块1.44MB的fat12格式的软盘共有2880个扇区，每个扇区512占个字节。其中第0个扇区称为主引导扇区;第1-9扇区为fat表;第10-18扇区是fat表的复制版;第19-32扇区为根目录区;从第33扇区往后为数据区。</p>
-<p>&#8195;&#8195;字节和扇区在fat12文件系统中是两个相当重要的概念，为此，我们在程序中定义bt这个结构体来表示字节，sector这个结构体来表示扇区。为了方便行文，先给出它们的定义:</p>
+        # fat12文件系统仿真实验报告
+
+
+## 实验目的
+
+&#8195;&#8195;本实验目的在于学习fat12文件系统，增强编写C语言、C++语言和汇编语言程序的的能力，为进一步学习操作系统相关知识做好准备。
+
+## 实验要求
+
+### 总体要求
+
+&#8195;&#8195;用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的FAT12文件系统仿真程序
+
+### 具体要求
+
+&#8195;&#8195;用c、c++或汇编与c组合，编写一个具有下列功能的可视化或命令操作的程序:
+
+&#8195;&#8195;1.查看fdd144虚拟软盘的第一个扇区内容是否符合FAT12格式。
+&#8195;&#8195;2.检查fdd144虚拟软盘的FAT12格式各部分信息是否一致完整。
+&#8195;&#8195;3.列出fdd144虚拟软盘中根目录文件目录内容。
+&#8195;&#8195;4.列出fdd144虚拟软盘中目录树。
+&#8195;&#8195;5.提供一个输入框，输入任意字符，创建一个文件保存这些输入的字符。
+&#8195;&#8195;6.删除根目录的一个指定文件
+&#8195;&#8195;7.实现按路径名操作文件
+&#8195;&#8195;8.显示一个文件的内容
+&#8195;&#8195;9.编辑文件的内容
+&#8195;&#8195;10.复制文件，2个文件合并为一个文件。
+&#8195;&#8195;11.建立子目录
+&#8195;&#8195;12.删除子目录
+&#8195;&#8195;13.其他
+
+## 实验方案与过程
+
+### 实验环境
+
+&#8195;&#8195;首先通过WinImage软件创建一个虚拟软盘，往里面添加文件，保存后得到一个fat12格式的软盘。为了方便验证结果是否正确，我使用了HexView工具来查看软盘的内容。编写代码时，我主要在WSL(一个可以在windows操作系统下运行的linux简化版)系统下使用VSCode编辑器，用c语言和c++语言进行编程。
+
+### fat12文件系统相关知识
+
+&#8195;&#8195;一块1.44MB的fat12格式的软盘共有2880个扇区，每个扇区512占个字节。其中第0个扇区称为主引导扇区;第1-9扇区为fat表;第10-18扇区是fat表的复制版;第19-32扇区为根目录区;从第33扇区往后为数据区。
+
+&#8195;&#8195;字节和扇区在fat12文件系统中是两个相当重要的概念，为此，我们在程序中定义bt这个结构体来表示字节，sector这个结构体来表示扇区。为了方便行文，先给出它们的定义:
+
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">byte</span>//用<span class="title">byte</span>和<span class="title">bt</span>来表示字节</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">char</span> s[<span class="number">9</span>];<span class="comment">//把字节用01字符串表示</span></span><br><span class="line">    <span class="keyword">char</span> h, l;<span class="comment">//把字节用16进制表示，h为高4位，l为低4位</span></span><br><span class="line">    uc ascii;<span class="comment">//这个字节的值，uc是unsigned char</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">input</span><span class="params">()</span></span>;<span class="comment">//从输入流中读取一个字节</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">from_char</span><span class="params">(<span class="keyword">char</span> c)</span></span>;</span><br><span class="line">&#125; bt;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Sector</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    bt bs[SIZE_OF_SECTOR];<span class="comment">//SIZE_OF_SECTOR默认是512</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">input</span><span class="params">()</span></span>;<span class="comment">//从输入流中读取扇区</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">input_from_string</span><span class="params">(<span class="built_in">string</span> a)</span></span>;<span class="comment">//从一个长为512的字符串中读取扇区</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">output</span><span class="params">()</span></span>;<span class="comment">//打印扇区内容，方便调试</span></span><br><span class="line">    bt <span class="keyword">operator</span>[](<span class="keyword">int</span> i);<span class="comment">//按下标取出一个字节</span></span><br><span class="line">&#125; sector;</span><br></pre></td></tr></table></figure>
 
-<h4 id="创建软盘"><a href="#创建软盘" class="headerlink" title="创建软盘"></a>创建软盘</h4><p>&#8195;&#8195;我们使用WinImage工具创建软盘。<br>&#8195;&#8195;打开WinImage，点击左上角的文件、新建，然后确定，就创建了一块软盘，我们可以往里面添加文件，我随便拖了两个文件进去，结果如下<br><img src="https://i.loli.net/2020/04/01/SsDBwxbyukm4Hvo.png" alt="image.png"><br>&#8195;&#8195;按ctrl+s，将其保存为vfd文件。<br>&#8195;&#8195;然后就可以通过HexView工具打开它。</p>
-<h4 id="引导扇区"><a href="#引导扇区" class="headerlink" title="引导扇区"></a>引导扇区</h4><p>&#8195;&#8195;引导扇区主要记录了软盘的相关信息和引导扇区程序。启动计算机时，BIOS程序通过读入引导扇区中的引导扇区程序来启动操作系统。引导扇区的内容如下表所示:<br>(下表主要参考CSDN博客<a href="https://blog.csdn.net/begginghard/article/details/7284834?depth_1-utm_source=distribute.pc_relevant_right.none-task&amp;utm_source=distribute.pc_relevant_right.none-task" target="_blank" rel="noopener">https://blog.csdn.net/begginghard/article/details/7284834?depth_1-utm_source=distribute.pc_relevant_right.none-task&amp;utm_source=distribute.pc_relevant_right.none-task</a>)<br>|名称|开始字节|长度|内容|参考值|<br>|–|–|–|–|–|<br>|BS_jmpBOOT|0|3|一个短跳转指令|0xEB 0x58 0x90|<br>|BS_OEMName|3|8|厂商名|’ZGH’|<br>|BPB_BytesPerSec|11|2|每扇区字节数（Bytes/Sector）|0x200|<br>|BPB_SecPerClus|13|1|每簇扇区数（Sector/Cluster）|0x1|<br>|BPB_ResvdSecCnt|14|2|Boot记录占用多少扇区|ox1|<br>|BPB_NumFATs|16|1|共有多少FAT表|0x2|<br>|BPB_RootEntCnt|17|2|根目录区文件最大数|0xE0|<br>|BPB_TotSec16|19|2|扇区总数|0xB40|<br>|BPB_Media|21|1|介质描述符|0xF0|<br>|BPB_FATSz16|22|2|每个FAT表所占扇区数|0x9|<br>|BPB_SecPerTrk|24|2|每磁道扇区数（Sector/track）|0x12|<br>|BPB_NumHeads|26|2|磁头数（面数）|0x2|<br>|BPB_HiddSec|28|4|隐藏扇区数|0|<br>|BPB_TotSec32|32|4|如果BPB_TotSec16=0,则由这里给出扇区数|0|<br>|BS_DrvNum|36|1|INT|13H的驱动器号|<br>|0|BS_Reserved1|37|1|保留，未使用|<br>|0|BS_BootSig|38|1|扩展引导标记(29h)|<br>|0x29|BS_VolID|39|4|卷序列号|<br>|0|BS_VolLab|43|11|卷标|<br>|’ZGH’|BS_FileSysType|54|8|文件系统类型|<br>|引导扇区程序|62|448|引导代码及其他数据|引导代码（剩余空间用0填充）|<br>|结束标志0xAA55|510|2|第510字节为0x55，第511字节为0xAA|0xAA55|</p>
-<p>&#8195;&#8195;BIOS程序通过识别结束标志判断该软盘是否符合fat12格式。</p>
-<p>&#8195;&#8195;在程序中，我们需要将软盘中的第一个扇区读入程序中，并判断它是否符合fat12格式。由于引导扇区本身就是一个扇区，所以定义sector的子类MBR，用以表示一个扇区。</p>
+#### 创建软盘
+
+&#8195;&#8195;我们使用WinImage工具创建软盘。
+&#8195;&#8195;打开WinImage，点击左上角的文件、新建，然后确定，就创建了一块软盘，我们可以往里面添加文件，我随便拖了两个文件进去，结果如下
+![image.png](https://i.loli.net/2020/04/01/SsDBwxbyukm4Hvo.png)
+&#8195;&#8195;按ctrl+s，将其保存为vfd文件。
+&#8195;&#8195;然后就可以通过HexView工具打开它。
+
+#### 引导扇区
+
+&#8195;&#8195;引导扇区主要记录了软盘的相关信息和引导扇区程序。启动计算机时，BIOS程序通过读入引导扇区中的引导扇区程序来启动操作系统。引导扇区的内容如下表所示:
+(下表主要参考CSDN博客<https://blog.csdn.net/begginghard/article/details/7284834?depth_1-utm_source=distribute.pc_relevant_right.none-task&utm_source=distribute.pc_relevant_right.none-task>)
+|名称|开始字节|长度|内容|参考值|
+|--|--|--|--|--|
+|BS_jmpBOOT|0|3|一个短跳转指令|0xEB 0x58 0x90|
+|BS_OEMName|3|8|厂商名|'ZGH'|
+|BPB_BytesPerSec|11|2|每扇区字节数（Bytes/Sector）|0x200|
+|BPB_SecPerClus|13|1|每簇扇区数（Sector/Cluster）|0x1|
+|BPB_ResvdSecCnt|14|2|Boot记录占用多少扇区|ox1|
+|BPB_NumFATs|16|1|共有多少FAT表|0x2|
+|BPB_RootEntCnt|17|2|根目录区文件最大数|0xE0|
+|BPB_TotSec16|19|2|扇区总数|0xB40|
+|BPB_Media|21|1|介质描述符|0xF0|
+|BPB_FATSz16|22|2|每个FAT表所占扇区数|0x9|
+|BPB_SecPerTrk|24|2|每磁道扇区数（Sector/track）|0x12|
+|BPB_NumHeads|26|2|磁头数（面数）|0x2|
+|BPB_HiddSec|28|4|隐藏扇区数|0|
+|BPB_TotSec32|32|4|如果BPB_TotSec16=0,则由这里给出扇区数|0|
+|BS_DrvNum|36|1|INT|13H的驱动器号|
+|0|BS_Reserved1|37|1|保留，未使用|
+|0|BS_BootSig|38|1|扩展引导标记(29h)|
+|0x29|BS_VolID|39|4|卷序列号|
+|0|BS_VolLab|43|11|卷标|
+|'ZGH'|BS_FileSysType|54|8|文件系统类型|
+|引导扇区程序|62|448|引导代码及其他数据|引导代码（剩余空间用0填充）|
+|结束标志0xAA55|510|2|第510字节为0x55，第511字节为0xAA|0xAA55|
+
+&#8195;&#8195;BIOS程序通过识别结束标志判断该软盘是否符合fat12格式。
+
+&#8195;&#8195;在程序中，我们需要将软盘中的第一个扇区读入程序中，并判断它是否符合fat12格式。由于引导扇区本身就是一个扇区，所以定义sector的子类MBR，用以表示一个扇区。
+
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">MBR</span>:</span><span class="keyword">public</span> sector&#123;</span><br><span class="line">    <span class="keyword">char</span> BS_OEMName[<span class="number">8</span>]; <span class="comment">// OEM字符串，必须为8个字符，不足以空格填空 </span></span><br><span class="line">    short BPB_BytsPerSec; <span class="comment">// 每扇区字节数 </span></span><br><span class="line">    <span class="keyword">char</span> BPB_SecPerClus; <span class="comment">// 每簇占用的扇区数 </span></span><br><span class="line">    short BPB_RsvdSecCnt; <span class="comment">// Boot占用的扇区数 </span></span><br><span class="line">    <span class="keyword">char</span> BPB_NumFATs; <span class="comment">// FAT表的记录数 </span></span><br><span class="line">    short BPB_RootEntCnt; <span class="comment">// 最大根目录文件数 </span></span><br><span class="line">    short BPB_TotSec16; <span class="comment">// 扇区总数 </span></span><br><span class="line">    <span class="keyword">char</span> BPB_Media; <span class="comment">// 媒体描述符 </span></span><br><span class="line">    short BPB_FATSz16; <span class="comment">// 每个FAT占用扇区数 </span></span><br><span class="line">    short BPB_SecPerTrk; <span class="comment">// 每个磁道扇区数 </span></span><br><span class="line">    short BPB_NumHeads; <span class="comment">// 磁头数 </span></span><br><span class="line">    <span class="keyword">int</span> BPB_HiddSec; <span class="comment">// 隐藏扇区数 </span></span><br><span class="line">    <span class="keyword">int</span> BPB_TotSec32; <span class="comment">// 如果BPB_TotSec16是0，则在这里记录 </span></span><br><span class="line">    <span class="keyword">char</span> BS_DrvNum; <span class="comment">// 中断13的驱动器号 </span></span><br><span class="line">    <span class="keyword">char</span> BS_Reserved1; <span class="comment">// 未使用 </span></span><br><span class="line">    <span class="keyword">char</span> BS_BootSig; <span class="comment">// 扩展引导标志 </span></span><br><span class="line">    <span class="keyword">int</span> BS_VolID; <span class="comment">// 卷序列号 </span></span><br><span class="line">    <span class="keyword">char</span> BS_VolLab[<span class="number">11</span>]; <span class="comment">// 卷标，必须是11个字符，不足以空格填充 </span></span><br><span class="line">    <span class="keyword">char</span> BS_FileSysType[<span class="number">8</span>];<span class="comment">// 文件系统类型，8个字符，不足填充空格</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>;<span class="comment">//用于读入后初始化各个变量</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">check</span><span class="params">()</span></span>;<span class="comment">//用于检查MBR是否合法</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">int</span>&amp; Byte_Per_Sector,<span class="keyword">int</span>&amp; Sector_Per_Cluster,<span class="keyword">int</span>&amp; Num_Of_Fats,<span class="keyword">int</span>&amp; Root_Entry_Count,<span class="keyword">int</span>&amp; Num_Of_Sector,<span class="keyword">int</span>&amp; Size_Of_Fat,<span class="keyword">int</span>&amp; Sector_Hidden)</span></span>;<span class="comment">//用于显示提示信息</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-<p>&#8195;&#8195;在程序开始时，我们首先读入MBR，调用init()函数对各个变量进行赋值；再检查它的前三个字节是否为0xeb 0x58 0x90;然后检查各个变量是否符合默认值；最后看结束标志是否为 0xaa55。如果发现问题，则给出提示信息并中止程序。如果检查正确，则调用print()函数输出各项信息。</p>
-<h4 id="fat区"><a href="#fat区" class="headerlink" title="fat区"></a>fat区</h4><p>&#8195;&#8195;fat区共有18个扇区，其中后9个扇区是前9个扇区的副本。fat12文件系统启动时，需要检查这两部分是否一样。我们将前9个扇区称为fat表。从名字中就可以看出，fat表是fat12文件系统的核心。</p>
-<p>&#8195;&#8195;在fat12文件系统中，文件存储是以簇为单位的，一般情况下，一个簇就是一个扇区，所以下文将簇与扇区划等号。对于一个文件，如果它的大小小于512字节，则在数据区中给它分配一个簇，将它的内容写进这个簇里，然后将fat表中这个簇对应的值(下文会详述这种对应的方式)修改为一个特殊的结束标志。</p>
-<p>&#8195;&#8195;如果它的大小大于等于512字节呢？首先还是分配簇a，将文件的前512个字节写进簇a里，然后再分配一个簇b，将fat表中簇a对应的值修改为一个值，通过这个值我们能找到b扇区，然后再分配一个簇c，将fat表中簇b对应的值修改为一个值，通过这个值我们能找到簇c……一直这样下去，直至文件结束，将分配的最后一个簇在fat表中对应的值修改为结束标志。</p>
-<p>&#8195;&#8195;这样，读文件时，只需知道这个文件开始的簇，就可以读下一个簇，下下个簇……直到在fat表里读到结束标志为止。</p>
-<p>&#8195;&#8195;下图是一个fat表的开头：(这个fat表不是刚才创建的软盘的fat表)<br><img src="https://i.loli.net/2020/03/30/NUZMQVGdKsD8uCb.png" alt="image.png"><br>&#8195;&#8195;fat12文件系统中的”12”是什么意思呢？12是指一个fat表中12个bit组成一个fat表项，而我们知道一个字节是8个bit，所以fat表中，3个字节组成两个fat表项。</p>
-<p>&#8195;&#8195;既然如此，fat表该怎么读呢？如果你以为是顺着读，就太naive了。我们知道x86系统采用小端存储方式，就是说，低字节存储在高地址位中(高地址位就是地址值较小)。比如说，一个16位整数0000000011111111，在x86系统中会先存11111111(低字节),再存00000000(高字节)。<br>了解了这些，我们再来看fat表。前3个字节是 0xf0 0xff 0xff。我们把第二个字节的低四位拿出来，跟第一个字节拼在一起，组成0xff0(注意不是0xf0f)，它就是fat表的第一个表项了。再把第三个字节拿出来，和第二个字节的高四位拼在一起，组成 0xfff，它就是第二个表项了，如下图所示：<br>![CEU3__8__V6@DE2`GG9IHO1.png](<a href="https://i.loli.net/2020/03/30/7RItOHvzNwFl6D5.png" target="_blank" rel="noopener">https://i.loli.net/2020/03/30/7RItOHvzNwFl6D5.png</a>)<br>&#8195;&#8195;按这个规则读下去，第三个表项就是0xfff，第四个表项是0x004……</p>
-<p>&#8195;&#8195;现在我们知道如何读这个fat表了。但问题来了，读出来的值有什么用呢？fat表中读出的第一个值表示坏簇标志，一般为0xff0，第二个值是结束标志，一般为0xfff。后续的每个值代表这个簇的下个簇的簇号。如第三个值为0x004，代表第一个簇(前两个值不算)对应的下一个簇是第二个簇，第四个值为0xfff，表示这个文件到第二个簇这里就结束了。</p>
-<p>&#8195;&#8195;在程序中，我们定义一个fat结构体：</p>
+&#8195;&#8195;在程序开始时，我们首先读入MBR，调用init()函数对各个变量进行赋值；再检查它的前三个字节是否为0xeb 0x58 0x90;然后检查各个变量是否符合默认值；最后看结束标志是否为 0xaa55。如果发现问题，则给出提示信息并中止程序。如果检查正确，则调用print()函数输出各项信息。
+
+#### fat区
+
+&#8195;&#8195;fat区共有18个扇区，其中后9个扇区是前9个扇区的副本。fat12文件系统启动时，需要检查这两部分是否一样。我们将前9个扇区称为fat表。从名字中就可以看出，fat表是fat12文件系统的核心。
+
+&#8195;&#8195;在fat12文件系统中，文件存储是以簇为单位的，一般情况下，一个簇就是一个扇区，所以下文将簇与扇区划等号。对于一个文件，如果它的大小小于512字节，则在数据区中给它分配一个簇，将它的内容写进这个簇里，然后将fat表中这个簇对应的值(下文会详述这种对应的方式)修改为一个特殊的结束标志。
+
+&#8195;&#8195;如果它的大小大于等于512字节呢？首先还是分配簇a，将文件的前512个字节写进簇a里，然后再分配一个簇b，将fat表中簇a对应的值修改为一个值，通过这个值我们能找到b扇区，然后再分配一个簇c，将fat表中簇b对应的值修改为一个值，通过这个值我们能找到簇c……一直这样下去，直至文件结束，将分配的最后一个簇在fat表中对应的值修改为结束标志。
+
+&#8195;&#8195;这样，读文件时，只需知道这个文件开始的簇，就可以读下一个簇，下下个簇……直到在fat表里读到结束标志为止。
+
+&#8195;&#8195;下图是一个fat表的开头：(这个fat表不是刚才创建的软盘的fat表)
+![image.png](https://i.loli.net/2020/03/30/NUZMQVGdKsD8uCb.png)
+&#8195;&#8195;fat12文件系统中的"12"是什么意思呢？12是指一个fat表中12个bit组成一个fat表项，而我们知道一个字节是8个bit，所以fat表中，3个字节组成两个fat表项。
+
+&#8195;&#8195;既然如此，fat表该怎么读呢？如果你以为是顺着读，就太naive了。我们知道x86系统采用小端存储方式，就是说，低字节存储在高地址位中(高地址位就是地址值较小)。比如说，一个16位整数0000000011111111，在x86系统中会先存11111111(低字节),再存00000000(高字节)。
+了解了这些，我们再来看fat表。前3个字节是 0xf0 0xff 0xff。我们把第二个字节的低四位拿出来，跟第一个字节拼在一起，组成0xff0(注意不是0xf0f)，它就是fat表的第一个表项了。再把第三个字节拿出来，和第二个字节的高四位拼在一起，组成 0xfff，它就是第二个表项了，如下图所示：
+![CEU3__8__V6@DE2`GG9IHO1.png](https://i.loli.net/2020/03/30/7RItOHvzNwFl6D5.png)
+&#8195;&#8195;按这个规则读下去，第三个表项就是0xfff，第四个表项是0x004……
+
+&#8195;&#8195;现在我们知道如何读这个fat表了。但问题来了，读出来的值有什么用呢？fat表中读出的第一个值表示坏簇标志，一般为0xff0，第二个值是结束标志，一般为0xfff。后续的每个值代表这个簇的下个簇的簇号。如第三个值为0x004，代表第一个簇(前两个值不算)对应的下一个簇是第二个簇，第四个值为0xfff，表示这个文件到第二个簇这里就结束了。
+
+&#8195;&#8195;在程序中，我们定义一个fat结构体：
+
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Fat</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="built_in">vector</span>&lt;bt&gt; bts;<span class="comment">//存储fat表的每一个字节</span></span><br><span class="line">    bt <span class="keyword">operator</span>[](<span class="keyword">int</span> i) &#123; <span class="keyword">return</span> bts[i]; &#125;<span class="comment">//按下标访问fat表中的字节</span></span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; cluster_numbers;<span class="comment">//将fat表转换成一个整数数组，前三个字节没有包含在内</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">(MBR mbr)</span></span>;<span class="comment">/*初始化，由于fat表的实际长度是大于数据区扇区数的，所以要将后面一部分切掉，这</span></span><br><span class="line"><span class="comment">    个长度需要MBR中的一些变量来确定*/</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">get_first_empty</span><span class="params">()</span></span>;<span class="comment">//从fat表中读出一个空的簇号</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">write_floopy</span><span class="params">()</span></span>;<span class="comment">//将fat表写回软盘</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">get_empty</span><span class="params">()</span></span>;<span class="comment">//得到fat表中有多少个未被使用的簇和坏簇，用于检查是否有"孤魂野鬼"簇</span></span><br><span class="line">&#125; fat;</span><br></pre></td></tr></table></figure>
 
-<p>&#8195;&#8195;程序开始时还是先把fat表读进来，并检查两个fat表是否一致，不一致就报错。然后统计空闲簇和坏簇的数量。</p>
-<h4 id="根目录区与数据区"><a href="#根目录区与数据区" class="headerlink" title="根目录区与数据区"></a>根目录区与数据区</h4><p>&#8195;&#8195;根目录区占14个扇区，由于前面已经用了19个扇区(引导扇区1个，fat18个)，所以根目录区是从第19个扇区开始的，起始位置是0x2600。根目录里每32字节构成了一个文件记录，记录了这个文件的基本信息，我们可以根据这个记录来找到文件的内容。</p>
-<p>&#8195;&#8195;在程序中，我们定义rootentry类来表示根目录区，它比较简单，只有一个bt类型的数组，也不需要检查什么东西。</p>
+&#8195;&#8195;程序开始时还是先把fat表读进来，并检查两个fat表是否一致，不一致就报错。然后统计空闲簇和坏簇的数量。
+
+#### 根目录区与数据区
+
+&#8195;&#8195;根目录区占14个扇区，由于前面已经用了19个扇区(引导扇区1个，fat18个)，所以根目录区是从第19个扇区开始的，起始位置是0x2600。根目录里每32字节构成了一个文件记录，记录了这个文件的基本信息，我们可以根据这个记录来找到文件的内容。
+
+&#8195;&#8195;在程序中，我们定义rootentry类来表示根目录区，它比较简单，只有一个bt类型的数组，也不需要检查什么东西。
+
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">RootEntry</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="built_in">vector</span>&lt;bt&gt; bts;</span><br><span class="line"></span><br><span class="line">&#125; rootentry;</span><br></pre></td></tr></table></figure>
 
-<p>&#8195;&#8195;从第33个扇区往后的扇区都是数据区，每个扇区512字节。定义datas类表示数据区。数据区一般包含2847个扇区，所以定义一个sector数组。</p>
+&#8195;&#8195;从第33个扇区往后的扇区都是数据区，每个扇区512字节。定义datas类表示数据区。数据区一般包含2847个扇区，所以定义一个sector数组。
+
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Datas</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="built_in">vector</span>&lt;sector&gt; secs;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">write_floopy</span><span class="params">(<span class="keyword">int</span> clus_num, <span class="built_in">string</span> content)</span></span>;<span class="comment">/*这个函数用于写回软盘</span></span><br><span class="line"><span class="comment">    在程序种写回软盘是以扇区为单位的。第一个参数表示写的是数据区第几个扇区，content是一个512字节的数组表示要写的内容。*/</span></span><br><span class="line">&#125; datas;</span><br></pre></td></tr></table></figure>
 
-<h4 id="文件与文件夹"><a href="#文件与文件夹" class="headerlink" title="文件与文件夹"></a>文件与文件夹</h4><p>&#8195;&#8195;文件的读写是fat12文件系统的重点。我们先来了解文件是怎么组织的。</p>
-<p>&#8195;&#8195;一个文件会有一个32个字节的文件记录，这个文件记录存储在这个文件所属的文件夹里，包含了这个文件的各种信息:</p>
-<p>&#8195;&#8195;第1-8个字节是文件名，如果长度不够就用空格填充；<br>&#8195;&#8195;第9-11个字节是文件后缀名，如果长度不够或者没有后缀就用空格填充；<br>&#8195;&#8195;第12个字节是文件属性，十分重要，一般的文件的文件属性就是0x00，文件夹的文件属性一般是0x10。<br>&#8195;&#8195;第13-22个字节是保留字节，没有作用；<br>&#8195;&#8195;第23,24字节是文件的创建时间<br>&#8195;&#8195;第25,26字节是文件的创建日期，精确到分钟<br>&#8195;&#8195;第27,28字节是文件的起始簇号<br>&#8195;&#8195;第29-32字节是文件的大小<br>&#8195;&#8195;我们以根目录为例：<br><img src="https://i.loli.net/2020/04/01/lA7fVIsEn14JSBh.png" alt="image.png"></p>
-<p>&#8195;&#8195;对于第一个文件，它的名字是NEW,后缀名是CPP，文件属性是0x00,说明它是一个普通文件。创建时间是0x89A4,换成二进制是</p>
-<p>&#8195;&#8195;1000 1001 1010 0100。</p>
-<p>&#8195;&#8195;其中前5位是小时，10001=17,说明创建时间是17点；后6位是分钟,001101=13，说明具体时间是17:13。后五位没有作用(因为5位最多表示32个数，而一分钟有60秒)</p>
-<p>&#8195;&#8195;创建日期是0x507E,换成二进制是</p>
-<p>&#8195;&#8195;0101 0000 0111 1110</p>
-<p>&#8195;&#8195;前7位是年份与1980的差值， 01010000=40,40+1980=2020，说明文件创建于2020年；后面4位是月份，0011是3，说明是2020年的3月；后面5位11110=30说明日期是 2020-3-30<br>起始簇号是0x0002</p>
-<p>&#8195;&#8195;大小是0x0000003c，说明它一共占60个字节。</p>
-<p>&#8195;&#8195;现在我们知道了这个文件的基本信息，我们要怎么找到它的内容呢？这就需要我们看一下数据区了。</p>
-<p>&#8195;&#8195;从第33个扇区往后的扇区都是数据区，每个扇区512字节。上文的NEW.CPP文件的起始簇号是2，由于fat表前两个值有其他用途，所以簇号2代表的是第一个簇，或者说数据区的第一个扇区。</p>
-<p>&#8195;&#8195;数据区的起始位置是0x4200，我们看看这里有什么：<br><img src="https://i.loli.net/2020/04/01/56owAs1WFaBnOgf.png" alt="image.png"><br>&#8195;&#8195;是60个a。</p>
-<p>&#8195;&#8195;再来看根目录下的下一个文件，起始簇号是3，代表它开始于数据区的第一个扇区，即0x4400</p>
-<p><img src="https://i.loli.net/2020/04/01/qMFOnw7YvjibfNh.png" alt="image.png"></p>
-<p>&#8195;&#8195;它是一些奇奇怪怪的东西。</p>
-<p>&#8195;&#8195;根据前文所述的读文件方法，我们可以把整个文件读出来，在此不再赘述。</p>
-<p>&#8195;&#8195;打开前面创建的软盘，点击上方的映像、创建文件夹，然后输入名字，就可以创建一个文件夹了。<br><img src="https://i.loli.net/2020/04/01/XJm7K58ohPzADF9.png" alt="image.png"><br>&#8195;&#8195;往里面拖两个文件<br><img src="https://i.loli.net/2020/04/01/XUI76AZpoPQs9uB.png" alt="image.png"><br>&#8195;&#8195;然后我们来看看根目录里发生了什么：<br><img src="https://i.loli.net/2020/04/01/yp4aPLAuk9rbUtG.png" alt="image.png"><br>&#8195;&#8195;可以看到它多了一个文件记录，名字是HOULAI，后缀是空的，文件属性是0x10，说明这是个文件夹，首簇号是0x2B，由于(0x2B-0x2)*0x200+0x4200=0x9400，我们只需要找到这个地址</p>
-<p><img src="https://i.loli.net/2020/04/14/CLgk7ZFD1Q6fNmp.png" alt="image.png"></p>
-<p>&#8195;&#8195;可以看到，这里也是一个个文件记录，其中有两个比较奇怪，第一个文件记录的名字是”.”,第二个文件记录的名字是”..”。事实上，除了根目录之外的每个文件夹都有这两个记录，”.”表示的是当前文件夹，”..”表示的是上一级文件夹。在程序中读取文件时它们会被忽略。</p>
-<p>&#8195;&#8195;了解了文件和文件夹的存储原理，在程序中读入文件的方法也就很简单了。</p>
-<p>&#8195;&#8195;在程序中，我们把文件和文件夹统一看成文件，用file类来表示它:</p>
+#### 文件与文件夹
+
+&#8195;&#8195;文件的读写是fat12文件系统的重点。我们先来了解文件是怎么组织的。
+
+&#8195;&#8195;一个文件会有一个32个字节的文件记录，这个文件记录存储在这个文件所属的文件夹里，包含了这个文件的各种信息:
+
+&#8195;&#8195;第1-8个字节是文件名，如果长度不够就用空格填充；
+&#8195;&#8195;第9-11个字节是文件后缀名，如果长度不够或者没有后缀就用空格填充；
+&#8195;&#8195;第12个字节是文件属性，十分重要，一般的文件的文件属性就是0x00，文件夹的文件属性一般是0x10。
+&#8195;&#8195;第13-22个字节是保留字节，没有作用；
+&#8195;&#8195;第23,24字节是文件的创建时间
+&#8195;&#8195;第25,26字节是文件的创建日期，精确到分钟
+&#8195;&#8195;第27,28字节是文件的起始簇号
+&#8195;&#8195;第29-32字节是文件的大小
+&#8195;&#8195;我们以根目录为例：
+![image.png](https://i.loli.net/2020/04/01/lA7fVIsEn14JSBh.png)
+
+&#8195;&#8195;对于第一个文件，它的名字是NEW,后缀名是CPP，文件属性是0x00,说明它是一个普通文件。创建时间是0x89A4,换成二进制是
+
+&#8195;&#8195;1000 1001 1010 0100。
+
+&#8195;&#8195;其中前5位是小时，10001=17,说明创建时间是17点；后6位是分钟,001101=13，说明具体时间是17:13。后五位没有作用(因为5位最多表示32个数，而一分钟有60秒)
+
+&#8195;&#8195;创建日期是0x507E,换成二进制是
+
+&#8195;&#8195;0101 0000 0111 1110
+
+&#8195;&#8195;前7位是年份与1980的差值， 01010000=40,40+1980=2020，说明文件创建于2020年；后面4位是月份，0011是3，说明是2020年的3月；后面5位11110=30说明日期是 2020-3-30
+起始簇号是0x0002
+
+&#8195;&#8195;大小是0x0000003c，说明它一共占60个字节。
+
+&#8195;&#8195;现在我们知道了这个文件的基本信息，我们要怎么找到它的内容呢？这就需要我们看一下数据区了。
+
+&#8195;&#8195;从第33个扇区往后的扇区都是数据区，每个扇区512字节。上文的NEW.CPP文件的起始簇号是2，由于fat表前两个值有其他用途，所以簇号2代表的是第一个簇，或者说数据区的第一个扇区。
+
+&#8195;&#8195;数据区的起始位置是0x4200，我们看看这里有什么：
+![image.png](https://i.loli.net/2020/04/01/56owAs1WFaBnOgf.png)
+&#8195;&#8195;是60个a。
+
+&#8195;&#8195;再来看根目录下的下一个文件，起始簇号是3，代表它开始于数据区的第一个扇区，即0x4400
+
+![image.png](https://i.loli.net/2020/04/01/qMFOnw7YvjibfNh.png)
+
+&#8195;&#8195;它是一些奇奇怪怪的东西。
+
+&#8195;&#8195;根据前文所述的读文件方法，我们可以把整个文件读出来，在此不再赘述。
+
+&#8195;&#8195;打开前面创建的软盘，点击上方的映像、创建文件夹，然后输入名字，就可以创建一个文件夹了。
+![image.png](https://i.loli.net/2020/04/01/XJm7K58ohPzADF9.png)
+&#8195;&#8195;往里面拖两个文件
+![image.png](https://i.loli.net/2020/04/01/XUI76AZpoPQs9uB.png)
+&#8195;&#8195;然后我们来看看根目录里发生了什么：
+![image.png](https://i.loli.net/2020/04/01/yp4aPLAuk9rbUtG.png)
+&#8195;&#8195;可以看到它多了一个文件记录，名字是HOULAI，后缀是空的，文件属性是0x10，说明这是个文件夹，首簇号是0x2B，由于(0x2B-0x2)*0x200+0x4200=0x9400，我们只需要找到这个地址
+
+![image.png](https://i.loli.net/2020/04/14/CLgk7ZFD1Q6fNmp.png)
+
+&#8195;&#8195;可以看到，这里也是一个个文件记录，其中有两个比较奇怪，第一个文件记录的名字是".",第二个文件记录的名字是".."。事实上，除了根目录之外的每个文件夹都有这两个记录，"."表示的是当前文件夹，".."表示的是上一级文件夹。在程序中读取文件时它们会被忽略。
+
+&#8195;&#8195;了解了文件和文件夹的存储原理，在程序中读入文件的方法也就很简单了。
+
+&#8195;&#8195;在程序中，我们把文件和文件夹统一看成文件，用file类来表示它:
+
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">File</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="built_in">string</span> content, path;<span class="comment">//分别是文件的内容和路径</span></span><br><span class="line">    <span class="built_in">string</span> name, suffix;<span class="comment">//分别是名字和后缀。文件夹没有后缀</span></span><br><span class="line">    <span class="keyword">int</span> attr, fstclus, size;<span class="comment">//分别是属性，首簇号，大小。文件夹的属性是0x10,普通文件的属性是0x00。</span></span><br><span class="line">    <span class="keyword">unsigned</span> short Time, Date;<span class="comment">//文件上一次修改的时间和日期</span></span><br><span class="line">    File *fa;<span class="comment">//它的上一级文件夹的指针。</span></span><br><span class="line">    <span class="built_in">map</span>&lt;<span class="built_in">string</span>, File *&gt; sons;<span class="comment">/*只有文件夹才有sons这个成员。</span></span><br><span class="line"><span class="comment">    记录了它的子文件和子文件夹，用名字+"."+后缀来当索引*/</span></span><br><span class="line">    File() &#123;&#125;<span class="comment">//默认构造函数</span></span><br><span class="line">    File(<span class="built_in">string</span> Name, File *now);<span class="comment">/*这个构造函数用于给now这个指针指向的文件夹</span></span><br><span class="line"><span class="comment">    添加一个子文件夹，Name指定了文件夹的名字*/</span></span><br><span class="line">    File(<span class="built_in">string</span> Name, <span class="built_in">string</span> Content, File *now);<span class="comment">/*这个构造函数用于给now这个指针指向的文件夹</span></span><br><span class="line"><span class="comment">    添加一个子文件，Name指定了文件的名字和后缀*/</span></span><br><span class="line">    File(File *from);<span class="comment">/*这个构造函数用于创建于from指向的文件内容相同的文件*/</span></span><br><span class="line">    <span class="function"><span class="keyword">unsigned</span> short <span class="title">get_Time</span><span class="params">(<span class="keyword">int</span> h, <span class="keyword">int</span> m)</span></span>;<span class="comment">//获得时间</span></span><br><span class="line">    <span class="function"><span class="keyword">unsigned</span> short <span class="title">get_Date</span><span class="params">(<span class="keyword">int</span> y, <span class="keyword">int</span> m, <span class="keyword">int</span> d)</span></span>;<span class="comment">//获得日期</span></span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">ToString</span><span class="params">()</span></span>;<span class="comment">//将时间和日期转换成string格式</span></span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">to_file_record</span><span class="params">()</span></span>;<span class="comment">//根据文件的信息得到文件的文件记录</span></span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">to_dir_record</span><span class="params">()</span></span>;<span class="comment">//根据文件夹的信息得到文件夹的文件记录</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add_file</span><span class="params">(File *tem_file)</span></span>;<span class="comment">//给文件夹添加一个子文件</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add_file_root</span><span class="params">(File *tem_file)</span></span>;<span class="comment">//跟根目录添加一个子文件</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">get_content</span><span class="params">()</span></span>;<span class="comment">//得到文件的内容</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">write_back</span><span class="params">(<span class="keyword">int</span> loc)</span></span>;<span class="comment">//将修改后的文件内容写回软盘</span></span><br><span class="line">    <span class="function">File *<span class="title">get_son</span><span class="params">(<span class="built_in">string</span> Name, <span class="keyword">bool</span> isn_folder)</span></span>;<span class="comment">//根据名字和后缀得到一个子文件(夹)</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">dir</span><span class="params">()</span></span>;<span class="comment">//输出子文件的信息</span></span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; <span class="title">dir_recusive</span><span class="params">()</span></span>;<span class="comment">//递归得到所有子文件的信息</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span></span>;<span class="comment">//删除这个文件</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">get_content_deleted</span><span class="params">(<span class="keyword">int</span> loc)</span></span>;<span class="comment">/*对文件夹里已经被删除的目录项调用这个函数，</span></span><br><span class="line"><span class="comment">    使得被删除的簇能被捕获，避免出现"孤魂野鬼"*/</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">find_string</span><span class="params">(<span class="keyword">int</span> loc, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; &amp;b, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; &amp;ret)</span></span>;<span class="comment">/*从这个文件夹开始查找</span></span><br><span class="line"><span class="comment">    将输入的字符串转化成b,将返回的路径字符串放在ret里*/</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">create</span><span class="params">(File *tem)</span></span>;<span class="comment">//用于创建于tem指向的文件内容相同的文件//</span></span><br><span class="line">&#125; file;</span><br></pre></td></tr></table></figure>
 
-<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>&#8195;&#8195;本系统完成了要求的所有功能，此外还增加了find功能，具体情况请看下表:</p>
-<table>
-<thead>
-<tr>
-<th>指令</th>
-<th>功能</th>
-<th>备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>help</td>
-<td>输出提示信息</td>
-<td>无</td>
-</tr>
-<tr>
-<td>quit</td>
-<td>退出系统</td>
-<td>无</td>
-</tr>
-<tr>
-<td>cd [相对路径或绝对路径]</td>
-<td>进入指定的文件夹</td>
-<td>“..”表示上一级文件夹，”.”表示当前文件夹,用’/‘作分隔符</td>
-</tr>
-<tr>
-<td>dir</td>
-<td>展示当前文件夹下的文件信息</td>
-<td>会输出名字、后缀、修改时间和大小</td>
-</tr>
-<tr>
-<td>dir_r</td>
-<td>递归的展示当前文件夹下的所有文件</td>
-<td>只能看到名字和后缀</td>
-</tr>
-<tr>
-<td>print [相对路径或绝对路径]</td>
-<td>输出文件内容</td>
-<td>目标文件不能是文件夹</td>
-</tr>
-<tr>
-<td>gedit [相对路径或绝对路径]</td>
-<td>进入文本编辑器模式，编辑指定的文件</td>
-<td>无</td>
-</tr>
-<tr>
-<td>mk [文件名] [文件内容]</td>
-<td>在当前路径下创建一个文件</td>
-<td>文件名长度不能超过8，文件名不能包含非法字符，文件要有后缀，不能与已有文件同名</td>
-</tr>
-<tr>
-<td>mkdir [文件夹名]</td>
-<td>在当前路径下创建一个文件夹</td>
-<td>文件夹名长度不能超过8，文件夹名不能包含非法字符，不能与已有文件夹重名</td>
-</tr>
-<tr>
-<td>rm [相对路径或绝对路径]</td>
-<td>删除一个文件或文件夹</td>
-<td>删除操作不可逆，请谨慎操作</td>
-</tr>
-<tr>
-<td>find [相对路径或绝对路径]</td>
-<td>根据路径查找文件(夹)</td>
-<td>支持通配符’<em>‘和’?’。’</em>‘可以表示任意长度的字符串，’?’可以表示任意字符。系统会输出所有可能的路径</td>
-</tr>
-<tr>
-<td>cp [相对路径或绝对路径][文件夹的相对路径或绝对路径]</td>
-<td>复制文件(夹)</td>
-<td>将第一个参数复制到第二个参数指向的文件夹处</td>
-</tr>
-<tr>
-<td>mv [相对路径或绝对路径][文件夹的相对路径或绝对路径]</td>
-<td>剪切文件</td>
-<td>将第一个参数剪切到第二个参数指向的文件夹处</td>
-</tr>
-</tbody></table>
-<p>&#8195;&#8195;由于许多操作都需要按路径名找到文件，所有我们先来了解按路径名寻找文件的方法:</p>
-<h4 id="路径分析"><a href="#路径分析" class="headerlink" title="路径分析"></a>路径分析</h4><p>&#8195;&#8195;我们在file类中定义了一个map&lt;string,file*&gt;类型的成员变量sons，不用我说也能知道它的作用是什么。</p>
-<p>&#8195;&#8195;在创建一个文件时，如果它是一个文件夹，则对应它的所有子文件，往sons里加入一个(pair){文件名+”.”+后缀，指向该文件的指针}。这样，我们就能很轻松地根据文件名和后缀找到对应的文件。</p>
-<p>&#8195;&#8195;我们定义path_analysis和path_analysis2函数。path_analysis2函数接受一个字符串，将它用’/‘分隔为一个字符串向量并返回。</p>
-<p>&#8195;&#8195;用户输入路径可以是绝对路径或相对路径，当第一个字符为’/‘时，我们认为这是绝对路径，从根目录开始找；否则认为这是相对路径，从当前文件夹下开始找。</p>
-<p>&#8195;&#8195;从根目录开始找的方法是:</p>
-<p>&#8195;&#8195;设输入字符串向量为vec,根文件夹指针为f1。<br>&#8195;&#8195;遍历向量的每一个元素，查找f1的sons里是否有子文件(夹)的名字与之匹配，若有则修改f1为对应文件(夹)，否则直接返回NULL。<br>&#8195;&#8195;遍历完向量之后说明f1已经是需要的文件(夹)，返回f1即可。</p>
+### 具体实现
+
+&#8195;&#8195;本系统完成了要求的所有功能，此外还增加了find功能，具体情况请看下表:
+
+|指令|功能|备注|
+|---|----|---|
+|help|输出提示信息|无|
+|quit|退出系统|无|
+|cd [相对路径或绝对路径]|进入指定的文件夹|".."表示上一级文件夹，"."表示当前文件夹,用'/'作分隔符|
+|dir|展示当前文件夹下的文件信息|会输出名字、后缀、修改时间和大小|
+|dir_r|递归的展示当前文件夹下的所有文件|只能看到名字和后缀|
+|print [相对路径或绝对路径]|输出文件内容|目标文件不能是文件夹|
+|gedit [相对路径或绝对路径]|进入文本编辑器模式，编辑指定的文件|无|
+|mk [文件名] [文件内容]|在当前路径下创建一个文件|文件名长度不能超过8，文件名不能包含非法字符，文件要有后缀，不能与已有文件同名|
+|mkdir [文件夹名]|在当前路径下创建一个文件夹|文件夹名长度不能超过8，文件夹名不能包含非法字符，不能与已有文件夹重名|
+|rm [相对路径或绝对路径]|删除一个文件或文件夹|删除操作不可逆，请谨慎操作|
+|find [相对路径或绝对路径]|根据路径查找文件(夹)|支持通配符'*'和'?'。'*'可以表示任意长度的字符串，'?'可以表示任意字符。系统会输出所有可能的路径|
+|cp [相对路径或绝对路径][文件夹的相对路径或绝对路径]|复制文件(夹)|将第一个参数复制到第二个参数指向的文件夹处|
+|mv [相对路径或绝对路径][文件夹的相对路径或绝对路径]|剪切文件|将第一个参数剪切到第二个参数指向的文件夹处|
+
+&#8195;&#8195;由于许多操作都需要按路径名找到文件，所有我们先来了解按路径名寻找文件的方法:
+
+#### 路径分析
+
+&#8195;&#8195;我们在file类中定义了一个map<string,file*>类型的成员变量sons，不用我说也能知道它的作用是什么。
+
+&#8195;&#8195;在创建一个文件时，如果它是一个文件夹，则对应它的所有子文件，往sons里加入一个(pair){文件名+"."+后缀，指向该文件的指针}。这样，我们就能很轻松地根据文件名和后缀找到对应的文件。
+
+&#8195;&#8195;我们定义path_analysis和path_analysis2函数。path_analysis2函数接受一个字符串，将它用'/'分隔为一个字符串向量并返回。
+
+&#8195;&#8195;用户输入路径可以是绝对路径或相对路径，当第一个字符为'/'时，我们认为这是绝对路径，从根目录开始找；否则认为这是相对路径，从当前文件夹下开始找。
+
+&#8195;&#8195;从根目录开始找的方法是:
+
+&#8195;&#8195;设输入字符串向量为vec,根文件夹指针为f1。
+&#8195;&#8195;遍历向量的每一个元素，查找f1的sons里是否有子文件(夹)的名字与之匹配，若有则修改f1为对应文件(夹)，否则直接返回NULL。
+&#8195;&#8195;遍历完向量之后说明f1已经是需要的文件(夹)，返回f1即可。
+
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">file *<span class="title">path_analysis</span><span class="params">(<span class="built_in">string</span> input, file *now, file *root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (input == <span class="string">""</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">bool</span> rt = (input[<span class="number">0</span>] == <span class="string">'/'</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> i : input)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">isalpha</span>(i) &amp;&amp; !<span class="built_in">isdigit</span>(i) &amp;&amp; i != <span class="string">'/'</span> &amp;&amp; i != <span class="string">'.'</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; folder_names = path_analysis2(input);</span><br><span class="line">    file *tem;</span><br><span class="line">    <span class="keyword">if</span> (rt)</span><br><span class="line">        tem = root;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        tem = now;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; folder_names.size(); i++)</span><br><span class="line">    &#123;</span><br><span class="line">        tem = tem-&gt;get_son(folder_names[i], i + <span class="number">1</span> == folder_names.size());</span><br><span class="line">        <span class="keyword">if</span> (tem == <span class="literal">NULL</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tem;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>&#8195;&#8195;从当前目录开始找的方法与此基本相同，不再赘述。</p>
-<h4 id="cd操作的实现"><a href="#cd操作的实现" class="headerlink" title="cd操作的实现"></a>cd操作的实现</h4><p>&#8195;&#8195;既然了解了路径分析的方法，cd操作的实现也就呼之欲出了。我们在程序中定义两个指针，一个名为tem，指向当前所在的文件；一个名为root，指向根文件夹。只需要根据这两个指针和输入的字符串调用paht_analysis函数即可，如果函数返回NULL则报错，否则修改tem。</p>
-<p>&#8195;&#8195;代码如下:</p>
+&#8195;&#8195;从当前目录开始找的方法与此基本相同，不再赘述。
+
+#### cd操作的实现
+
+&#8195;&#8195;既然了解了路径分析的方法，cd操作的实现也就呼之欲出了。我们在程序中定义两个指针，一个名为tem，指向当前所在的文件；一个名为root，指向根文件夹。只需要根据这两个指针和输入的字符串调用paht_analysis函数即可，如果函数返回NULL则报错，否则修改tem。
+
+&#8195;&#8195;代码如下:
+
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (a == <span class="string">"cd"</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; b;</span><br><span class="line">    file *now = path_analysis(b, tem, root);</span><br><span class="line">    <span class="keyword">if</span> (now == <span class="literal">NULL</span> || now-&gt;attr != <span class="number">0x10</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"路径"</span> &lt;&lt; b &lt;&lt; <span class="string">"不合法\n"</span>;</span><br><span class="line">        <span class="comment">//注意，cd只能进入文件夹，进入一个文件是不可以的</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        tem = now;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="dir操作的实现"><a href="#dir操作的实现" class="headerlink" title="dir操作的实现"></a>dir操作的实现</h4><p>&#8195;&#8195;进行dir操作时，我们遍历sons，输出所有子文件(夹)的信息，包括文件名、后缀、修改时间和大小。由于这个操作十分简单，代码就不必展示了。</p>
-<h4 id="dir-r操作的实现"><a href="#dir-r操作的实现" class="headerlink" title="dir_r操作的实现"></a>dir_r操作的实现</h4><p>&#8195;&#8195;这个操作的实现需要用到递归的思想。</p>
-<p>&#8195;&#8195;定义dir_recusive()函数，它返回一个字符串向量。它的实现方法是:<br>&#8195;&#8195;创建一个vector<string> ret用于返回。<br>&#8195;&#8195;遍历sons的每一个键值对，如果值(即file指针)指向一个普通文件，则把对应的键放进ret里;<br>&#8195;&#8195;如果指向的是一个文件夹，则对它调用dir_recusive()，把返回的字符串向量的每一个元素加上一个前缀”  “,都放进ret里。<br>为什么要加入一个前缀呢？想一想，当前文件夹下的文件名没有前缀，下一级文件夹下的文件名有一个前缀，再下一级文件夹下的文件名有两个前缀……这样看起来不就形成了树的结构吗？</p>
-<p>&#8195;&#8195;dir_recusive()函数代码如下:</p>
+#### dir操作的实现
+
+&#8195;&#8195;进行dir操作时，我们遍历sons，输出所有子文件(夹)的信息，包括文件名、后缀、修改时间和大小。由于这个操作十分简单，代码就不必展示了。
+
+#### dir_r操作的实现
+
+&#8195;&#8195;这个操作的实现需要用到递归的思想。
+
+&#8195;&#8195;定义dir_recusive()函数，它返回一个字符串向量。它的实现方法是:
+&#8195;&#8195;创建一个vector<string> ret用于返回。
+&#8195;&#8195;遍历sons的每一个键值对，如果值(即file指针)指向一个普通文件，则把对应的键放进ret里;
+&#8195;&#8195;如果指向的是一个文件夹，则对它调用dir_recusive()，把返回的字符串向量的每一个元素加上一个前缀"  ",都放进ret里。
+为什么要加入一个前缀呢？想一想，当前文件夹下的文件名没有前缀，下一级文件夹下的文件名有一个前缀，再下一级文件夹下的文件名有两个前缀……这样看起来不就形成了树的结构吗？
+
+&#8195;&#8195;dir_recusive()函数代码如下:
+
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; <span class="title">File::dir_recusive</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; vec, tem;</span><br><span class="line">    vec.push_back(name + (attr == <span class="number">0x10</span> ? <span class="string">""</span> : <span class="string">"."</span> + suffix) + <span class="string">"\n"</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> i : sons)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (i.first == <span class="string">"."</span> || i.first == <span class="string">".."</span>)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        tem = i.second-&gt;dir_recusive();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; tem.size(); j++)</span><br><span class="line">        &#123;</span><br><span class="line">            vec.push_back(<span class="string">"  "</span> + tem[j]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> vec;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="print操作的实现"><a href="#print操作的实现" class="headerlink" title="print操作的实现"></a>print操作的实现</h4><p>&#8195;&#8195;这个操作很简单，根据输入的路径找到相应的文件夹，然后输出它的内容即可。</p>
-<h4 id="mk操作的实现"><a href="#mk操作的实现" class="headerlink" title="mk操作的实现"></a>mk操作的实现</h4><p>&#8195;&#8195;这个操作是重点和难点。首先我们要根据第一个参数找到文件夹，根据第二个参数创建一个文件。怎么创建一个文件？</p>
-<p>&#8195;&#8195;我们知道文件是保存在数据区里的，那我们要在数据区里找到一个空闲的扇区，这可以在fat表里找(也可以用已删除的文件占用的扇区，这会在下文讲解)一个空闲簇号，找到之后将内容写到对应的扇区，将fat表对应的位置修改为一个结束标志。如果文件内容不止512个字节，则继续分配一个簇号，将内容写进去，将fat表中上一个簇号对应的位置修改为一个这个簇号，将这个簇号对应的文职修改为一个结束标志。一直这样下去，直到写完为止。<br>&#8195;&#8195;这部分代码如下:</p>
+#### print操作的实现
+
+&#8195;&#8195;这个操作很简单，根据输入的路径找到相应的文件夹，然后输出它的内容即可。
+
+#### mk操作的实现
+
+&#8195;&#8195;这个操作是重点和难点。首先我们要根据第一个参数找到文件夹，根据第二个参数创建一个文件。怎么创建一个文件？
+
+&#8195;&#8195;我们知道文件是保存在数据区里的，那我们要在数据区里找到一个空闲的扇区，这可以在fat表里找(也可以用已删除的文件占用的扇区，这会在下文讲解)一个空闲簇号，找到之后将内容写到对应的扇区，将fat表对应的位置修改为一个结束标志。如果文件内容不止512个字节，则继续分配一个簇号，将内容写进去，将fat表中上一个簇号对应的位置修改为一个这个簇号，将这个簇号对应的文职修改为一个结束标志。一直这样下去，直到写完为止。
+&#8195;&#8195;这部分代码如下:
+
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (!Content.empty())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (Content.size() &gt; <span class="number">512</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        datas1.write_floopy(nowclus - <span class="number">2</span>, Content.substr(<span class="number">0</span>, <span class="number">512</span>));</span><br><span class="line">        Content = Content.substr(<span class="number">512</span>);</span><br><span class="line">        fat1.cluster_numbers[nowclus - <span class="number">2</span>] = fat1.get_first_empty() + <span class="number">2</span>;</span><br><span class="line">        nowclus = fat1.cluster_numbers[nowclus - <span class="number">2</span>];</span><br><span class="line">        fat1.cluster_numbers[nowclus - <span class="number">2</span>] = END_CLUSTER;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        datas1.write_floopy(nowclus - <span class="number">2</span>, Content);</span><br><span class="line">        Content = <span class="string">""</span>;</span><br><span class="line">        fat1.cluster_numbers[nowclus - <span class="number">2</span>] = END_CLUSTER;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>&#8195;&#8195;创建文件的其他操作就很简单了，注意要设置fa指针指向父文件夹。此外还要给文件生成一条文件记录，把它添加进父文件夹的内容里，给父文件夹的sons变量添加一个键值对。最后把fat表更新一遍。</p>
-<h4 id="mkdir操作的实现"><a href="#mkdir操作的实现" class="headerlink" title="mkdir操作的实现"></a>mkdir操作的实现</h4><p>&#8195;&#8195;搞定了mk操作后，mkdir也就差不多了。区别是创建出来的文件的内容是两条文件记录，记录”.”和”..”这两个”子”文件夹。</p>
-<h4 id="rm操作的实现"><a href="#rm操作的实现" class="headerlink" title="rm操作的实现"></a>rm操作的实现</h4><p>&#8195;&#8195;rm操作可能是最难的操作了。<br>&#8195;&#8195;我们定义一个queue&lt;pair&lt;file <em>, int&gt;&gt;类型的全局变量deleted_clusters。它的每一个元素是一个 file</em>,int 对。</p>
-<p>&#8195;&#8195;当我们删除某个文件夹下的一个文件时，我们将它的文件记录的第一个字符变成一个删除标志，同时需要将 指向文件夹的指针 和 这个文件记录的序号 组成一个pair，push进deleted_clusters里。</p>
-<p>&#8195;&#8195;这样做有什么好处呢？假设我们在删除操作完成后就退出系统，然后重新打开，读入文件夹时，我们如果读到一个首字符为删除标志的文件记录，就把指向文件夹的指针和文件记录的序号放进deleted_clusters里。</p>
-<p>&#8195;&#8195;此后，如果我们需要再创建一个文件，就可以去deleted_clusters找被删除的簇。怎么找呢？我们先通过deleted_culsters的front()方法得到一个pair，根据它找到之前删除文件的文件记录，它不是记录了这个文件在数据区的位置了吗？直接将这些位置覆盖就可以了。覆盖完之后将这个pair pop掉就可以了。</p>
-<p>&#8195;&#8195;这样就大功告成了吗？还没有，至少还有两个问题:</p>
-<p>&#8195;&#8195;1.如果被删除的文件占用两个扇区，而我这次创建的文件只有一个扇区，那我把删除文件的首扇区覆盖了，第二个扇区不就成了孤魂野鬼了？</p>
-<p>&#8195;&#8195;2.将被删除文件的内容覆盖了之后，我们并没有修改它的文件记录，这样，我们下一次启动系统，还是会将它对应的pair读到deleted_clusters里，这样就可能又把它覆盖了一遍，不是就乱套了吗？</p>
-<p>&#8195;&#8195;其实解决方法也很简单。</p>
-<p>&#8195;&#8195;第一个问题，只需将首扇区覆盖之后，看一下这个扇区在fat表中对应的值是否是结束标志，如果不是，就修改文件记录，使它的首扇区变成原来的第二个扇区。同时，由于这个文件还没有被完全覆盖，因此不必在deleted_clusters里把它对应的pair pop掉。</p>
-<p>&#8195;&#8195;第二个问题，只需要将文件记录里的首扇区标志改为0，此后读文件时遇到这种首扇区标志位0的文件记录就跳过即可。</p>
-<p>&#8195;&#8195;以上就是删除普通文件的基本方法。删除文件夹呢？也很简单，递归地把子文件都删除，再将文件夹也删除了就可以了。</p>
-<p>&#8195;&#8195;为什么要这样？因为我的deleted_clusters是一个队列，由于子文件先删除，队列又是先进先出的，覆盖的时候便会先覆盖子文件，再覆盖文件夹。否则要是先把文件夹覆盖了，子文件的文件记录找不到了，就出现”孤魂野鬼”了。如果deleted_clusters是一个栈，就应该先删除文件夹，再删除文件。</p>
-<p>&#8195;&#8195;删除操作的代码如下:</p>
+&#8195;&#8195;创建文件的其他操作就很简单了，注意要设置fa指针指向父文件夹。此外还要给文件生成一条文件记录，把它添加进父文件夹的内容里，给父文件夹的sons变量添加一个键值对。最后把fat表更新一遍。
+
+#### mkdir操作的实现
+
+&#8195;&#8195;搞定了mk操作后，mkdir也就差不多了。区别是创建出来的文件的内容是两条文件记录，记录"."和".."这两个"子"文件夹。
+
+#### rm操作的实现
+
+&#8195;&#8195;rm操作可能是最难的操作了。
+&#8195;&#8195;我们定义一个queue<pair<file *, int>>类型的全局变量deleted_clusters。它的每一个元素是一个 file*,int 对。
+
+&#8195;&#8195;当我们删除某个文件夹下的一个文件时，我们将它的文件记录的第一个字符变成一个删除标志，同时需要将 指向文件夹的指针 和 这个文件记录的序号 组成一个pair，push进deleted_clusters里。
+
+&#8195;&#8195;这样做有什么好处呢？假设我们在删除操作完成后就退出系统，然后重新打开，读入文件夹时，我们如果读到一个首字符为删除标志的文件记录，就把指向文件夹的指针和文件记录的序号放进deleted_clusters里。
+
+&#8195;&#8195;此后，如果我们需要再创建一个文件，就可以去deleted_clusters找被删除的簇。怎么找呢？我们先通过deleted_culsters的front()方法得到一个pair，根据它找到之前删除文件的文件记录，它不是记录了这个文件在数据区的位置了吗？直接将这些位置覆盖就可以了。覆盖完之后将这个pair pop掉就可以了。
+
+&#8195;&#8195;这样就大功告成了吗？还没有，至少还有两个问题:
+
+&#8195;&#8195;1.如果被删除的文件占用两个扇区，而我这次创建的文件只有一个扇区，那我把删除文件的首扇区覆盖了，第二个扇区不就成了孤魂野鬼了？
+
+&#8195;&#8195;2.将被删除文件的内容覆盖了之后，我们并没有修改它的文件记录，这样，我们下一次启动系统，还是会将它对应的pair读到deleted_clusters里，这样就可能又把它覆盖了一遍，不是就乱套了吗？
+
+&#8195;&#8195;其实解决方法也很简单。
+
+&#8195;&#8195;第一个问题，只需将首扇区覆盖之后，看一下这个扇区在fat表中对应的值是否是结束标志，如果不是，就修改文件记录，使它的首扇区变成原来的第二个扇区。同时，由于这个文件还没有被完全覆盖，因此不必在deleted_clusters里把它对应的pair pop掉。
+
+&#8195;&#8195;第二个问题，只需要将文件记录里的首扇区标志改为0，此后读文件时遇到这种首扇区标志位0的文件记录就跳过即可。
+
+&#8195;&#8195;以上就是删除普通文件的基本方法。删除文件夹呢？也很简单，递归地把子文件都删除，再将文件夹也删除了就可以了。
+
+&#8195;&#8195;为什么要这样？因为我的deleted_clusters是一个队列，由于子文件先删除，队列又是先进先出的，覆盖的时候便会先覆盖子文件，再覆盖文件夹。否则要是先把文件夹覆盖了，子文件的文件记录找不到了，就出现"孤魂野鬼"了。如果deleted_clusters是一个栈，就应该先删除文件夹，再删除文件。
+
+&#8195;&#8195;删除操作的代码如下:
+
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">File::remove</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (attr == <span class="number">0x10</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> i : sons)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (i.first == <span class="string">"."</span> || i.first == <span class="string">".."</span>)</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            i.second-&gt;remove();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; fa-&gt;content.size(); j += <span class="number">32</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> ((fa-&gt;content[j + <span class="number">27</span>] &lt;&lt; <span class="number">8</span>) + fa-&gt;content[j + <span class="number">26</span>] == fstclus)</span><br><span class="line">        &#123;</span><br><span class="line">            fa-&gt;content[j] = DELETED_CLUSTER_SIGN;</span><br><span class="line">            fa-&gt;sons.erase(attr == <span class="number">16</span> ? name : name + <span class="string">"."</span> + suffix);</span><br><span class="line">            fa-&gt;write_back(j / SIZE_OF_SECTOR);</span><br><span class="line">            deleted_clusters.push(&#123;fa, j / <span class="number">32</span>&#125;);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="gedit操作的实现"><a href="#gedit操作的实现" class="headerlink" title="gedit操作的实现"></a>gedit操作的实现</h4><p>&#8195;&#8195;为了实现这个操作，我设计了一个简易的编辑器。它的原理是不断相应键盘的输入，每输入一次就把控制台刷新一次，然后输出。由于这个编辑器与fat12文件系统关系不大，我就不再赘述。</p>
-<p>&#8195;&#8195;这个操作也是根据输入的字符串找到相应的文件(注意这个文件不能是文件夹)，然后调用编辑器编辑它的内容，当用户按下ctrl+s则将修改后的内容保存回去。怎么保存呢？很简单，只需把原来的文件删掉，再创建一个同名而不同内容的文件即可。</p>
-<h4 id="find操作的实现"><a href="#find操作的实现" class="headerlink" title="find操作的实现"></a>find操作的实现</h4><p>&#8195;&#8195;find操作本事不算复杂，但为了使我的文件系统更有特色，我给它增加了’*’和’?’这两个通配符。</p>
-<p>&#8195;&#8195;’<em>‘表示任意字符串(甚至可以是空的)。比如 “houlai”和”h\</em>lai”是匹配的。<br>&#8195;&#8195;’?’表示单个字符。比如”zhiqian”和”?hi?ian”是匹配的。</p>
-<p>&#8195;&#8195;怎么实现字符串的带通配符匹配呢？一种方法是暴力法，即直接枚举通配符的每一种可能。但这样效率很低，在字符串很长的情况下根本配不出来。</p>
-<p>&#8195;&#8195;另一种是动态规划法，即dp(dynamic planning)，对输出长度为n和m的字符串，它的时间复杂度是O(nm)的，效率很高。由于这部分内容与fat12文件系统关系不大，具体的dp方法就不必赘述，直接给出匹配的代码:</p>
+#### gedit操作的实现
+
+&#8195;&#8195;为了实现这个操作，我设计了一个简易的编辑器。它的原理是不断相应键盘的输入，每输入一次就把控制台刷新一次，然后输出。由于这个编辑器与fat12文件系统关系不大，我就不再赘述。
+
+&#8195;&#8195;这个操作也是根据输入的字符串找到相应的文件(注意这个文件不能是文件夹)，然后调用编辑器编辑它的内容，当用户按下ctrl+s则将修改后的内容保存回去。怎么保存呢？很简单，只需把原来的文件删掉，再创建一个同名而不同内容的文件即可。
+
+#### find操作的实现
+
+&#8195;&#8195;find操作本事不算复杂，但为了使我的文件系统更有特色，我给它增加了'*'和'?'这两个通配符。
+
+&#8195;&#8195;'*'表示任意字符串(甚至可以是空的)。比如 "houlai"和"h\*lai"是匹配的。
+&#8195;&#8195;'?'表示单个字符。比如"zhiqian"和"?hi?ian"是匹配的。
+
+&#8195;&#8195;怎么实现字符串的带通配符匹配呢？一种方法是暴力法，即直接枚举通配符的每一种可能。但这样效率很低，在字符串很长的情况下根本配不出来。
+
+&#8195;&#8195;另一种是动态规划法，即dp(dynamic planning)，对输出长度为n和m的字符串，它的时间复杂度是O(nm)的，效率很高。由于这部分内容与fat12文件系统关系不大，具体的dp方法就不必赘述，直接给出匹配的代码:
+
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isMatch</span><span class="params">(<span class="built_in">string</span> a, <span class="built_in">string</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = a.size(), m = b.size();</span><br><span class="line">    <span class="keyword">bool</span> ok[n + <span class="number">1</span>][m + <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= m; j++)</span><br><span class="line">            ok[i][j] = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">bool</span> okk[m + <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= m; j++)</span><br><span class="line">        okk[j] = <span class="literal">false</span>;</span><br><span class="line">    okk[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    ok[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= m; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        ok[<span class="number">0</span>][j] == (ok[<span class="number">0</span>][j - <span class="number">1</span>] &amp;&amp; (b[j - <span class="number">1</span>] == <span class="string">'*'</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= m; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (b[j - <span class="number">1</span>] == <span class="string">'?'</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                ok[i][j] = ok[i - <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (b[j - <span class="number">1</span>] == <span class="string">'*'</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                ok[i][j] = okk[j - <span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//         cout &lt;&lt; ok[i - 1][j - 1] &lt;&lt; " " &lt;&lt; (a[i - 1] == b[j - 1]) &lt;&lt; endl;</span></span><br><span class="line">                ok[i][j] = (ok[i - <span class="number">1</span>][j - <span class="number">1</span>] &amp;&amp; (a[i - <span class="number">1</span>] == b[j - <span class="number">1</span>]));</span><br><span class="line">            &#125;</span><br><span class="line">            okk[j] = okk[j] || ok[i][j];</span><br><span class="line">            <span class="comment">//cout &lt;&lt; i &lt;&lt; " " &lt;&lt; j &lt;&lt; " " &lt;&lt; ok[i][j] &lt;&lt; endl;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ok[n][m];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>&#8195;&#8195;搞定了单个字符串的匹配方法，find操作的实现也就简单了，只需像之间路径分析一样搜索下去，找到了就将路径放进一个vector&lt;string&gt;里。不同的是这里的find可以找到多个路径，因此需要用dfs的方法；而之前的路径分析最多只有一个结果，因此直接找就可以了。<br>&#8195;&#8195;具体代码如下:</p>
+&#8195;&#8195;搞定了单个字符串的匹配方法，find操作的实现也就简单了，只需像之间路径分析一样搜索下去，找到了就将路径放进一个vector\<string\>里。不同的是这里的find可以找到多个路径，因此需要用dfs的方法；而之前的路径分析最多只有一个结果，因此直接找就可以了。
+&#8195;&#8195;具体代码如下:
+
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">File::find_string</span><span class="params">(<span class="keyword">int</span> loc, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; &amp;b, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; &amp;ret)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (loc == b.size())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//        cout&lt;&lt;name&lt;&lt;" "&lt;&lt;path&lt;&lt;endl;</span></span><br><span class="line">        ret.push_back(path);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> i : sons)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (isMatch(i.first, b[loc]))</span><br><span class="line">        &#123;</span><br><span class="line">            i.second-&gt;find_string(loc + <span class="number">1</span>, b, ret);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="cp操作和mv操作"><a href="#cp操作和mv操作" class="headerlink" title="cp操作和mv操作"></a>cp操作和mv操作</h4><p>&#8195;&#8195;在明确了如何找文件，如何删除文件之后，这两个操作也就非常简单了，没有进行解释的必要。</p>
-<h3 id="代码架构"><a href="#代码架构" class="headerlink" title="代码架构"></a>代码架构</h3><p>&#8195;&#8195;总共有12个文件，分别是:</p>
-<table>
-<thead>
-<tr>
-<th>文件名</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>fun.cpp</td>
-<td>定义了各种通用的函数</td>
-</tr>
-<tr>
-<td>byte.h</td>
-<td>定义了byte类</td>
-</tr>
-<tr>
-<td>byte.cpp</td>
-<td>byte类的实现和与之相关的函数</td>
-</tr>
-<tr>
-<td>sector.h</td>
-<td>定义了sector类和它的实现</td>
-</tr>
-<tr>
-<td>mbr.h</td>
-<td>定义了MBR类</td>
-</tr>
-<tr>
-<td>mbr.cpp</td>
-<td>MBR类的实现</td>
-</tr>
-<tr>
-<td>file.h</td>
-<td>定义了file类、fat类、rootentry类和datas类。</td>
-</tr>
-<tr>
-<td>file.cpp</td>
-<td>上述几个类的实现和相应的函数。</td>
-</tr>
-<tr>
-<td>getch.cpp</td>
-<td>定义了一个函数</td>
-</tr>
-<tr>
-<td>my_editor.h</td>
-<td>定义了my_editor类和一些函数</td>
-</tr>
-<tr>
-<td>interface.cpp</td>
-<td>给出了my_editor类的大部分实现，定义了一些与用户交互的函数</td>
-</tr>
-<tr>
-<td>main.cpp</td>
-<td>包括了程序开始时的检查和根文件夹的读入</td>
-</tr>
-</tbody></table>
-<p>&#8195;&#8195;总计约1900行代码</p>
-<h2 id="结果展示"><a href="#结果展示" class="headerlink" title="结果展示"></a>结果展示</h2><p>&#8195;&#8195;使用dir_r可以展示目录树:<br><img src="https://i.loli.net/2020/04/15/XELPIqom6kZd8sw.png" alt="image.png"><br>&#8195;&#8195;使用print可以显示文件内容:<br><img src="https://i.loli.net/2020/04/15/RhFQNvI4Yn2kfZA.png" alt="image.png"><br>&#8195;&#8195;使用gedit可以编辑文件:<br><img src="https://i.loli.net/2020/04/15/UliEz8pGcV1tS9L.png" alt="image.png"><br><img src="https://i.loli.net/2020/04/15/GIBgNKhYoRkCXb8.png" alt="image.png"><br>&#8195;&#8195;使用dir命令可以查看当前文件夹下的内容:<br><img src="https://i.loli.net/2020/04/15/3sncS9lR1XybkoK.png" alt="image.png"><br>&#8195;&#8195;使用cd命令可以进入文件夹:<br><img src="https://i.loli.net/2020/04/15/IUi8WJgtXZH2bCR.png" alt="image.png"><br>&#8195;&#8195;使用mk命令可以创建文件,使用rm文件可以删除文件:<br><img src="https://i.loli.net/2020/04/15/KIqjTfQX3vzHZsP.png" alt="image.png"><br>&#8195;&#8195;使用mkdir命令可以创建文件夹:<br><img src="https://i.loli.net/2020/04/15/LGyKaSrANFbP497.png" alt="image.png"><br>&#8195;&#8195;使用cp命令可以复制文件:<br><img src="https://i.loli.net/2020/04/15/iDcPjqfGAby87de.png" alt="image.png"><br>&#8195;&#8195;使用mv命令可以剪切文件:<br><img src="https://i.loli.net/2020/04/15/dlXBxtUIA4VnTzH.png" alt="image.png"><br>&#8195;&#8195;使用rm命令还可以删除文件夹:<br><img src="https://i.loli.net/2020/04/15/cFNKIGk6BWAuCoH.png" alt="image.png"></p>
-<p>&#8195;&#8195;详情请看演示视频。</p>
-<h2 id="实验总结"><a href="#实验总结" class="headerlink" title="实验总结"></a>实验总结</h2><p>&#8195;&#8195;这次实验可以说是我做过最难的实验了，代码量大，编程难度高，还用到了搜索、动态规划等算法。但从最后的完成情况来看，我还是比较满意的（<del>虽然还是有很多bug</del>），实现了要求的功能，还增加了自己的创意。不过还是存在代码不够规范的问题，不同文件、不同类糅杂在一起，以至于我自己都不清楚我的代码文件是怎么组织的。</p>
-<p>&#8195;&#8195;在完成这次实验的过程中，最大的困难是编写删除操作的代码。我会思考了很久才想出一种很复杂的方法，这也带来了大量的代码和bug，不过好在还是写出来了。但在跟其他同学交流之后，似乎他们的方法更为简单，而我的方法理论上在性能方面会更优秀(我也不太确定)，为了偷个懒我也没有改。</p>
-<p>&#8195;&#8195;还有一个遗憾是没有用到汇编语言。事实上大部分代码是用c++编写的，还用到了stl和linux的各种头文件里的很多内容，可能会导致代码的可移植性有点差。</p>
-<p>&#8195;&#8195;这次实验的收获也是很明显的，我锻炼了编写较大规模程序的能力，对文件系统和操作系统有了更深入的了解，也激发了我进一步学习操作系统的兴趣。</p>
-<p>&#8195;&#8195;总的来说，这次实验完成的十分艰难，但也是收获满满，有一些做的不错的地方，也有不少改进的空间。希望在接下来的课程中也能有这么有趣的实验。</p>
+#### cp操作和mv操作
+
+&#8195;&#8195;在明确了如何找文件，如何删除文件之后，这两个操作也就非常简单了，没有进行解释的必要。
+
+### 代码架构
+
+&#8195;&#8195;总共有12个文件，分别是:
+
+|文件名|内容|
+|---|---|
+|fun.cpp|定义了各种通用的函数
+|byte.h|定义了byte类
+byte.cpp|byte类的实现和与之相关的函数
+sector.h|定义了sector类和它的实现
+mbr.h|定义了MBR类
+mbr.cpp|MBR类的实现
+file.h|定义了file类、fat类、rootentry类和datas类。
+file.cpp|上述几个类的实现和相应的函数。
+getch.cpp|定义了一个函数
+my_editor.h|定义了my_editor类和一些函数
+interface.cpp|给出了my_editor类的大部分实现，定义了一些与用户交互的函数
+main.cpp|包括了程序开始时的检查和根文件夹的读入
+
+&#8195;&#8195;总计约1900行代码
+
+## 结果展示
+
+&#8195;&#8195;使用dir_r可以展示目录树:
+![image.png](https://i.loli.net/2020/04/15/XELPIqom6kZd8sw.png)
+&#8195;&#8195;使用print可以显示文件内容:
+![image.png](https://i.loli.net/2020/04/15/RhFQNvI4Yn2kfZA.png)
+&#8195;&#8195;使用gedit可以编辑文件:
+![image.png](https://i.loli.net/2020/04/15/UliEz8pGcV1tS9L.png)
+![image.png](https://i.loli.net/2020/04/15/GIBgNKhYoRkCXb8.png)
+&#8195;&#8195;使用dir命令可以查看当前文件夹下的内容:
+![image.png](https://i.loli.net/2020/04/15/3sncS9lR1XybkoK.png)
+&#8195;&#8195;使用cd命令可以进入文件夹:
+![image.png](https://i.loli.net/2020/04/15/IUi8WJgtXZH2bCR.png)
+&#8195;&#8195;使用mk命令可以创建文件,使用rm文件可以删除文件:
+![image.png](https://i.loli.net/2020/04/15/KIqjTfQX3vzHZsP.png)
+&#8195;&#8195;使用mkdir命令可以创建文件夹:
+![image.png](https://i.loli.net/2020/04/15/LGyKaSrANFbP497.png)
+&#8195;&#8195;使用cp命令可以复制文件:
+![image.png](https://i.loli.net/2020/04/15/iDcPjqfGAby87de.png)
+&#8195;&#8195;使用mv命令可以剪切文件:
+![image.png](https://i.loli.net/2020/04/15/dlXBxtUIA4VnTzH.png)
+&#8195;&#8195;使用rm命令还可以删除文件夹:
+![image.png](https://i.loli.net/2020/04/15/cFNKIGk6BWAuCoH.png)
+
+&#8195;&#8195;详情请看演示视频。
+
+## 实验总结
+
+&#8195;&#8195;这次实验可以说是我做过最难的实验了，代码量大，编程难度高，还用到了搜索、动态规划等算法。但从最后的完成情况来看，我还是比较满意的（~~虽然还是有很多bug~~），实现了要求的功能，还增加了自己的创意。不过还是存在代码不够规范的问题，不同文件、不同类糅杂在一起，以至于我自己都不清楚我的代码文件是怎么组织的。
+
+&#8195;&#8195;在完成这次实验的过程中，最大的困难是编写删除操作的代码。我会思考了很久才想出一种很复杂的方法，这也带来了大量的代码和bug，不过好在还是写出来了。但在跟其他同学交流之后，似乎他们的方法更为简单，而我的方法理论上在性能方面会更优秀(我也不太确定)，为了偷个懒我也没有改。
+
+&#8195;&#8195;还有一个遗憾是没有用到汇编语言。事实上大部分代码是用c++编写的，还用到了stl和linux的各种头文件里的很多内容，可能会导致代码的可移植性有点差。
+
+&#8195;&#8195;这次实验的收获也是很明显的，我锻炼了编写较大规模程序的能力，对文件系统和操作系统有了更深入的了解，也激发了我进一步学习操作系统的兴趣。
+
+&#8195;&#8195;总的来说，这次实验完成的十分艰难，但也是收获满满，有一些做的不错的地方，也有不少改进的空间。希望在接下来的课程中也能有这么有趣的实验。
 
     </div>
 
@@ -567,7 +693,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#fat12文件系统仿真实验报告"><span class="nav-number">1.</span> <span class="nav-text">fat12文件系统仿真实验报告</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实验目的"><span class="nav-number">1.1.</span> <span class="nav-text">实验目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验要求"><span class="nav-number">1.2.</span> <span class="nav-text">实验要求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总体要求"><span class="nav-number">1.2.1.</span> <span class="nav-text">总体要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体要求"><span class="nav-number">1.2.2.</span> <span class="nav-text">具体要求</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验方案与过程"><span class="nav-number">1.3.</span> <span class="nav-text">实验方案与过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实验环境"><span class="nav-number">1.3.1.</span> <span class="nav-text">实验环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fat12文件系统相关知识"><span class="nav-number">1.3.2.</span> <span class="nav-text">fat12文件系统相关知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建软盘"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">创建软盘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引导扇区"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">引导扇区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fat区"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">fat区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#根目录区与数据区"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">根目录区与数据区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件与文件夹"><span class="nav-number">1.3.2.5.</span> <span class="nav-text">文件与文件夹</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体实现"><span class="nav-number">1.3.3.</span> <span class="nav-text">具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#路径分析"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">路径分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cd操作的实现"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">cd操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dir操作的实现"><span class="nav-number">1.3.3.3.</span> <span class="nav-text">dir操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dir-r操作的实现"><span class="nav-number">1.3.3.4.</span> <span class="nav-text">dir_r操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#print操作的实现"><span class="nav-number">1.3.3.5.</span> <span class="nav-text">print操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mk操作的实现"><span class="nav-number">1.3.3.6.</span> <span class="nav-text">mk操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mkdir操作的实现"><span class="nav-number">1.3.3.7.</span> <span class="nav-text">mkdir操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rm操作的实现"><span class="nav-number">1.3.3.8.</span> <span class="nav-text">rm操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gedit操作的实现"><span class="nav-number">1.3.3.9.</span> <span class="nav-text">gedit操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#find操作的实现"><span class="nav-number">1.3.3.10.</span> <span class="nav-text">find操作的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cp操作和mv操作"><span class="nav-number">1.3.3.11.</span> <span class="nav-text">cp操作和mv操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码架构"><span class="nav-number">1.3.4.</span> <span class="nav-text">代码架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结果展示"><span class="nav-number">1.4.</span> <span class="nav-text">结果展示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验总结"><span class="nav-number">1.5.</span> <span class="nav-text">实验总结</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -690,6 +815,8 @@
 
 
 
+
+  
 
   
 
