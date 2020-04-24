@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Tensor与Autograd详解参考自《深度学习框架PyTorch入门与实践》 Tensor创建Tensor创建Tensor的方法有很多:    函数 功能    Tensor(*size) 基础构造函数   ones(*size) 全为 1 Tensor   zeros(*size) 全为 0 Tensor   eyes(*size) 对角线为1，其他为0   arange(s,e,step)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pytorch学习笔记2">
+<meta property="og:url" content="http://yoursite.com/2020/04/22/pytorch%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02/index.html">
+<meta property="og:site_name" content="reeeeeeeeeein的博客">
+<meta property="og:description" content="Tensor与Autograd详解参考自《深度学习框架PyTorch入门与实践》 Tensor创建Tensor创建Tensor的方法有很多:    函数 功能    Tensor(*size) 基础构造函数   ones(*size) 全为 1 Tensor   zeros(*size) 全为 0 Tensor   eyes(*size) 对角线为1，其他为0   arange(s,e,step)">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/04/21/bh1INsQH2CDZJui.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/21/FHmz64MwnYik3U1.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/21/t1bwdZcOvEFT3hV.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/21/2IY1rnLE3aWm98i.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/21/ErYxRC1MD7Pi5dF.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/21/rSDs8YauxeB5CFb.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/21/s8hv6XkiAx1Ofc2.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/21/Mf1PgbTLKvAqWl8.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/21/3M8SQftLEpv2UHA.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/21/93ay4eobRnSIPVs.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/21/3qwKlU4OPgGTNLF.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/21/QqLorfhP7dNG5MU.png">
+<meta property="article:published_time" content="2020-04-21T16:19:35.565Z">
+<meta property="article:modified_time" content="2020-04-21T16:19:35.565Z">
+<meta property="article:author" content="reeeeeeeeeein">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/21/bh1INsQH2CDZJui.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/04/22/pytorch%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>pytorch学习笔记2 | reeeeeeeeeein的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+<div class="bg_content">
+<canvas id="canvas"></canvas>
+</div>
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">reeeeeeeeeein的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/22/pytorch%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          pytorch学习笔记2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-22 00:19:35" itemprop="dateCreated datePublished" datetime="2020-04-22T00:19:35+08:00">2020-04-22</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Tensor与Autograd详解"><a href="#Tensor与Autograd详解" class="headerlink" title="Tensor与Autograd详解"></a>Tensor与Autograd详解</h1><p>参考自《深度学习框架PyTorch入门与实践》</p>
+<h2 id="Tensor"><a href="#Tensor" class="headerlink" title="Tensor"></a>Tensor</h2><h3 id="创建Tensor"><a href="#创建Tensor" class="headerlink" title="创建Tensor"></a>创建Tensor</h3><p>创建Tensor的方法有很多:</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tensor(*size)</td>
+<td>基础构造函数</td>
+</tr>
+<tr>
+<td>ones(*size)</td>
+<td>全为 1 Tensor</td>
+</tr>
+<tr>
+<td>zeros(*size)</td>
+<td>全为 0 Tensor</td>
+</tr>
+<tr>
+<td>eyes(*size)</td>
+<td>对角线为1，其他为0</td>
+</tr>
+<tr>
+<td>arange(s,e,step)</td>
+<td>从s到e，步长为step</td>
+</tr>
+<tr>
+<td>linspace(s,e,step)</td>
+<td>从s到e，均分为step份</td>
+</tr>
+<tr>
+<td>rand/randn(*sizes)</td>
+<td>均匀/标准分布</td>
+</tr>
+<tr>
+<td>normal(mean,std)/uniform(from,to)</td>
+<td>正态分布/均匀分布</td>
+</tr>
+<tr>
+<td>randperm(m)</td>
+<td>随机排列</td>
+</tr>
+</tbody></table>
+<p>用Tensor()函数创建tensor时，可以有很多方法:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">x=t.Tensor([[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>],[<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]])<span class="comment">#用一个list来创建</span></span><br><span class="line">y=t.Tensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br><span class="line">z=t.Tensor(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)<span class="comment">#用几个值来确定Tensor的维度</span></span><br><span class="line">print(x)</span><br><span class="line">print(y)</span><br><span class="line">print(y.tolist())</span><br><span class="line">print(z)</span><br><span class="line">a=x</span><br><span class="line">a</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/21/bh1INsQH2CDZJui.png" alt="image.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">print(x.size())</span><br><span class="line">print(x.numel())</span><br><span class="line">y=t.Tensor(x.size())</span><br><span class="line">z=t.Tensor((<span class="number">2</span>,<span class="number">3</span>))<span class="comment">#Tensor的元素是2和3</span></span><br><span class="line">a=t.Tensor(<span class="number">2</span>,<span class="number">3</span>)<span class="comment">#Tensor的大小是2*3</span></span><br><span class="line">y,z,a</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/21/FHmz64MwnYik3U1.png" alt="image.png"></p>
+<p>tensor.shape和tensor.size()是一样的:<br><img src="https://i.loli.net/2020/04/21/t1bwdZcOvEFT3hV.png" alt="image.png"></p>
+<p>一些其他的创建方法；</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">x=t.ones(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">print(x)</span><br><span class="line">x=t.zeros(<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line">print(x)</span><br><span class="line">x=t.arange(<span class="number">1</span>,<span class="number">7</span>,<span class="number">2</span>)<span class="comment">#注意，第二个参数是取不到的</span></span><br><span class="line">print(x)</span><br><span class="line">x=t.arange(<span class="number">1</span>,<span class="number">7.00000000000001</span>,<span class="number">2</span>)<span class="comment">#注意，第二个参数是取不到的</span></span><br><span class="line">print(x)</span><br><span class="line">x=t.linspace(<span class="number">1</span>,<span class="number">10.7</span>,<span class="number">5</span>)</span><br><span class="line">print(x)</span><br><span class="line">x=t.randn(<span class="number">3</span>,<span class="number">3</span>)<span class="comment">#均值为0，方差为1的正态分布</span></span><br><span class="line">print(x)</span><br><span class="line">x=t.randperm(<span class="number">20</span>)</span><br><span class="line">print(x)</span><br><span class="line">x=t.eye(<span class="number">3</span>,<span class="number">5</span>)</span><br><span class="line">print(x)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/21/2IY1rnLE3aWm98i.png" alt="image.png"></p>
+<h2 id="改变形状的操作"><a href="#改变形状的操作" class="headerlink" title="改变形状的操作"></a>改变形状的操作</h2><p>用 view()，squeeze(),unsqueeze(),resize_()等方法可以改变tensor的形状</p>
+<h3 id="view"><a href="#view" class="headerlink" title="view()"></a>view()</h3><p>view()用于直接改变形状，但不能改变tensor的大小。用法:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">b=t.arange(<span class="number">0</span>,<span class="number">6</span>)</span><br><span class="line">print(b.view(<span class="number">2</span>,<span class="number">3</span>))</span><br><span class="line">print(b.view(<span class="number">-1</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">3</span>)) <span class="comment"># -1表示自动计算其大小</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/21/ErYxRC1MD7Pi5dF.png" alt="image.png"></p>
+<h3 id="unsqueeze"><a href="#unsqueeze" class="headerlink" title="unsqueeze()"></a>unsqueeze()</h3><p>unsqueeze()用于增加tensor的维度。用法:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">print(b)</span><br><span class="line">print(b.unsqueeze(<span class="number">1</span>))<span class="comment">#从 6 变成 6*1</span></span><br><span class="line">print(b.unsqueeze(<span class="number">-2</span>))<span class="comment">#-2 的意思是，增加的那个维度是增加了维度之后的tensor的倒数第二个维度。</span></span><br><span class="line"><span class="comment">#也就是说，从 6 增加成 1*6</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/21/rSDs8YauxeB5CFb.png" alt="image.png"></p>
+<h3 id="squeeze"><a href="#squeeze" class="headerlink" title="squeeze()"></a>squeeze()</h3><p>squeeze()用于压缩大小为一的维度。用法:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x=t.Tensor(<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>)</span><br><span class="line">print(x.squeeze(<span class="number">0</span>))<span class="comment">#第0个维度大小是2，不能压缩</span></span><br><span class="line">print(x.squeeze())<span class="comment">#压缩所有大小为1的维度</span></span><br><span class="line">x.squeeze(<span class="number">2</span>)<span class="comment">#第二个维度大小是1，被压缩</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/21/s8hv6XkiAx1Ofc2.png" alt="image.png"></p>
+<h3 id="resize"><a href="#resize" class="headerlink" title="resize_"></a>resize_</h3><p>resize_也可以用来修改形状。不同的是，如果新尺寸超过了原来的尺寸，会自动分配新的内存空间。用法:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x=t.rand(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">print(x)</span><br><span class="line">print(x.resize_(<span class="number">3</span>,<span class="number">2</span>))</span><br><span class="line">x.resize_(<span class="number">3</span>,<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/21/Mf1PgbTLKvAqWl8.png" alt="image.png"></p>
+<h2 id="索引操作"><a href="#索引操作" class="headerlink" title="索引操作"></a>索引操作</h2><p>Tensor可以按下标索引:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">a=t.randn(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">print(a)</span><br><span class="line">print(a[<span class="number">0</span>])<span class="comment">#第0行</span></span><br><span class="line">print(a[:,<span class="number">2</span>])<span class="comment">#第2列</span></span><br><span class="line">print(a[<span class="number">1</span>:<span class="number">3</span>,<span class="number">2</span>:<span class="number">4</span>])<span class="comment">#第1,2行和第2,3列的交叉</span></span><br><span class="line">print(a[:<span class="number">2</span>])<span class="comment">#前两行</span></span><br><span class="line">print(a[<span class="number">0</span>:<span class="number">2</span>])<span class="comment">#前两行</span></span><br><span class="line">print(a[<span class="number">0</span>:<span class="number">1</span>,:<span class="number">2</span>])<span class="comment">#第0行，前两列。形状是1*2</span></span><br><span class="line">print(a[<span class="number">0</span>,:<span class="number">2</span>])<span class="comment">#第0行，前两列。形状是2</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/21/3M8SQftLEpv2UHA.png" alt="image.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">print(a)</span><br><span class="line">print(a&gt;<span class="number">1</span>)</span><br><span class="line">print(a[a&gt;<span class="number">1</span>])<span class="comment">#形状不同</span></span><br><span class="line">print(a*(a&gt;<span class="number">1</span>))<span class="comment">#形状相同</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/21/93ay4eobRnSIPVs.png" alt="image.png"></p>
+<h2 id="选择函数"><a href="#选择函数" class="headerlink" title="选择函数"></a>选择函数</h2><p>选择函数用于从Tensor中选出一部分。</p>
+<h3 id="index-select"><a href="#index-select" class="headerlink" title="index_select()"></a>index_select()</h3><p>index_select()用于选出tensor特定维度特定下表的部分。用法:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line">a = torch.linspace(<span class="number">1</span>, <span class="number">12</span>, steps=<span class="number">12</span>).view(<span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line">print(a)</span><br><span class="line">b = torch.index_select(a, <span class="number">0</span>, torch.tensor([<span class="number">0</span>, <span class="number">2</span>]))<span class="comment">#0表示第0个维度，0,2表示这一维度下表为0和2的会被选出来。</span></span><br><span class="line">print(b)</span><br><span class="line">print(a.index_select(<span class="number">0</span>, torch.tensor([<span class="number">0</span>, <span class="number">2</span>])))</span><br><span class="line">c = a.index_select(<span class="number">1</span>, torch.tensor([<span class="number">1</span>, <span class="number">3</span>]))<span class="comment">#1表示第一个维度</span></span><br><span class="line">print(c)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/21/3qwKlU4OPgGTNLF.png" alt="image.png"></p>
+<h3 id="mask-select"><a href="#mask-select" class="headerlink" title="mask_select()"></a>mask_select()</h3><p>a.mask_select(b)=a[b],没啥好用的</p>
+<h3 id="nonzero"><a href="#nonzero" class="headerlink" title="nonzero()"></a>nonzero()</h3><p>用于获得非0元素的下标，用法:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a=t.Tensor([<span class="number">2</span>,<span class="number">3</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>])</span><br><span class="line">print(a.nonzero())</span><br><span class="line">a[a.nonzero()]</span><br></pre></td></tr></table></figure>
+
+<h3 id="gather-和scatter"><a href="#gather-和scatter" class="headerlink" title="gather()和scatter()"></a>gather()和scatter()</h3><p>太复杂了，等用到的时候再搞。</p>
+<h2 id="高级索引"><a href="#高级索引" class="headerlink" title="高级索引"></a>高级索引</h2><p>x[[],[]……[]] 其中第1个列表表示第0个维度要选的东西，第2个列表表示第1个维度要选的东西，以此类推。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x=t.arange(<span class="number">0</span>,<span class="number">27</span>).view(<span class="number">3</span>,<span class="number">3</span>,<span class="number">3</span>)</span><br><span class="line">print(x)</span><br><span class="line">print(x[[<span class="number">1</span>,<span class="number">2</span>],[<span class="number">1</span>,<span class="number">2</span>],[<span class="number">2</span>,<span class="number">1</span>]])<span class="comment">#相当于x[1,1,2]和x[2,2,1]</span></span><br><span class="line">print(x[[<span class="number">1</span>,<span class="number">2</span>],[<span class="number">0</span>],[<span class="number">0</span>]])<span class="comment">#相当于x[1,0,0]和x[2,0,0]</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/21/QqLorfhP7dNG5MU.png" alt="image.png"></p>
+<h2 id="Tensor类型"><a href="#Tensor类型" class="headerlink" title="Tensor类型"></a>Tensor类型</h2><p>tensor的元素默认类型是FloatTensor,可以通过t.set_default_tensor_type()修改默认类型。</p>
+<p>常见类型有:</p>
+<table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>CPU tensor</th>
+<th>GPU tensor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>32bit浮点</td>
+<td>torch.FloatTensor</td>
+<td>torch.cuda.FloatTensor</td>
+</tr>
+<tr>
+<td>64bit浮点</td>
+<td>torch.DoubleTensor</td>
+<td>torch.cuda.DoubleTensor</td>
+</tr>
+<tr>
+<td>16bit浮点</td>
+<td>16bit浮点只能在GPU里用</td>
+<td>torch.cuda.HaltTensor</td>
+</tr>
+<tr>
+<td>8bit无符号整型</td>
+<td>torch.ByteTensor</td>
+<td>torch.cuda.ByteTensor</td>
+</tr>
+<tr>
+<td>8bit有符号整型</td>
+<td>torch.CharTensor</td>
+<td>torch.cuda.CharTensor</td>
+</tr>
+<tr>
+<td>16bit有符号整型</td>
+<td>torch.ShortTensor</td>
+<td>torch.cuda.ShortTensor</td>
+</tr>
+<tr>
+<td>32bit有符号整型</td>
+<td>torch.IntTensor</td>
+<td>torch.cuda.IntTensor</td>
+</tr>
+<tr>
+<td>64bit有符号整型</td>
+<td>torch.LongTensor</td>
+<td>torch.cuda.LongTensor</td>
+</tr>
+</tbody></table>
+<p>还可以用type()函数指定类型:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">t.set_default_tensor_type(<span class="string">"torch.FloatTensor"</span>)</span><br><span class="line">a=t.rand(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">print(a)</span><br><span class="line">b=a.int()</span><br><span class="line">print(b)</span><br><span class="line">b=b.type(<span class="string">"torch.DoubleTensor"</span>)</span><br><span class="line">print(b)</span><br></pre></td></tr></table></figure>
+
+<h2 id="逐元素操作"><a href="#逐元素操作" class="headerlink" title="逐元素操作"></a>逐元素操作</h2><p>这些函数会对tensor的每一个元素进行操作，如下表所示:</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>abs/sqrt/div/exp/fmod/log/pow</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/21/pytorch%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/" rel="prev" title="pytorch学习笔记1">
+      <i class="fa fa-chevron-left"></i> pytorch学习笔记1
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Tensor与Autograd详解"><span class="nav-number">1.</span> <span class="nav-text">Tensor与Autograd详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tensor"><span class="nav-number">1.1.</span> <span class="nav-text">Tensor</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建Tensor"><span class="nav-number">1.1.1.</span> <span class="nav-text">创建Tensor</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改变形状的操作"><span class="nav-number">1.2.</span> <span class="nav-text">改变形状的操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#view"><span class="nav-number">1.2.1.</span> <span class="nav-text">view()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#unsqueeze"><span class="nav-number">1.2.2.</span> <span class="nav-text">unsqueeze()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#squeeze"><span class="nav-number">1.2.3.</span> <span class="nav-text">squeeze()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#resize"><span class="nav-number">1.2.4.</span> <span class="nav-text">resize_</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引操作"><span class="nav-number">1.3.</span> <span class="nav-text">索引操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选择函数"><span class="nav-number">1.4.</span> <span class="nav-text">选择函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#index-select"><span class="nav-number">1.4.1.</span> <span class="nav-text">index_select()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mask-select"><span class="nav-number">1.4.2.</span> <span class="nav-text">mask_select()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nonzero"><span class="nav-number">1.4.3.</span> <span class="nav-text">nonzero()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gather-和scatter"><span class="nav-number">1.4.4.</span> <span class="nav-text">gather()和scatter()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高级索引"><span class="nav-number">1.5.</span> <span class="nav-text">高级索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tensor类型"><span class="nav-number">1.6.</span> <span class="nav-text">Tensor类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逐元素操作"><span class="nav-number">1.7.</span> <span class="nav-text">逐元素操作</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">reeeeeeeeeein</p>
+  <div class="site-description" itemprop="description">SYSU 计算机专业大二在读</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">reeeeeeeeeein</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
