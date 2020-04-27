@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="加载用户程序众所周知，引导扇区程序会将操作系统加载到内存中，并把计算机的控制权交给操作系统。问题来了，引导扇区程序是怎么加载用户程序的？ 这是一个复杂的问题，为了回答这个问题，首先我们需要了解用户程序的内容有什么样的格式，其次我们需要知道处理器与硬盘交互的方式，最后还要知道引导扇区程序怎么把控制权交给用户程序。 用户程序header段在引导扇区程序中，处理器从0x7c00处开始执行代码。然而，对于">
+<meta property="og:type" content="article">
+<meta property="og:title" content="加载用户程序">
+<meta property="og:url" content="http://yoursite.com/2020/04/27/%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%88%B7%E7%A8%8B%E5%BA%8F/index.html">
+<meta property="og:site_name" content="reeeeeeeeeein的博客">
+<meta property="og:description" content="加载用户程序众所周知，引导扇区程序会将操作系统加载到内存中，并把计算机的控制权交给操作系统。问题来了，引导扇区程序是怎么加载用户程序的？ 这是一个复杂的问题，为了回答这个问题，首先我们需要了解用户程序的内容有什么样的格式，其次我们需要知道处理器与硬盘交互的方式，最后还要知道引导扇区程序怎么把控制权交给用户程序。 用户程序header段在引导扇区程序中，处理器从0x7c00处开始执行代码。然而，对于">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/04/27/WtKF7V15MsSwuJQ.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/27/j79IMNP2pcyd46C.png">
+<meta property="article:published_time" content="2020-04-27T10:14:34.453Z">
+<meta property="article:modified_time" content="2020-04-27T10:14:34.453Z">
+<meta property="article:author" content="reeeeeeeeeein">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/27/WtKF7V15MsSwuJQ.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/04/27/%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%88%B7%E7%A8%8B%E5%BA%8F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>加载用户程序 | reeeeeeeeeein的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+<div class="bg_content">
+<canvas id="canvas"></canvas>
+</div>
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">reeeeeeeeeein的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/27/%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%88%B7%E7%A8%8B%E5%BA%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          加载用户程序
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-27 18:14:34" itemprop="dateCreated datePublished" datetime="2020-04-27T18:14:34+08:00">2020-04-27</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="加载用户程序"><a href="#加载用户程序" class="headerlink" title="加载用户程序"></a>加载用户程序</h1><p>众所周知，引导扇区程序会将操作系统加载到内存中，并把计算机的控制权交给操作系统。问题来了，引导扇区程序是怎么加载用户程序的？</p>
+<p>这是一个复杂的问题，为了回答这个问题，首先我们需要了解用户程序的内容有什么样的格式，其次我们需要知道处理器与硬盘交互的方式，最后还要知道引导扇区程序怎么把控制权交给用户程序。</p>
+<h2 id="用户程序header段"><a href="#用户程序header段" class="headerlink" title="用户程序header段"></a>用户程序header段</h2><p>在引导扇区程序中，处理器从0x7c00处开始执行代码。然而，对于引导扇区程序会把用户程序加载到哪一个位置，用户程序是不知道的。那就有问题了，如果我在用户程序中要访问数据段中的一个数据，却连这个数据在内存中的位置都不知道，还怎么访问呢？</p>
+<p>分段的方法能很好的解决这个问题。用户程序被分为几段，每一段有一个起始地址，如果我们要访问一个数据，只需给出它在段中的偏移地址即可。用户程序会告诉引导扇区程序自己有几个段，每个段相对于程序开始处的偏移是多少，引导扇区程序会给用户程序在内存中分配一个位置，比如说，0xd000，然后假设用户程序的数据段相对于程序开始处偏移为0x100，则数据段会被加载到内存中的0xd100处。然后，引导扇区程序把ds置为0xd10，这样，用户程序就可以用段地址和偏移地址访问内存了。</p>
+<p>为了告诉引导扇区程序一些必要的信息，用户程序会有一个header段，里面包含了程序的长度、第一条指令的位置、其他段的个数和其他段的相对偏移量。如图所示:</p>
+<p><img src="https://i.loli.net/2020/04/27/WtKF7V15MsSwuJQ.png" alt="image-20200427172648671.png"></p>
+<p>代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">SECTION header vstart&#x3D;0 align&#x3D;16 ;SECTION表明这是一个段的开头，vstart&#x3D;0表明这个段里的所有标号</span><br><span class="line">;都用的是偏移地址，align&#x3D;16表明这个段的起始位置要为16的倍数</span><br><span class="line">length dd program_end;program_end标号在程序的尾部，可以用来得到程序的长度</span><br><span class="line">codeentry dw start;start标号指向程序的第一条指令的位置</span><br><span class="line">          dd section.code_1.start;section.code_1.start指的是code_1这个段的开始位置，第一条指令在这个段里面</span><br><span class="line">          ;根据上面两行，可以知道用户程序的第一条指令的位置</span><br><span class="line">segment_table dw (header_end-code_1_segment)&#x2F;4;段表的长度，即这个程序还有几个段</span><br><span class="line">code_1_segment dd section.code_1.start;code_1段的开始位置</span><br><span class="line">data_1_segment dd section.data_1.start;data_1段的开始位置</span><br><span class="line">stack_segment dd section.stack.start;stack段的开始位置</span><br><span class="line">header_end:</span><br></pre></td></tr></table></figure>
+
+<p>有了这个header段，引导扇区程序就能得到加载用户程序所必须的信息。由于引导扇区程序要将用户程序加载进内存，我们也成引导扇区程序为<strong>加载器</strong>。</p>
+<h2 id="加载器"><a href="#加载器" class="headerlink" title="加载器"></a>加载器</h2><p>我们来看一下加载器会做些什么。</p>
+<p>首先，我们默认加载器知道用户程序在磁盘中的哪一个扇区，也明确了用户程序会被加载到哪一个位置。在加载器的开头，会有一个:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">first_sector equ 100</span><br></pre></td></tr></table></figure>
+
+<p>这是一个伪指令，相当于%define first_sector 100。</p>
+<p>然后，加载器像其他程序一样，会有一个段声明:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SECTION mbr align&#x3D;16 vstart&#x3D;0x7c00</span><br></pre></td></tr></table></figure>
+
+<p>注意这里vstart=0x7c00。也就是说，后面的标号的值都要加上0x7c00。接下来是正常的设置堆栈段和栈指针的位置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mov ax,0</span><br><span class="line">mov ss,ax</span><br><span class="line">mov sp,ax</span><br></pre></td></tr></table></figure>
+
+<p>然后要处理的是用户程序在内存中的起始位置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mov ax,[cs:start_loc]</span><br><span class="line">mov dx,[cs:start_loc+2]</span><br><span class="line">mov bx,16</span><br><span class="line">div bx</span><br><span class="line">mov es,ax</span><br><span class="line">mov ds,ax</span><br></pre></td></tr></table></figure>
+
+<p>一开始时cs寄存器是0，start_loc标号在程序的尾部，内容是:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start_loc: dd 0x10000</span><br></pre></td></tr></table></figure>
+
+<p>这个值就是用户程序会被加载到的位置。</p>
+<p>由于0x10000是一个20位的数，于是只能用dx:ax两个寄存器来存储。我们将dx:ax除以16，商保存在ax中，将它赋值给es和ds。这样，ds和es就是用户程序的起始段地址。接下来我们读入第一个扇区:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">xor bx,bx</span><br><span class="line">xor di,di</span><br><span class="line">mov si,first_sector</span><br><span class="line">call read_disk</span><br></pre></td></tr></table></figure>
+
+<p>call指令意思是过程调用，它会先将ip的值保存至栈中，转而取执行read_disk位置的指令。事实上，它就相当于高级语言中的函数。向这个”函数”传递参数的方式是把要用到值放在其他寄存器中。</p>
+<p>既然我们要读磁盘，我们得知道把要读哪一个扇区和读出来的内容放在哪里告诉磁盘。这里我们把扇区的位置放置在di:si中，读出来的内容放在[ds:bx]里 。做完这些工作，就可以调用read_disk了，它的内容是:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">read_disk:</span><br><span class="line">push ax</span><br><span class="line">push bx</span><br><span class="line">push cx</span><br><span class="line">push dx</span><br><span class="line"></span><br><span class="line">mov dx,0x1f2</span><br><span class="line">mov al,1</span><br><span class="line">out dx,al                       ;读取的扇区数</span><br><span class="line"></span><br><span class="line">inc dx                          ;0x1f3</span><br><span class="line">mov ax,si</span><br><span class="line">out dx,al                       ;LBA地址7~0</span><br><span class="line"></span><br><span class="line">inc dx                          ;0x1f4</span><br><span class="line">mov al,ah</span><br><span class="line">out dx,al                       ;LBA地址15~8</span><br><span class="line"></span><br><span class="line">inc dx                          ;0x1f5</span><br><span class="line">mov ax,di</span><br><span class="line">out dx,al                       ;LBA地址23~16</span><br><span class="line"></span><br><span class="line">inc dx                          ;0x1f6</span><br><span class="line">mov al,0xe0                     ;LBA28模式，主盘</span><br><span class="line">or al,ah                        ;LBA地址27~24</span><br><span class="line">out dx,al</span><br><span class="line"></span><br><span class="line">inc dx                          ;0x1f7</span><br><span class="line">mov al,0x20                     ;读命令</span><br><span class="line">out dx,al</span><br><span class="line"></span><br><span class="line">disk_ok?:</span><br><span class="line">in al,dx</span><br><span class="line">and al,0x88</span><br><span class="line">cmp al,0x08</span><br><span class="line">jne disk_ok?</span><br><span class="line"></span><br><span class="line">mov cx,256</span><br><span class="line">mov dx,0x1f0</span><br><span class="line"></span><br><span class="line">read_content:</span><br><span class="line">in ax,dx</span><br><span class="line">mov [bx],ax</span><br><span class="line">add bx,2</span><br><span class="line">dec cx</span><br><span class="line">cmp cx,0</span><br><span class="line">jne read_content</span><br><span class="line"></span><br><span class="line">pop dx</span><br><span class="line">pop cx</span><br><span class="line">pop bx</span><br><span class="line">pop ax</span><br><span class="line"></span><br><span class="line">ret</span><br></pre></td></tr></table></figure>
+
+<p>看起来很复杂，但只要一条条分析，还是能分析清楚的。首先是把ax,bx,cx,dx 4个寄存器push到栈中。因为我们要修改它们的值，得先把它们保护起来，等这个过程要返回了，就把它们pop回去。</p>
+<p>从第7行到第30行，是在向I/O端口读写信息，这些端口是独立编址的。从I/O端口读入信息用in指令，用法是:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">in al,dx</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">in ax,dx</span><br></pre></td></tr></table></figure>
+
+<p>dx是要访问的端口号，al、ax是用来保存读入的值。注意不能用其他的寄存器。</p>
+<p>相应的，向I/O端口写入信息，要用out指令，用法是:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">out dx,al</span><br></pre></td></tr></table></figure>
+
+<p>和</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">out dx,ax</span><br></pre></td></tr></table></figure>
+
+<p>dx是访问的端口号，al、ax是要写入的值。</p>
+<p>in、out指令的dx参数也可以用立即数代替。</p>
+<p>主硬盘端口分配的端口号是0x1f0-0x1f7。</p>
+<p>其中，0x1f0 是硬盘接口的数据端口，而且还是一个 16 位端口。一旦硬盘控制器空闲，且准备就绪，就可以连续从这个端口写入或者读取数据。</p>
+<p>0x1f1 端口是错误寄存器，包含硬盘驱动器最后一次执行命令后的状态（错误原因）。</p>
+<p>0x1f2端口用于设置要读取的扇区数量，0x1f3-0x1f6端口用于设置起始扇区号。扇区号有28个字节，0-7字节要放在0x1f3里，8-15字节要放在0x1f4里，16-23字节要放在0x1f5里，24-27字节要放在0x1f6里。0x1f6的高4位置为1110。</p>
+<p>端口 0x1f7 既是命令端口，又是状态端口。在通过这个端口发送 读写命令之后，硬盘就忙乎开了。在它内部操作期间，它将 0x1f7 端口的第 7 位置 “1”，表明自己很忙。一旦硬盘系统准备就绪，它再将此位清零，说明自己已经忙完了，同时将第 3 位置“1”，意思是准备好了，请求主机发送或者接收数据。</p>
+<p>了解了这些后，第7-30行的代码也就很容易理解了。</p>
+<p>第32-36行是在不断判断硬盘是否准备好，如果没有则继续循环。</p>
+<p>第38行将cx置为256，因为一个扇区是512个字节，一次读出2个字节。第39行将dx置为0x1f0，即从0x1f0读入数据。</p>
+<p>第41-47行不断将数据读入到[ds:bx]处，然后将bx+=2。</p>
+<p>最后恢复ax,bx,cx,dx寄存器，注意顺序要反过来。</p>
+<p>第一次读完磁盘后，用户程序的第一个扇区就已经在内存里了。接下来要进行一些很重要的工作:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mov dx,[bx+2]</span><br><span class="line">mov ax,[bx]</span><br><span class="line">mov bx,512</span><br><span class="line">div bx</span><br><span class="line">cmp dx,0</span><br><span class="line">je tem1</span><br><span class="line">inc ax</span><br></pre></td></tr></table></figure>
+
+<p>用户程序的前4个字节是用户程序的大小，先把它读入到ds:ax中，然后除以512，得到用户程序在磁盘中的扇区数。注意，如果用户程序的大小恰好为512的倍数，则除法指令结束后，ax的值就是用户程序占的扇区数，此时dx为0；否则，这个数字要加1。</p>
+<p>接下来要读入其他扇区:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">tem1:</span><br><span class="line">dec ax</span><br><span class="line">mov cx,ax</span><br><span class="line">cmp cx,0</span><br><span class="line">je tem3</span><br><span class="line"></span><br><span class="line">push ds</span><br><span class="line">tem2:</span><br><span class="line">xor bx,bx</span><br><span class="line">inc si</span><br><span class="line">mov ax,ds</span><br><span class="line">add ax,0x20</span><br><span class="line">mov ds,ax</span><br><span class="line">call read_disk</span><br><span class="line">dec cx</span><br><span class="line">cmp cx,0</span><br><span class="line">jne tem2</span><br></pre></td></tr></table></figure>
+
+<p>首先将ax减1(刚才已经读了一个扇区了)。如果ax==0，则跳过下面的工作；否则进入tem2这个循环。</p>
+<p>循环里每次将si加1(ds:si是要读的扇区号)，将ds+=0x20(写入内存的位置每次往后推512个字节)，将bx置为0，然后调用read_disk过程读入扇区。</p>
+<p>把扇区读完了，接下来要确定用户程序的第一条指令的位置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tem3:</span><br><span class="line">mov dx,[0x08]</span><br><span class="line">mov ax,[0x06]</span><br><span class="line">call segment_reloc</span><br></pre></td></tr></table></figure>
+
+<p>回忆一下，第一条指令的位置是通过 段地址(第一条指令所在段的首地址)+偏移地址(第一条指令相对于段地址的差值) 给出的。在[ds:bx+0x06]到[ds:bx+0x09]之间的是段地址。我们把它的值与用户程序在内存中的首地址相加，就得到了这个段的真实地址，再把它右移4位，送到ax寄存器中。上述过程会被执行很多次（有好几个段），所以我们把它写成一个segment_reloc过程:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">push dx</span><br><span class="line"></span><br><span class="line">add ax,[cs:start_loc]</span><br><span class="line">add dx,[cs:start_loc+0x02]</span><br><span class="line">shr ax,4</span><br><span class="line">shl dx,12</span><br><span class="line">or ax,dx</span><br><span class="line"></span><br><span class="line">pop dx</span><br><span class="line">ret</span><br></pre></td></tr></table></figure>
+
+<p>shr指令是右移4位，shl指令是左移12位，or指令把ax和dx合起来（ax的高4位为0，dx的低12位为0）。</p>
+<p>得到真实段地址右移4位的值后，把它送回[ds:0x06]处。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov [0x06],ax</span><br></pre></td></tr></table></figure>
+
+<p>接下来要读段表。首先从[ds:0x0a]处取出一个字放到cx中，表示段表的大小，然后将bx置为0x0c，这是段表的首地址相对用户程序起始处的偏移地址:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov cx,[0x0a]</span><br><span class="line">mov bx,0x0c</span><br></pre></td></tr></table></figure>
+
+<p>接下来要一个个读:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">segment_table_reloc:</span><br><span class="line">mov dx,[bx+0x02]</span><br><span class="line">mov ax,[bx]</span><br><span class="line">call segment_reloc</span><br><span class="line">mov [bx],ax</span><br><span class="line">add bx,4</span><br><span class="line">dec cx</span><br><span class="line">cmp cx,0</span><br><span class="line">jne segment_table_reloc</span><br></pre></td></tr></table></figure>
+
+<p>这部分内容跟开始时读段表差不多，不再赘述。</p>
+<p>折腾完这些，加载器的工作差不多完成了，可以把控制权交给用户程序了:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmp far [0x04]</span><br></pre></td></tr></table></figure>
+
+<p>jmp far是 16 位间接绝对远转移。上面一条指令会从 ds:0x04 处取出6个字节，把前两个字节作为一个字，它是指令的偏移地址；后4个字节被当成一个双字，是指令所在段的地址（这个地址已经被我们重定位过了）。这样就能跳到用户程序的第一条指令了。注意，此时ds,es的值都是用户程序在内存中的首地址右移4位的值。</p>
+<h2 id="用户程序其他内容"><a href="#用户程序其他内容" class="headerlink" title="用户程序其他内容"></a>用户程序其他内容</h2><p>看看用户程序会做什么:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">SECTION code_1 align&#x3D;16 vstart&#x3D;0</span><br><span class="line">start:</span><br><span class="line">mov ax,[stack_segment]</span><br><span class="line">mov ss,ax</span><br><span class="line">mov sp,stack_end</span><br><span class="line"></span><br><span class="line">mov ax,[data_1_segment]</span><br><span class="line">mov ds,ax</span><br><span class="line"></span><br><span class="line">mov ax,0xb800</span><br><span class="line">mov es,ax</span><br><span class="line"></span><br><span class="line">mov bx,msg</span><br><span class="line">mov cx,12</span><br><span class="line"></span><br><span class="line">xor ax,ax</span><br><span class="line">mov di,0</span><br><span class="line"></span><br><span class="line">do:</span><br><span class="line">mov al,[bx]</span><br><span class="line">inc bx</span><br><span class="line">mov [es:di],al</span><br><span class="line">inc di</span><br><span class="line">mov byte [es:di],0x07</span><br><span class="line">inc di</span><br><span class="line">dec cx</span><br><span class="line">cmp cx,0</span><br><span class="line">jne do</span><br><span class="line"></span><br><span class="line">jmp near $</span><br><span class="line"></span><br><span class="line">SECTION data_1 align&#x3D;16 vstart&#x3D;0</span><br><span class="line">msg db &#39;hello world!&#39;</span><br><span class="line"></span><br><span class="line">SECTION stack align&#x3D;16 vstart&#x3D;0</span><br><span class="line">resb 256</span><br><span class="line">stack_end:</span><br><span class="line">SECTION trail align&#x3D;16</span><br><span class="line">program_end:</span><br></pre></td></tr></table></figure>
+
+<p>第1行声明了一个段，第3行就是我们期待已经的第一条指令。前3条指令用于设置段指针和段寄存器的值。</p>
+<p>第7，8行两行设置数据段寄存器ds的值，第9,10行两行设置附加段寄存器es的值。</p>
+<p>从第12行开始是一个很正常的显示字符串的工作，不再赘述。</p>
+<p>第32行声明了数据段，里面只有一个字符串。</p>
+<p>第35行声明了堆栈段，里面用resb指令保留了256个字节。注意，stack_end标号是在resb指令的后面，因为栈指针的值是不断减小的。</p>
+<p>最后，第38行声明了一个trail段，它没什么用，值得注意的是它没有vstart=0这个定义，所以标号program_end的值是从0开始算的，所以它的值就是用户程序的大小。</p>
+<h2 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h2><p>用bochs运行，结果如下:</p>
+<p><img src="https://i.loli.net/2020/04/27/j79IMNP2pcyd46C.png" alt="image-20200427174119405.png"></p>
+<p>效果拨群。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/22/pytorch%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02/" rel="prev" title="pytorch学习笔记2">
+      <i class="fa fa-chevron-left"></i> pytorch学习笔记2
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#加载用户程序"><span class="nav-number">1.</span> <span class="nav-text">加载用户程序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#用户程序header段"><span class="nav-number">1.1.</span> <span class="nav-text">用户程序header段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载器"><span class="nav-number">1.2.</span> <span class="nav-text">加载器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用户程序其他内容"><span class="nav-number">1.3.</span> <span class="nav-text">用户程序其他内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行结果"><span class="nav-number">1.4.</span> <span class="nav-text">运行结果</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">reeeeeeeeeein</p>
+  <div class="site-description" itemprop="description">SYSU 计算机专业大二在读</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">reeeeeeeeeein</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>

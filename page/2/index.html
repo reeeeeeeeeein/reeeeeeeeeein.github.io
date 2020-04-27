@@ -165,6 +165,69 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/09/%E5%AE%89%E5%8D%93%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/09/%E5%AE%89%E5%8D%93%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B03/" class="post-title-link" itemprop="url">安卓开发笔记3</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-09 21:11:14" itemprop="dateCreated datePublished" datetime="2020-04-09T21:11:14+08:00">2020-04-09</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="安卓开发笔记3"><a href="#安卓开发笔记3" class="headerlink" title="安卓开发笔记3"></a>安卓开发笔记3</h1><p><del>(随手写的，不具有参考价值)</del></p>
+<h2 id="给EditText自定义边框"><a href="#给EditText自定义边框" class="headerlink" title="给EditText自定义边框"></a>给EditText自定义边框</h2><p>(主要参考这篇博客:<a href="https://www.cnblogs.com/johnsonwei/p/5785055.html" target="_blank" rel="noopener">https://www.cnblogs.com/johnsonwei/p/5785055.html</a>)</p>
+<p>需要在drawable文件夹下面自定义一个xml文件:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">layer-list</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">shape</span></span></span><br><span class="line"><span class="tag">            <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:shape</span>=<span class="string">"rectangle"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">solid</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:color</span>=<span class="string">"#EEEEEF"</span>/&gt;</span>//内部颜色</span><br><span class="line">            <span class="tag">&lt;<span class="name">corners</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:radius</span>=<span class="string">"15dip"</span>//用于指定边框<span class="attr">4</span>个角的弯曲程度</span></span><br><span class="line"><span class="tag">                /&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">stroke</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:width</span>=<span class="string">"0.5px"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:color</span>=<span class="string">"#225050"</span>/&gt;</span>//边框颜色</span><br><span class="line">        <span class="tag">&lt;/<span class="name">shape</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">layer-list</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后指定EditText的background:</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;EditText</span><br><span class="line">    android:<span class="attribute">layout_width</span>=<span class="string">"200dp"</span></span><br><span class="line">    android:<span class="attribute">layout_height</span>=<span class="string">"wrap_content"</span></span><br><span class="line">    android:<span class="attribute">inputType</span>=<span class="string">"phone"</span></span><br><span class="line">    android:<span class="attribute">text</span>=<span class="string">""</span></span><br><span class="line">    android:<span class="attribute">id</span>=<span class="string">"@android:id/edit"</span></span><br><span class="line">    android:<span class="attribute">background</span>=<span class="string">"@drawable/edit_bg"</span>/&gt;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/08/%E5%AE%89%E5%8D%93%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -990,109 +1053,11 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/28/%E5%9C%A8WSL%E5%AE%89%E8%A3%85%E5%B9%B6%E9%85%8D%E7%BD%AEVSCode/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="reeeeeeeeeein">
-      <meta itemprop="description" content="SYSU 计算机专业大二在读">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="reeeeeeeeeein的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/02/28/%E5%9C%A8WSL%E5%AE%89%E8%A3%85%E5%B9%B6%E9%85%8D%E7%BD%AEVSCode/" class="post-title-link" itemprop="url">在WSL安装并配置VSCode</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-02-28 00:12:03" itemprop="dateCreated datePublished" datetime="2020-02-28T00:12:03+08:00">2020-02-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-17 17:57:06" itemprop="dateModified" datetime="2020-04-17T17:57:06+08:00">2020-04-17</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="下载WSL"><a href="#下载WSL" class="headerlink" title="下载WSL"></a>下载WSL</h2><p>WSL(Windows Subsystem for Linux)可以在windows中装一个Linux子系统，非常方便且易于使用。</p>
-<p>首先在Microsoft Store中下载Ubuntu：</p>
-<p><img src="https://i.loli.net/2020/02/28/DbgThwa9SveLnjl.png" alt="image.png"></p>
-<p>点开下载的界面会花很长时间，但下载速度很快。</p>
-<p>下载过程中，打开Windows功能，勾选”适用于 Linux 的 Windows 子系统”:</p>
-<p><img src="https://i.loli.net/2020/02/28/68owCq1MLNBmnhD.png" alt="image.png"></p>
-<p>然后打开下载好的Ubuntu，第一次打开要设定用户名和密码。这样，wsl就算是安装完了。</p>
-<p>为了加快下载速度，把默认源切换成阿里源：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo sed -i s@&#x2F;archive.ubuntu.com&#x2F;@&#x2F;mirrors.aliyun.com&#x2F;@g &#x2F;etc&#x2F;apt&#x2F;sources.list</span><br><span class="line">sudo apt update -y</span><br><span class="line">sudo apt upgrade -y</span><br></pre></td></tr></table></figure>
-
-<h2 id="下载并配置VSCode"><a href="#下载并配置VSCode" class="headerlink" title="下载并配置VSCode"></a>下载并配置VSCode</h2><p>下载VSCode只用4条命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:ubuntu-desktop&#x2F;ubuntu-make</span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install ubuntu-make</span><br><span class="line">sudo umake ide visual-studio-code</span><br></pre></td></tr></table></figure>
-
-<p>这样就得到一个未配置的VSCode了。<br>但是由于种种原因，下载下来的VSCode可能用不了。解决办法是在本地有一个能用的VSCode，然后在本地上安装Remote-WSL插件：</p>
-<p><img src="https://i.loli.net/2020/02/28/QNIRjCSnKilqBzA.png" alt="image.png"></p>
-<p>这样就可以在wsl里用code .(注意小数点和前面的空格不能少)命令进入VSCode了。在root状态下使用这个命令会失效，<br>而且再切回原本的用户再使用也会失效，这时只能关闭终端重新启动。</p>
-<p>然后要在wsl里安装g++和gdb：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install gdb</span><br><span class="line">sudo apt-get install g++</span><br></pre></td></tr></table></figure>
-
-<p>接下来要配置开发环境，需要新建一个.vscode文件夹：<br><img src="https://i.loli.net/2020/02/28/WTpU5Yu3dF7qQ1y.png" alt="image.png"></p>
-<p>4个文件的内容分别是：</p>
-<h3 id="c-cpp-properties-json"><a href="#c-cpp-properties-json" class="headerlink" title="c_cpp_properties.json"></a>c_cpp_properties.json</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"configurations"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"name"</span>: <span class="string">"Linux"</span>,</span><br><span class="line">            <span class="attr">"includePath"</span>: [],</span><br><span class="line">            <span class="attr">"defines"</span>: [<span class="string">"_DEBUG"</span>,<span class="string">"_UNICODE"</span>],</span><br><span class="line">            <span class="attr">"compilerPath"</span>: <span class="string">"/usr/bin/g++"</span>,</span><br><span class="line">            <span class="attr">"intelliSenseMode"</span>: <span class="string">"$&#123;default&#125;"</span></span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"version"</span>: <span class="number">4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="launch-json"><a href="#launch-json" class="headerlink" title="launch.json"></a>launch.json</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// Use IntelliSense to learn about possible attributes.</span></span><br><span class="line">  <span class="comment">// Hover to view descriptions of existing attributes.</span></span><br><span class="line">  <span class="comment">// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387</span></span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"0.2.0"</span>,</span><br><span class="line">  <span class="attr">"configurations"</span>: [</span><br><span class="line">  </span><br><span class="line">      &#123;</span><br><span class="line">          <span class="attr">"name"</span>: <span class="string">"g++ build and debug active file"</span>,</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"cppdbg"</span>,</span><br><span class="line">          <span class="attr">"request"</span>: <span class="string">"launch"</span>,</span><br><span class="line">          <span class="attr">"program"</span>: <span class="string">"$&#123;fileDirname&#125;/$&#123;fileBasenameNoExtension&#125;"</span>,</span><br><span class="line">          <span class="attr">"args"</span>: [],</span><br><span class="line">          <span class="attr">"stopAtEntry"</span>: <span class="literal">false</span>,</span><br><span class="line">          <span class="attr">"cwd"</span>: <span class="string">"$&#123;workspaceFolder&#125;"</span>,</span><br><span class="line">          <span class="attr">"environment"</span>: [],</span><br><span class="line">          <span class="attr">"externalConsole"</span>: <span class="literal">false</span>,</span><br><span class="line">          <span class="attr">"MIMode"</span>: <span class="string">"gdb"</span>,</span><br><span class="line">          <span class="attr">"setupCommands"</span>: [</span><br><span class="line">              &#123;</span><br><span class="line">                  <span class="attr">"description"</span>: <span class="string">"Enable pretty-printing for gdb"</span>,</span><br><span class="line">                  <span class="attr">"text"</span>: <span class="string">"-enable-pretty-printing"</span>,</span><br><span class="line">                  <span class="attr">"ignoreFailures"</span>: <span class="literal">true</span></span><br><span class="line">              &#125;</span><br><span class="line">          ],</span><br><span class="line">          <span class="attr">"preLaunchTask"</span>: <span class="string">"g++ build active file"</span>,</span><br><span class="line">          <span class="attr">"miDebuggerPath"</span>: <span class="string">"/usr/bin/gdb"</span></span><br><span class="line">      &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="settings-json"><a href="#settings-json" class="headerlink" title="settings.json"></a>settings.json</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"files.associations"</span>: &#123;</span><br><span class="line">    <span class="attr">"iostream"</span>: <span class="string">"cpp"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="task-json"><a href="#task-json" class="headerlink" title="task.json"></a>task.json</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"tasks"</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"shell"</span>,</span><br><span class="line">          <span class="attr">"label"</span>: <span class="string">"g++ build active file"</span>,</span><br><span class="line">          <span class="attr">"command"</span>: <span class="string">"/usr/bin/g++"</span>,</span><br><span class="line">          <span class="attr">"args"</span>: [</span><br><span class="line">              <span class="string">"-g"</span>,</span><br><span class="line">              <span class="string">"$&#123;file&#125;"</span>,</span><br><span class="line">              <span class="string">"-o"</span>,</span><br><span class="line">              <span class="string">"$&#123;fileDirname&#125;/$&#123;fileBasenameNoExtension&#125;"</span></span><br><span class="line">          ],</span><br><span class="line">          <span class="attr">"options"</span>: &#123;</span><br><span class="line">              <span class="attr">"cwd"</span>: <span class="string">"/usr/bin"</span></span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"2.0.0"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然后就可以写一个helloworld.cpp,愉快地一键F5运行了：<br>但还是会在上方出现一个选择环境的提示，选C++(GDB/LLDB)<br>选择配置则是g++ build and debug active file</p>
-<p><img src="https://i.loli.net/2020/02/28/4m8EVbNBOJLwFvx.png" alt="image.png"></p>
-<p>然后会在终端看到结果：</p>
-<p><img src="https://i.loli.net/2020/02/28/MT9uopNYCtAelam.png" alt="image.png"></p>
-<p>当然，也可以在终端用g++直接编译然后运行~</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1157,7 +1122,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
