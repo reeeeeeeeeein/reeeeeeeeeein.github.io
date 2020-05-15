@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="操作系统实验一_引导扇区程序实验目的​        锻炼编写汇编语言程序的能力，增加对操作系统启动方式的了解，学习bochs调试工具、NASM编译工具的使用。 实验要求​        设计IBM_PC的一个引导扇区程序，程序功能是：用字符‘A’从屏幕左边某行位置45度角下斜射出，保持一个可观察的适当速度直线运动，碰到屏幕的边后产生反射，改变方向运动，如此类推，不断运动；在此基础上，增加你的个性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统实验一_引导扇区程序">
+<meta property="og:url" content="http://yoursite.com/2020/05/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E4%B8%80_%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E7%A8%8B%E5%BA%8F/index.html">
+<meta property="og:site_name" content="reeeeeeeeeein的博客">
+<meta property="og:description" content="操作系统实验一_引导扇区程序实验目的​        锻炼编写汇编语言程序的能力，增加对操作系统启动方式的了解，学习bochs调试工具、NASM编译工具的使用。 实验要求​        设计IBM_PC的一个引导扇区程序，程序功能是：用字符‘A’从屏幕左边某行位置45度角下斜射出，保持一个可观察的适当速度直线运动，碰到屏幕的边后产生反射，改变方向运动，如此类推，不断运动；在此基础上，增加你的个性">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/04/23/b3kvIO5Efi6KDJj.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/23/u9dmARTcgSlZJGt.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/m2Colb69jveKOUz.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/Bfj7THwEq84MxRX.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/QbgTUBG2pA81Frx.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/r73KEhFymjLkSWv.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/7bDsRBiTzPXmWfC.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/LBQdsMFyj1ur3ft.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/tUvoYS4eaLFDqKQ.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/6czsDHAn1IuLJgB.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/beE8Kg6wa3mCvxu.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/Bn3PD8pvrxhe72w.png">
+<meta property="article:published_time" content="2020-05-15T06:56:04.503Z">
+<meta property="article:modified_time" content="2020-05-15T06:56:04.503Z">
+<meta property="article:author" content="reeeeeeeeeein">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/23/b3kvIO5Efi6KDJj.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/05/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E4%B8%80_%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E7%A8%8B%E5%BA%8F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>操作系统实验一_引导扇区程序 | reeeeeeeeeein的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+<div class="bg_content">
+<canvas id="canvas"></canvas>
+</div>
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">reeeeeeeeeein的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E4%B8%80_%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E7%A8%8B%E5%BA%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统实验一_引导扇区程序
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-15 14:56:04" itemprop="dateCreated datePublished" datetime="2020-05-15T14:56:04+08:00">2020-05-15</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="操作系统实验一-引导扇区程序"><a href="#操作系统实验一-引导扇区程序" class="headerlink" title="操作系统实验一_引导扇区程序"></a>操作系统实验一_引导扇区程序</h1><h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><p>​        锻炼编写汇编语言程序的能力，增加对操作系统启动方式的了解，学习bochs调试工具、NASM编译工具的使用。</p>
+<h2 id="实验要求"><a href="#实验要求" class="headerlink" title="实验要求"></a>实验要求</h2><p>​        设计IBM_PC的一个引导扇区程序，程序功能是：用字符‘A’从屏幕左边某行位置45度角下斜射出，保持一个可观察的适当速度直线运动，碰到屏幕的边后产生反射，改变方向运动，如此类推，不断运动；在此基础上，增加你的个性扩展，如同时控制两个运动的轨迹，或炫酷动态变色，个性画面，如此等等，自由不限。还要在屏幕某个区域特别的方式显示你的学号姓名等个人信息。将这个程序的机器码放进放进第三张虚拟软盘的首扇区，并用此软盘引导你的XXXPC，直到成功。</p>
+<h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p>​        使用NASM来编译代码，由于VSCode里可以使用终端，所以我用VSCode来编写汇编代码，然后可以方便的在终端里用NASM。<br>​        用《x86汇编语言-从实模式到保护模式》这本书附带的fixvhdwr来将二进制文件写入至硬盘，然后使用bochs2.1.1来对程序进行调试，调试无误后把二进制文件放到VirtualBox运行。</p>
+<h2 id="实验过程"><a href="#实验过程" class="headerlink" title="实验过程"></a>实验过程</h2><h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>​        我计划按实验要求的方法在屏幕上循环显示”reeeeeeeeeein”,并且字符的颜色不相同,每显示一些字符之后就把屏幕刷新。如下图所示:</p>
+<p><img src="https://i.loli.net/2020/04/23/b3kvIO5Efi6KDJj.png" alt="image.png"></p>
+<p>​        首先我们要确定当前要显示的位置，这就需要知道是在哪一行哪一列。于是我在程序末尾分配两个变量:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">locr: db 0 ;当前所在行</span><br><span class="line">locc: db 0 ;当前所在列</span><br></pre></td></tr></table></figure>
+
+<p>​        为了方便，以后直接用locr指代[ds:locr]这个位置存储的值，其他变量也是同理。</p>
+<p>​        知道了当前位置，还需要知道下一个位置。下一个位置无非是由当前位置往左往右往上往下得到，于是我又分配了两个变量；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">u_or_d: db 0 ;上还是下，0是下，1是上</span><br><span class="line">l_or_r: db 0 ;0右，1左</span><br></pre></td></tr></table></figure>
+
+<p>​        要显示”reeeeeeeeeein”,得知道现在要显示的是第几个字符，还要把这个字符串存储起来:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">words: db &#39;r&#39;,&#39;e&#39;,&#39;e&#39;,&#39;e&#39;,&#39;e&#39;,&#39;e&#39;,&#39;e&#39;,&#39;e&#39;,&#39;e&#39;,&#39;e&#39;,&#39;e&#39;,&#39;i&#39;,&#39;n&#39;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">loc: db 0 ;当前显示第几个字母</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%define name_length 13;字符串的长度为13</span><br></pre></td></tr></table></figure>
+
+<p>​        为了美观，背景颜色就用默认的黑色，而字符的前景颜色用颜色表里I=1的8个颜色:<br><img src="https://i.loli.net/2020/04/23/u9dmARTcgSlZJGt.png" alt="image.png"><br>​        所以分配一个变量存储当前的颜色:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">color: db 8;颜色从8显示到15</span><br></pre></td></tr></table></figure>
+
+<p>​        在我的电脑上，bochs和VirtualBox虚拟机的屏幕宽度都是80个字符。于是我设置可显示的宽度为80，可显示的高度为17。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%define width 80</span><br><span class="line">%define height 17</span><br></pre></td></tr></table></figure>
+
+<p>​        要刷新屏幕，得用一个计数器，当它减到0就刷新一次:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%define flush_seq 300</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flush_or_not: dw flush_seq;注意这里只能dw不能db，因为300&gt;255</span><br></pre></td></tr></table></figure>
+
+<p>​        此外，为了显示我的””知识产权”，我会屏幕下方显示”made by zjr”这个字符串。</p>
+<h3 id="代码解读"><a href="#代码解读" class="headerlink" title="代码解读"></a>代码解读</h3><h4 id="显示字符"><a href="#显示字符" class="headerlink" title="显示字符"></a>显示字符</h4><p>​        把上面这些工作做完了，就可以开始编写一些重要的代码了。首先看一下显示字符的代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">do:</span><br><span class="line">  xor ax,ax</span><br><span class="line">  mov al,[ds:locr]</span><br><span class="line">  imul bx,ax,width</span><br><span class="line">  mov ax,bx</span><br><span class="line">  xor bx,bx</span><br><span class="line">  mov bl,[ds:locc]</span><br><span class="line">  add ax,bx</span><br><span class="line">  add ax,ax</span><br><span class="line">  mov di,ax;到这里，es:di就是我们要访问的位置</span><br><span class="line">  xor ax,ax</span><br><span class="line">  mov al,[ds:loc]</span><br><span class="line">  mov si,ax</span><br><span class="line">  mov al,[ds:si+words]</span><br><span class="line">  mov [es:di],al</span><br><span class="line">  mov al,[ds:color]</span><br><span class="line">  mov byte [es:di+1],al</span><br><span class="line">  inc al</span><br><span class="line">  cmp al,16</span><br><span class="line">  jne tem0</span><br><span class="line">  mov al,8</span><br><span class="line">  tem0:</span><br><span class="line">  mov [ds:color],al</span><br><span class="line">  inc byte [ds:loc]</span><br><span class="line">  cmp byte [ds:loc],name_length</span><br><span class="line">  jne tem1</span><br><span class="line">  mov byte [ds:loc],0</span><br></pre></td></tr></table></figure>
+
+<p>​        当前显示的位置是:</p>
+<p>$$<br>locr*width+locc<br>$$</p>
+<p>​        第二行把ax清0(这是有必要的，如果ah的值不为0可能得到错误的结果)。把locr的内容放到al里，然后第四行把ax和width相乘，结果放到bx。</p>
+<p>​        第五行到第十行是把bx放到ax，并把locc加到ax里，然后ax乘2。ax乘2的原因是显示屏上显示一个字符要2个字节。最后把ax放到di里。这样，es:di就是我们当前要显示的位置。</p>
+<p>​        从第11行到第15行是找到要显示的字符。首先取出loc，再用$ds:words+loc$得到要显示的字符的位置，最后把这个字符取出来，放到$es:di$里。</p>
+<p>​        第16行开始是在确定字符的前景颜色，这跟找到字符是差不多的。注意color要自增一次，自增完之后要判断它是否等于16，如果等于，就把color置为8。</p>
+<p>​        第24行开始是对loc的自增，然后判断是否是8，是的话就置为0。</p>
+<h4 id="下一个位置"><a href="#下一个位置" class="headerlink" title="下一个位置"></a>下一个位置</h4><p>​        显示了当前的字符后，要确定下一个字符的位置，这就需要u_or_d和l_or_r这两个变量。u_or_d取值为0，则locr要加1，否则locr要减1；l_or_r取值为0，则locc加1，否则locc要减1:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">tem1:</span><br><span class="line">  cmp byte [ds:u_or_d],0</span><br><span class="line">  je tem2</span><br><span class="line">    dec byte [ds:locr]</span><br><span class="line">    jmp tem3</span><br><span class="line">  tem2:</span><br><span class="line">    inc byte [ds:locr]</span><br><span class="line">  tem3:</span><br><span class="line"></span><br><span class="line">  cmp byte [ds:l_or_r],0</span><br><span class="line">  je tem4</span><br><span class="line">    dec byte [ds:locc]</span><br><span class="line">    jmp tem5</span><br><span class="line">  tem4:</span><br><span class="line">    inc byte [ds:locc]</span><br></pre></td></tr></table></figure>
+
+
+
+<p>​        先看1到7行:判断u_or_d是否为0，是则跳到tem2，把locr加1；否则把locr减1，然后跳到tem3,不执行tem2那里的操作。其实就是一个if-else语句。</p>
+<p>​        10到16行基本与之相同，不再赘述。</p>
+<h4 id="调整方向"><a href="#调整方向" class="headerlink" title="调整方向"></a>调整方向</h4><p>​        接下来，要判断方向要不要调整。如果locr到达height-1，则要把u_or_d改为1；如果locr到达0，则要把u_or_d改为0：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">tem5:</span><br><span class="line"> cmp byte [ds:locr],height-1</span><br><span class="line"> jne tem6</span><br><span class="line"> mov byte [ds:u_or_d],1</span><br><span class="line"></span><br><span class="line"> tem6:</span><br><span class="line"> cmp byte [ds:locr],0</span><br><span class="line"> jne tem7</span><br><span class="line"> mov byte [ds:u_or_d],0</span><br><span class="line"></span><br><span class="line"> tem7:</span><br><span class="line"> cmp byte [ds:locc],width-1</span><br><span class="line"> jne tem8</span><br><span class="line"> mov byte [ds:l_or_r],1</span><br><span class="line"></span><br><span class="line"> tem8:</span><br><span class="line"> cmp byte [ds:locc],0</span><br><span class="line"> jne tem9</span><br><span class="line"> mov byte [ds:l_or_r],0</span><br></pre></td></tr></table></figure>
+
+<p>​        先判断locr是否等于height-1，不等于就跳到tem6位置，不执行第4行。如果等于就执行第4行，把u_or_d改为1；再判断它是否为0，是的话就执行第9行，把u_or_d改为0。值得注意的是，两个判断语句是相互独立的，所以第三行不能调到tem7，而是要跳到tem6。</p>
+<p>​        第11行往后跟前面基本是一样的。</p>
+<h4 id="其他工作"><a href="#其他工作" class="headerlink" title="其他工作"></a>其他工作</h4><p>​        每打印一个字符，会让程序暂停一段时间:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tem9:</span><br><span class="line">  mov ah,86h</span><br><span class="line">  mov cx,0x1E</span><br><span class="line">  mov dx,0x8480     </span><br><span class="line">  int 15h</span><br></pre></td></tr></table></figure>
+
+
+
+<p>​        考虑到如果屏幕字符很多会很影响观看体验，所以每打印300个字符会把屏幕刷新一遍:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cmp word [ds:flush_or_not],0</span><br><span class="line">jne tem10</span><br><span class="line">mov word [ds:flush_or_not],flush_seq</span><br><span class="line">jmp flush</span><br><span class="line">tem10:</span><br><span class="line">  dec word [ds:flush_or_not]</span><br><span class="line">jmp do</span><br></pre></td></tr></table></figure>
+
+<p>​        当flush_or_not等于0时，把它重新置为flush_seq，然后跳到flush段的代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">flush:</span><br><span class="line">  mov ax,width</span><br><span class="line">  imul bx,ax,height</span><br><span class="line">  xor ax,ax</span><br><span class="line">  mov di,ax</span><br><span class="line">  flush_do:</span><br><span class="line">    add di,di</span><br><span class="line">    mov byte [es:di],0</span><br><span class="line">    mov byte [es:di+1],0</span><br><span class="line">    inc ax</span><br><span class="line">    mov di,ax</span><br><span class="line">    cmp ax,bx</span><br><span class="line">    jl flush_do</span><br></pre></td></tr></table></figure>
+
+<p>​        首先用width和height相乘，得到要刷新的总字节数。然后执行循环，当ax&lt;bx时继续，否则退出。循环里把di*2，然后将es:di和es:di+1置为0(注意一个字符占的位置是两个字节)，最后ax+1，将di置为ax。</p>
+<p>​        把上面这段代码放在do标志前面，这样程序开始的时候就会把屏幕刷新。</p>
+<p>​        在程序开始的地方要设置段寄存器和附加段寄存器:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mov ax,0x7c0</span><br><span class="line">mov ds,ax</span><br><span class="line">mov ax,0xb800</span><br><span class="line">mov es,ax</span><br></pre></td></tr></table></figure>
+
+<p>​        在屏幕下方打印”made by zjr”:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mov ax,width</span><br><span class="line">imul bx,ax,height+2</span><br><span class="line">add bx,bx</span><br><span class="line">mov di,bx</span><br><span class="line">xor cx,cx</span><br><span class="line">mov si,cx</span><br><span class="line">do2:</span><br><span class="line">  mov al,[ds:si+my_name]</span><br><span class="line">  mov [es:di],al</span><br><span class="line">  inc di</span><br><span class="line">  inc di</span><br><span class="line">  inc si</span><br><span class="line">  cmp si,name2_length</span><br><span class="line">  jne do2</span><br></pre></td></tr></table></figure>
+
+<p>​        由于显示”reeeeeeeeeein”的位置是左上角(0,0)到右下角(height-1,width-1),可以让”maded by zjr”字符串在(height+2,0)开始显示，于是用bx存储$width<em>(height+2)</em>2$，把它复制给di，然后就可以用es:di直接访问要存储的位置。此后进入循环，用si做循环变量，每次用[ds:si+my_name]得到要打印的字符，赋值给al，再把它送到到打印的位置。</p>
+<h3 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h3><p>​        在VSCode里新建终端，输入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NASM proj.asm -o p</span><br></pre></td></tr></table></figure>
+
+<p>​        得到一个二进制文件。然后使用fixvhdwr把它写到一个文件格式为vhd的虚拟硬盘:</p>
+<p><img src="https://i.loli.net/2020/05/15/m2Colb69jveKOUz.png" alt="image-20200423194702107.png"></p>
+<p>​        然后选择这个二进制文件:</p>
+<p><img src="https://i.loli.net/2020/05/15/Bfj7THwEq84MxRX.png" alt="image-20200423194811099.png"></p>
+<p>​        写入完成后，可以用bochs打开:</p>
+<p><img src="https://i.loli.net/2020/05/15/QbgTUBG2pA81Frx.png" alt="image-20200423195008833.png"></p>
+<p>​        可以看到，结果符合预期。</p>
+<p>​        然后可以用VirtualBox验证一下:</p>
+<p>​        首先把刚才生成的二进制文件保存为img格式:</p>
+<p><img src="https://i.loli.net/2020/05/15/r73KEhFymjLkSWv.png" alt="image-20200423195208552.png"></p>
+<p>​        新建一个虚拟机:</p>
+<p><img src="https://i.loli.net/2020/05/15/7bDsRBiTzPXmWfC.png" alt="image-20200423195406846.png"></p>
+<p>​        点击右边的存储，往里面添加刚才创建的img文件作为软驱:</p>
+<p><img src="https://i.loli.net/2020/05/15/LBQdsMFyj1ur3ft.png" alt="image-20200423195524820.png"></p>
+<p>在系统一栏设置启动顺序为软驱优先:</p>
+<p><img src="https://i.loli.net/2020/05/15/tUvoYS4eaLFDqKQ.png" alt="image-20200423195708890.png"></p>
+<p>​        启动后就能看到结果：</p>
+<p><img src="https://i.loli.net/2020/05/15/6czsDHAn1IuLJgB.png" alt="image-20200423195854503.png"></p>
+<p>​        (似乎在virtualbox里显示的比bochs慢，并不知道为什么)</p>
+<h2 id="心得体会"><a href="#心得体会" class="headerlink" title="心得体会"></a>心得体会</h2><p>​        这次实验整体难度不算特别大，只对编写汇编代码有较基本的要求。我本来在2月份的时候就已经完成了，但只录了视频，没有写实验报告就交上去了，结果两个月过后，代码找不到了，实验报告也写不成了，没办法，只能重新写一遍，就算是练习吧。</p>
+<p>​        虽然写的代码并不多，但还是有不少奇奇怪怪的bug,比如:</p>
+<p><img src="https://i.loli.net/2020/05/15/beE8Kg6wa3mCvxu.png" alt="image-20200423200349299.png"></p>
+<p>​        这里loc变量长度是一个字节，而si是一个16位的寄存器。把loc赋值给si后，尽管我加了个byte，但第36行的[ds:si]还是会取两个字节的值。一开始loc后面是没有变量的，运行结果十分正常，后来我在后面加了一个<img src="https://i.loli.net/2020/05/15/Bn3PD8pvrxhe72w.png" alt="image-20200423200602504.png"></p>
+<p>​        取[ds:si]的时候就得到一个很大的值。这个bug困扰了我很久，直至我想起来si是个16位寄存器。</p>
+<p>​        类似于这样的bug还有很多，不再一一列举。以后我得多练习汇编语言编程，为以后其他的实验做准备。</p>
+<p>​        本次实验最大的收获还是增强了汇编语言编程能力，此外我还学会了用bochs进行debug，这对以后做实验是一个很大的帮助。还有的就是感谢TA推荐了Typora这个编写MarkDown文档的工具，确实比我之前用的VSCode插件好用很多，也算是一个意外之喜。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AE%9E%E9%AA%8C%E4%BA%8C_chat%E5%AE%9E%E9%AA%8C/" rel="prev" title="计算机网络实验二_chat实验">
+      <i class="fa fa-chevron-left"></i> 计算机网络实验二_chat实验
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E4%BA%8C_%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%88%B7%E7%A8%8B%E5%BA%8F/" rel="next" title="操作系统实验二_加载用户程序">
+      操作系统实验二_加载用户程序 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#操作系统实验一-引导扇区程序"><span class="nav-number">1.</span> <span class="nav-text">操作系统实验一_引导扇区程序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实验目的"><span class="nav-number">1.1.</span> <span class="nav-text">实验目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验要求"><span class="nav-number">1.2.</span> <span class="nav-text">实验要求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验环境"><span class="nav-number">1.3.</span> <span class="nav-text">实验环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验过程"><span class="nav-number">1.4.</span> <span class="nav-text">实验过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备工作"><span class="nav-number">1.4.1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码解读"><span class="nav-number">1.4.2.</span> <span class="nav-text">代码解读</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#显示字符"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">显示字符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#下一个位置"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">下一个位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#调整方向"><span class="nav-number">1.4.2.3.</span> <span class="nav-text">调整方向</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他工作"><span class="nav-number">1.4.2.4.</span> <span class="nav-text">其他工作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#效果展示"><span class="nav-number">1.4.3.</span> <span class="nav-text">效果展示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#心得体会"><span class="nav-number">1.5.</span> <span class="nav-text">心得体会</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">reeeeeeeeeein</p>
+  <div class="site-description" itemprop="description">SYSU 计算机专业大二在读</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">reeeeeeeeeein</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>

@@ -21,22 +21,22 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="加载用户程序众所周知，引导扇区程序会将操作系统加载到内存中，并把计算机的控制权交给操作系统。问题来了，引导扇区程序是怎么加载用户程序的？ 这是一个复杂的问题，为了回答这个问题，首先我们需要了解用户程序的内容有什么样的格式，其次我们需要知道处理器与硬盘交互的方式，最后还要知道引导扇区程序怎么把控制权交给用户程序。 用户程序header段在引导扇区程序中，处理器从0x7c00处开始执行代码。然而，对于">
+  <meta name="description" content="操作系统实验二_加载用户程序众所周知，引导扇区程序会将操作系统加载到内存中，并把计算机的控制权交给操作系统。问题来了，引导扇区程序是怎么加载用户程序的？ 这是一个复杂的问题，为了回答这个问题，首先我们需要了解用户程序的内容有什么样的格式，其次我们需要知道处理器与硬盘交互的方式，最后还要知道引导扇区程序怎么把控制权交给用户程序。 用户程序header段在引导扇区程序中，处理器从0x7c00处开始执行">
 <meta property="og:type" content="article">
-<meta property="og:title" content="加载用户程序">
-<meta property="og:url" content="http://yoursite.com/2020/04/27/%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%88%B7%E7%A8%8B%E5%BA%8F/index.html">
+<meta property="og:title" content="操作系统实验二_加载用户程序">
+<meta property="og:url" content="http://yoursite.com/2020/05/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E4%BA%8C_%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%88%B7%E7%A8%8B%E5%BA%8F/index.html">
 <meta property="og:site_name" content="reeeeeeeeeein的博客">
-<meta property="og:description" content="加载用户程序众所周知，引导扇区程序会将操作系统加载到内存中，并把计算机的控制权交给操作系统。问题来了，引导扇区程序是怎么加载用户程序的？ 这是一个复杂的问题，为了回答这个问题，首先我们需要了解用户程序的内容有什么样的格式，其次我们需要知道处理器与硬盘交互的方式，最后还要知道引导扇区程序怎么把控制权交给用户程序。 用户程序header段在引导扇区程序中，处理器从0x7c00处开始执行代码。然而，对于">
+<meta property="og:description" content="操作系统实验二_加载用户程序众所周知，引导扇区程序会将操作系统加载到内存中，并把计算机的控制权交给操作系统。问题来了，引导扇区程序是怎么加载用户程序的？ 这是一个复杂的问题，为了回答这个问题，首先我们需要了解用户程序的内容有什么样的格式，其次我们需要知道处理器与硬盘交互的方式，最后还要知道引导扇区程序怎么把控制权交给用户程序。 用户程序header段在引导扇区程序中，处理器从0x7c00处开始执行">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2020/04/27/WtKF7V15MsSwuJQ.png">
 <meta property="og:image" content="https://i.loli.net/2020/04/27/j79IMNP2pcyd46C.png">
-<meta property="article:published_time" content="2020-04-27T10:14:34.453Z">
-<meta property="article:modified_time" content="2020-04-27T10:14:34.453Z">
+<meta property="article:published_time" content="2020-05-15T06:57:12.221Z">
+<meta property="article:modified_time" content="2020-05-15T06:57:12.221Z">
 <meta property="article:author" content="reeeeeeeeeein">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2020/04/27/WtKF7V15MsSwuJQ.png">
 
-<link rel="canonical" href="http://yoursite.com/2020/04/27/%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%88%B7%E7%A8%8B%E5%BA%8F/">
+<link rel="canonical" href="http://yoursite.com/2020/05/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E4%BA%8C_%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%88%B7%E7%A8%8B%E5%BA%8F/">
 
 
 <script id="page-configurations">
@@ -48,7 +48,7 @@
   };
 </script>
 
-  <title>加载用户程序 | reeeeeeeeeein的博客</title>
+  <title>操作系统实验二_加载用户程序 | reeeeeeeeeein的博客</title>
   
 
 
@@ -170,7 +170,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/27/%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%88%B7%E7%A8%8B%E5%BA%8F/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E4%BA%8C_%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%88%B7%E7%A8%8B%E5%BA%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -183,7 +183,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          加载用户程序
+          操作系统实验二_加载用户程序
         </h1>
 
         <div class="post-meta">
@@ -193,7 +193,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-04-27 18:14:34" itemprop="dateCreated datePublished" datetime="2020-04-27T18:14:34+08:00">2020-04-27</time>
+              <time title="创建时间：2020-05-15 14:57:12" itemprop="dateCreated datePublished" datetime="2020-05-15T14:57:12+08:00">2020-05-15</time>
             </span>
 
           
@@ -214,7 +214,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="加载用户程序"><a href="#加载用户程序" class="headerlink" title="加载用户程序"></a>加载用户程序</h1><p>众所周知，引导扇区程序会将操作系统加载到内存中，并把计算机的控制权交给操作系统。问题来了，引导扇区程序是怎么加载用户程序的？</p>
+        <h1 id="操作系统实验二-加载用户程序"><a href="#操作系统实验二-加载用户程序" class="headerlink" title="操作系统实验二_加载用户程序"></a>操作系统实验二_加载用户程序</h1><p>众所周知，引导扇区程序会将操作系统加载到内存中，并把计算机的控制权交给操作系统。问题来了，引导扇区程序是怎么加载用户程序的？</p>
 <p>这是一个复杂的问题，为了回答这个问题，首先我们需要了解用户程序的内容有什么样的格式，其次我们需要知道处理器与硬盘交互的方式，最后还要知道引导扇区程序怎么把控制权交给用户程序。</p>
 <h2 id="用户程序header段"><a href="#用户程序header段" class="headerlink" title="用户程序header段"></a>用户程序header段</h2><p>在引导扇区程序中，处理器从0x7c00处开始执行代码。然而，对于引导扇区程序会把用户程序加载到哪一个位置，用户程序是不知道的。那就有问题了，如果我在用户程序中要访问数据段中的一个数据，却连这个数据在内存中的位置都不知道，还怎么访问呢？</p>
 <p>分段的方法能很好的解决这个问题。用户程序被分为几段，每一段有一个起始地址，如果我们要访问一个数据，只需给出它在段中的偏移地址即可。用户程序会告诉引导扇区程序自己有几个段，每个段相对于程序开始处的偏移是多少，引导扇区程序会给用户程序在内存中分配一个位置，比如说，0xd000，然后假设用户程序的数据段相对于程序开始处偏移为0x100，则数据段会被加载到内存中的0xd100处。然后，引导扇区程序把ds置为0xd10，这样，用户程序就可以用段地址和偏移地址访问内存了。</p>
@@ -332,10 +332,13 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/04/22/pytorch%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02/" rel="prev" title="pytorch学习笔记2">
-      <i class="fa fa-chevron-left"></i> pytorch学习笔记2
+    <a href="/2020/05/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E4%B8%80_%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E7%A8%8B%E5%BA%8F/" rel="prev" title="操作系统实验一_引导扇区程序">
+      <i class="fa fa-chevron-left"></i> 操作系统实验一_引导扇区程序
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E4%B8%89_%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8/" rel="next" title="操作系统实验三_操作系统内核">
+      操作系统实验三_操作系统内核 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -395,7 +398,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#加载用户程序"><span class="nav-number">1.</span> <span class="nav-text">加载用户程序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#用户程序header段"><span class="nav-number">1.1.</span> <span class="nav-text">用户程序header段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载器"><span class="nav-number">1.2.</span> <span class="nav-text">加载器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用户程序其他内容"><span class="nav-number">1.3.</span> <span class="nav-text">用户程序其他内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行结果"><span class="nav-number">1.4.</span> <span class="nav-text">运行结果</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#操作系统实验二-加载用户程序"><span class="nav-number">1.</span> <span class="nav-text">操作系统实验二_加载用户程序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#用户程序header段"><span class="nav-number">1.1.</span> <span class="nav-text">用户程序header段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载器"><span class="nav-number">1.2.</span> <span class="nav-text">加载器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用户程序其他内容"><span class="nav-number">1.3.</span> <span class="nav-text">用户程序其他内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行结果"><span class="nav-number">1.4.</span> <span class="nav-text">运行结果</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -408,7 +411,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

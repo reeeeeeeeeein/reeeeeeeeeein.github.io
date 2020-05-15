@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="操作系统实验三_操作系统内核[toc] 实验目的1、加深理解操作系统内核概念2、了解操作系统开发方法3、掌握汇编语言与高级语言混合编程的方法4、掌握独立内核的设计与加载方法5、加强磁盘空间管理工作 实验要求1、知道独立内核设计的需求2、掌握一种x86汇编语言与一种C高级语言混合编程的规定和要求3、设计一个程序，以汇编程序为主入口模块，调用一个C语言编写的函数处理汇编模块定义的数据，然后再由汇编模块">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统实验三_操作系统内核">
+<meta property="og:url" content="http://yoursite.com/2020/05/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E4%B8%89_%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8/index.html">
+<meta property="og:site_name" content="reeeeeeeeeein的博客">
+<meta property="og:description" content="操作系统实验三_操作系统内核[toc] 实验目的1、加深理解操作系统内核概念2、了解操作系统开发方法3、掌握汇编语言与高级语言混合编程的方法4、掌握独立内核的设计与加载方法5、加强磁盘空间管理工作 实验要求1、知道独立内核设计的需求2、掌握一种x86汇编语言与一种C高级语言混合编程的规定和要求3、设计一个程序，以汇编程序为主入口模块，调用一个C语言编写的函数处理汇编模块定义的数据，然后再由汇编模块">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/BiZqJkC7Qdv3Ueu.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/W6c7UZwH2i3zbQ5.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/82qvaxiGgCT6WH1.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/qVfBGdirO8TMtHz.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/pB162ZyeUJmLlri.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/pUdtYiPCSu12Ff4.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/p8iS1qwUP7LyH3X.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/h4wkFUQot7C6lSY.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/8FmgjUR9kdExCrw.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/oRcXPSM4mfpLC13.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/krx9MFn3uqolZsK.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/Ap3aekdBQ1SIJXP.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/QxwsYLrkB8vln9G.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/PwOi6rSZyXVCknb.png">
+<meta property="article:published_time" content="2020-05-15T07:10:51.346Z">
+<meta property="article:modified_time" content="2020-05-15T07:10:51.346Z">
+<meta property="article:author" content="reeeeeeeeeein">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/15/BiZqJkC7Qdv3Ueu.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/05/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E4%B8%89_%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>操作系统实验三_操作系统内核 | reeeeeeeeeein的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+<div class="bg_content">
+<canvas id="canvas"></canvas>
+</div>
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">reeeeeeeeeein的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E4%B8%89_%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统实验三_操作系统内核
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-15 15:10:51" itemprop="dateCreated datePublished" datetime="2020-05-15T15:10:51+08:00">2020-05-15</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="操作系统实验三-操作系统内核"><a href="#操作系统实验三-操作系统内核" class="headerlink" title="操作系统实验三_操作系统内核"></a>操作系统实验三_操作系统内核</h1><p>[toc]</p>
+<h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><p>1、加深理解操作系统内核概念<br>2、了解操作系统开发方法<br>3、掌握汇编语言与高级语言混合编程的方法<br>4、掌握独立内核的设计与加载方法<br>5、加强磁盘空间管理工作</p>
+<h2 id="实验要求"><a href="#实验要求" class="headerlink" title="实验要求"></a>实验要求</h2><p>1、知道独立内核设计的需求<br>2、掌握一种x86汇编语言与一种C高级语言混合编程的规定和要求<br>3、设计一个程序，以汇编程序为主入口模块，调用一个C语言编写的函数处理汇编模块定义的数据，然后再由汇编模块完成屏幕输出数据，将程序生成COM格式程序，在DOS或虚拟环境运行。<br>4、汇编语言与高级语言混合编程的方法，重写和扩展实验二的的监控程序，从引导程序分离独立，生成一个COM格式程序的独立内核。<br>5、再设计新的引导程序，实现独立内核的加载引导，确保内核功能不比实验二的监控程序弱，展示原有功能或加强功能可以工作。<br>6、编写实验报告，描述实验工作的过程和必要的细节，如截屏或录屏，以证实实验工作的真实性</p>
+<h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><ul>
+<li>Windows 10</li>
+<li>WSL （Windows Subsystem for Linux） [Ubuntu 18.04.2 LTS]：WSL 是以软件的形式运行在 Windows 下的 Linux 子系统，是近些年微软推出来的新工具，可以在 Windows 系统上原生运行 Linux。</li>
+<li>gcc version 7.5.0：C 语言程序编译器，Ubuntu 自带。</li>
+<li>ld  version 2.3.0:  链接器，Ubuntu自带</li>
+<li>NASM version 2.13.02：汇编程序编译器，通过<code>sudo apt install nasm</code>安装在 WSL 上。</li>
+<li>Oracle VM VirtualBox ：轻量开源的虚拟机软件，安装在Windows下。</li>
+<li>VSCode - Insiders v1.33.0：好用的文本编辑器，有丰富的插件，可以用它来打开WSL中的文件夹，用它自带的终端执行make命令。</li>
+<li>GNU Make 4.1：安装在 Ubuntu 下，一键编译并连接代码，生成最终的文件。</li>
+<li>Bochs 2.1.1：安装在Windows下，用于调试代码。</li>
+</ul>
+<h3 id="自制工具"><a href="#自制工具" class="headerlink" title="自制工具"></a>自制工具</h3><p>​        由于我的虚拟机和Bochs都安装在Windows下，所以需要将WSL中生成的文件写入至Windows的磁盘，这可以用我编写的工具 do 来解决，只需要执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;do 文件名 写入的扇区</span><br></pre></td></tr></table></figure>
+
+<p>​        就可以了。</p>
+<h2 id="实验内容"><a href="#实验内容" class="headerlink" title="实验内容"></a>实验内容</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>​        首先了解c语言程序与汇编语言程序混合编译的方法，再开发操作系统内核，它具有两个主要功能:</p>
+<ul>
+<li><p>提供加载用户程序的方法，用户可以将程序写入磁盘，然后让操作系统执行这些用户程序。</p>
+</li>
+<li><p>控制键盘输入和屏幕输出，使得用户可以与操作系统交互。</p>
+</li>
+</ul>
+<p>​        再将上一次实验的4个程序放进磁盘，让操作系统执行它们，查看执行结果是否正确。</p>
+<h3 id="c与汇编混合编译"><a href="#c与汇编混合编译" class="headerlink" title="c与汇编混合编译"></a>c与汇编混合编译</h3><p>​        由于操作系统内核非常复杂，只用汇编语言是很难完成的，因此需要使用c语言和汇编语言的混合编译，生成可执行的二进制文件。</p>
+<p>​        可以用gcc将一个c语言程序编译生成汇编语言文件，如对下面这个test.c：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> val)</span></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> val+<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  f(<span class="number">3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​        执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -march=i386 -m16 -ffreestanding -fno-PIE -masm=intel -S test.c -o test.asm</span><br></pre></td></tr></table></figure>
+
+<p>​        会生成一个x86格式的汇编语言文件test.asm。它的内容很复杂，但我们只用关注一些关键的地方:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">main:</span><br><span class="line">.LFB1:</span><br><span class="line">	.cfi_startproc</span><br><span class="line">	push	ebp;函数开始时，总要push ebp，保护这个寄存器</span><br><span class="line">	.cfi_def_cfa_offset 8</span><br><span class="line">	.cfi_offset 5, -8</span><br><span class="line">	mov	ebp, esp</span><br><span class="line">	.cfi_def_cfa_register 5</span><br><span class="line">	push	3 ;传递参数用push，把参数压到栈里，被调用的函数就能发现</span><br><span class="line">	call	f ;这里调用了f这个函数,用的是call指令</span><br><span class="line">	add	esp, 4 ;由于前面的ret和pop指令，现在esp指向的值就是3，也就是刚才传的参数，所以把esp+&#x3D;3，会让栈恢复到函数调用之前的状态</span><br><span class="line">	nop</span><br><span class="line">	leave</span><br><span class="line">	.cfi_restore 5</span><br><span class="line">	.cfi_def_cfa 4, 4</span><br><span class="line">	ret ;返回只用一条ret指令就可以了。由于我的test.c文件没有return 0，所以gcc帮我补上了一条ret指令</span><br><span class="line">	.cfi_endproc</span><br></pre></td></tr></table></figure>
+
+<p>​         f  函数是这样的:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">f:</span><br><span class="line">.LFB0:</span><br><span class="line">	.cfi_startproc</span><br><span class="line">	push	ebp ;这里也是要push ebp</span><br><span class="line">	.cfi_def_cfa_offset 8</span><br><span class="line">	.cfi_offset 5, -8</span><br><span class="line">	mov	ebp, esp</span><br><span class="line">	.cfi_def_cfa_register 5</span><br><span class="line">	mov	eax, DWORD PTR [ebp+8] ;main函数用了call指令，esp要减4；前面push 了 ebp ，esp又要减4，所以esp+8才是我们传递给f函数的参数。</span><br><span class="line">	inc	eax ;返回一个值，可以把它放在eax里</span><br><span class="line">	pop	ebp ;这里把ebp pop 掉，esp+&#x3D;4</span><br><span class="line">	.cfi_restore 5</span><br><span class="line">	.cfi_def_cfa 4, 4</span><br><span class="line">	ret ;这里返回，esp+&#x3D;4</span><br><span class="line">	.cfi_endproc</span><br></pre></td></tr></table></figure>
+
+<p>​        看来c语言生成的汇编程序也不算神秘，除了一些奇奇怪怪的指令，跟我们写的汇编程序也没有很大差别。通过上述分析，我们对函数调用和传递参数过程有了更深入的了解。</p>
+<p>​        接着，我们编写一个汇编程序（msg.asm）和c程序（count.c）混合编程实例。汇编模块中定义一个字符串（为了方便，假设它以’\n’结尾），调用C语言的函数，统计其中某个字符出现的次数，汇编模块显示统计结果。</p>
+<p>​        c程序如下:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">count</span><span class="params">(<span class="keyword">char</span>* str)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span>(;*str!=<span class="string">'\n'</span>;str++)&#123;</span><br><span class="line">    <span class="keyword">if</span>(*str==<span class="string">'e'</span>)i++;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  count(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​        其中，汇编程序调用c程序的函数的过程如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">push 0</span><br><span class="line">push string; string 是一个标号，占2个字节，但c语言的指针是4个字节，于是要把前两个字节置为0，就在上面多push一个0</span><br><span class="line">push 0;call会压栈2个字节，但c语言中默认的是压栈4个字节，如果我们不压栈4个字节，c程序中栈的位置会错乱</span><br><span class="line">call count</span><br></pre></td></tr></table></figure>
+
+<p>​        函数返回会把返回值放在eax寄存器，然后汇编程序可以调用 10h 号中断把它显示出来。</p>
+<p>​        编写makefile文件（makefile2）如下:</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">kernel:msg.o count.o my_mbr</span></span><br><span class="line">	ld -m elf_i386 -N --oformat binary -Ttext 0x7e00 msg.o count.o -o kernel</span><br><span class="line">	<span class="comment">#ld 用于将汇编程序生成的二进制文件和c程序生成的二进制文件链接起来， -Ttest用于指定程序的起始位置为0x7e00处</span></span><br><span class="line">	./do kernel 1 <span class="comment"># 将kernel文件写入磁盘的第一个扇区</span></span><br><span class="line">    ./do my_mbr 0 <span class="comment"># my_mbr是引导扇区程序，它会将kernel文件加载到0x7e00处</span></span><br><span class="line"><span class="section">msg.o:msg.asm</span></span><br><span class="line">	nasm -felf msg.asm -o msg.o <span class="comment"># 如果不加 -felf 参数好像就不能调用c程序中的函数</span></span><br><span class="line">	nm msg.o &gt; tem.txt <span class="comment">#用 nm 命令来分析符号表，输出重定向到tem.txt文件</span></span><br><span class="line"><span class="section">count.o:count.asm</span></span><br><span class="line">	gcc -march=i386 -m16 -mpreferred-stack-boundary=2 -ffreestanding -fno-PIE -masm=intel -c count.c -o count.o</span><br><span class="line">	<span class="comment">#这里跟上文的编译方式基本一样，不同的是 -c 参数指定生成 .o 文件</span></span><br><span class="line">	nm count.o &gt;&gt; tem.txt  <span class="comment">#用 nm 命令来分析符号表，输出重定向到tem.txt文件的末端</span></span><br><span class="line"><span class="section">my_mbr:my_mbr.asm</span></span><br><span class="line">	nasm my_mbr.asm -o my_mbr</span><br></pre></td></tr></table></figure>
+
+<p>​        在VSCode自带终端中输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -f makefile2</span><br></pre></td></tr></table></figure>
+
+<p>​        就完成了编译、链接和写入磁盘的工作，非常方便。得到的符号表如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">0000001a t _end #因为msg.asm里将_start声明为全局变量，_end没有，所以这一行是 小写字母t 表示这是局部变量</span><br><span class="line">00000000 T _start #这一行是大写字母T表示全局变量</span><br><span class="line">         U count</span><br><span class="line">0000001c t string</span><br><span class="line">00000000 T count</span><br><span class="line">0000003f T main</span><br></pre></td></tr></table></figure>
+
+<p>​        用bochs运行，结果如下:</p>
+<p><img src="https://i.loli.net/2020/05/15/BiZqJkC7Qdv3Ueu.png" alt="image-20200509142152549.png"></p>
+<p>​        运行结果正常。</p>
+<h3 id="开发操作系统内核"><a href="#开发操作系统内核" class="headerlink" title="开发操作系统内核"></a>开发操作系统内核</h3><p>​        理论上来说，用纯C语言开发内核也是可以的，但要用到很多内嵌汇编，会使程序看起来令人不适。为此，我把 C 程序中需要用到的大量汇编语言代码放置在entry.asm中，c程序只需要执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">call 标号</span><br></pre></td></tr></table></figure>
+
+<p>​        就可以调用entry.asm 里的各种过程。</p>
+<h4 id="汇编程序部分"><a href="#汇编程序部分" class="headerlink" title="汇编程序部分"></a>汇编程序部分</h4><p>​        这部分的内容在entry.asm这个文件中，主要分为三部分。从第6行到第13行是第一部分，主要负责将控制权交给C程序中的main函数，当main函数返回时停机。</p>
+<p>​        从第15行到第71行_load_program过程，用于加载用户程序。将程序从磁盘加载到内存可以调用  16h 号中断来实现，但我一调用就会出bug，于是我只能用《x86汇编语言：从实模式到保护模式》这本书里提供的代码。</p>
+<p>​        调用这个过程之前要将用户程序被加载到的位置放置在dx中，用户程序在磁盘中的起始扇区放置在si中，用户程序的所占扇区数放置在bx中。</p>
+<p>​        从第73行到第111行是clear过程，用于将屏幕清空。这个过程十分简单，不必赘述。</p>
+<h4 id="C程序部分"><a href="#C程序部分" class="headerlink" title="C程序部分"></a>C程序部分</h4><p>​        main.c这个文件中的内容是操作系统内核的主要部分。它包括基础I/O操作、工具函数和各种用户交互命令。</p>
+<h5 id="I-O-操作"><a href="#I-O-操作" class="headerlink" title="I/O 操作"></a>I/O 操作</h5><p>​        为了方便输入输出，我首先编写了getchar()、putchar()、getline()、put()这4个函数。</p>
+<p>​        第23行到第32行的内容是 getchar() 函数，它通过调用 16h 号中断来得到一个输入字符。如果这个字符的值是13（回车符的键盘码），则返回 ‘\n’ 。</p>
+<p>​        第34行到第86行的内容是putchar() 函数，它接受一个字符类型的参数，将字符打印到屏幕上。打印的位置由locr 、 locc 这两个全局变量来决定。</p>
+<p>​        当要打印的字符是一个普通的字符时，调用 10h 号中断在当前光标处输出这个字符，并调整locr 和 locc 两个变量的值；</p>
+<p>​        当要打印的字符是回车符时，将locc置0，将locr++，调用 10h 号中断设置光标的位置为 locc 和 locr 指定的位置；</p>
+<p>​        当要打印的字符是退格符时，首先修改 locc 和 locr 两个变量的值，保证这两个值始终都是下一次打印的字符在的屏幕上的位置。然后调用10h号中断修改当前光标的位置为为 locc 和 locr 指定的位置，将这个位置的值清0。</p>
+<p>​        getline()函数接受一个字符类型的指针，不断调用getchar()，把读进来的字符存到字符串里，读到回车符就终止，给字符串加上一个 ‘\0’ 。</p>
+<p>​        put()函数接受一个字符类型的指针，不断调用putchar()输出它，遇到 ‘\0’ 就终止。</p>
+<h5 id="工具函数"><a href="#工具函数" class="headerlink" title="工具函数"></a>工具函数</h5><p>​        为了方便，我编写了 int_to_str () , str_to_int () 和 strcmp () 这几个函数。意思很明显，内容也缺乏技术含量，不再赘述。</p>
+<h5 id="用户交互"><a href="#用户交互" class="headerlink" title="用户交互"></a>用户交互</h5><p>​        程序会不断循环，每次都用getline读取用户输入的命令，并进行交互，共有clear、help、load 和 quit  4种交互命令。</p>
+<p>​        clear命令会将屏幕清空，这只需调用前面说过的entry.asm里的_clear过程就可以了。</p>
+<p>​        help命令会打印提示信息。</p>
+<p>​        quit命令会终止操作系统内核的执行。</p>
+<p>​        load命令是最重要的命令。设计这个命令的初衷是，假设用户有一块装有我的操作系统内核的硬盘，但他完全不懂电脑，只会将程序写入硬盘。这个命令可以让他将程序加载到内存中并运行，而完全不需要修改操作系统的代码。</p>
+<p>​        load命令会打印一条提示信息提示，提示用户输入程序在磁盘中的起始位置，再打印一条提示信息，提示用户输入程序在磁盘中占用的扇区数。然后调用 _load_program 过程将程序加载进内存0xa000处，设置es、ds寄存器的值，并将控制权交给用户程序。用户程序运行结束后，操作系统会将es、ds寄存器的值清0，并清空屏幕。</p>
+<h2 id="实验过程"><a href="#实验过程" class="headerlink" title="实验过程"></a>实验过程</h2><p>​        编写一个makefile文件，然后就可以在VSCode自带的终端里输入make完成大量的工作:</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">user_programs=user_program_1 user_program_2 user_program_3 user_program_4</span><br><span class="line"><span class="section">all: kernel my_mbr <span class="variable">$(user_programs)</span></span></span><br><span class="line">	./do kernel 1 <span class="comment"># kernel 文件是生成的操作系统内核二进制文件</span></span><br><span class="line">	./do my_mbr 0 <span class="comment"># my_mbr 是引导扇区程序</span></span><br><span class="line"><span class="section">kernel:entry.o main.o  </span></span><br><span class="line">	ld -m elf_i386 -N --oformat binary -Ttext 0x7e00 entry.o main.o -o kernel</span><br><span class="line">	<span class="comment"># 这里将 entry.o 和 main.o 链接成kernel文件，参数在上文介绍过了，不再赘述</span></span><br><span class="line">	nm entry.o &gt; symbol_table.txt <span class="comment">#分析符号表，结果在 symbol_table.txt</span></span><br><span class="line">	nm main.o &gt;&gt; symbol_table.txt</span><br><span class="line"><span class="section">entry.o:entry.asm</span></span><br><span class="line">	nasm -felf <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line"><span class="section">main.o:main.c</span></span><br><span class="line">	gcc -march=i386 -m16 -mpreferred-stack-boundary=2 -ffreestanding -fno-PIE -masm=intel -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span> <span class="comment">#参数在上文已经介绍过了，不再赘述</span></span><br><span class="line"><span class="section">my_mbr:my_mbr.asm</span></span><br><span class="line">	nasm my_mbr.asm -o my_mbr</span><br><span class="line"><span class="section">user_program_1:user_program_1.asm # user_program是一些用户程序，把它们分别写入到第10,20,30,40个扇区，然后可以在操作系统中加载它们</span></span><br><span class="line">	nasm <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line">	./do <span class="variable">$@</span> 10</span><br><span class="line"><span class="section">user_program_2:user_program_2.asm</span></span><br><span class="line">	nasm <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line">	./do <span class="variable">$@</span> 20</span><br><span class="line"><span class="section">user_program_3:user_program_3.asm</span></span><br><span class="line">	nasm <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line">	./do <span class="variable">$@</span> 30</span><br><span class="line"><span class="section">user_program_4:user_program_4.asm</span></span><br><span class="line">	nasm <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line">	./do <span class="variable">$@</span> 40</span><br></pre></td></tr></table></figure>
+
+
+
+<p>​        用bochs运行，依次输入load,10,1（第一个用户程序在磁盘的第10个扇区，大小为1个扇区）：</p>
+<p><img src="https://i.loli.net/2020/05/15/W6c7UZwH2i3zbQ5.png" alt="image-20200509201901481.png"></p>
+<p>​        效果拨群：</p>
+<p><img src="https://i.loli.net/2020/05/15/82qvaxiGgCT6WH1.png" alt="image-20200509202009328.png"></p>
+<p>​        按下Ctrl+C，返回操作系统:</p>
+<p><img src="https://i.loli.net/2020/05/15/qVfBGdirO8TMtHz.png" alt="image-20200509202136463.png"></p>
+<p>​        再依次输入load，20，2 加载第二个程序:</p>
+<p><img src="https://i.loli.net/2020/05/15/pB162ZyeUJmLlri.png" alt="image-20200509205136902.png"></p>
+<p>​        效果如下:</p>
+<p><img src="https://i.loli.net/2020/05/15/pUdtYiPCSu12Ff4.png" alt="image-20200509205234324.png"></p>
+<p>​        输入 load 40 4 后效果如下:</p>
+<p><img src="https://i.loli.net/2020/05/15/p8iS1qwUP7LyH3X.png" alt="image-20200509205342547.png"></p>
+<p>​        输入load 30 3 后效果如下:</p>
+<p><img src="https://i.loli.net/2020/05/15/h4wkFUQot7C6lSY.png" alt="image-20200509205446870.png"></p>
+<p>​        输入help打印提示信息:</p>
+<p><img src="https://i.loli.net/2020/05/15/8FmgjUR9kdExCrw.png" alt="image-20200509205640183.png"></p>
+<p>​        输入clear清空:</p>
+<p><img src="https://i.loli.net/2020/05/15/oRcXPSM4mfpLC13.png" alt="image-20200509205739629.png"></p>
+<p><img src="https://i.loli.net/2020/05/15/krx9MFn3uqolZsK.png" alt="image-20200510163248587.png"></p>
+<p>​        输入quit可以退出操作系统：</p>
+<p><img src="https://i.loli.net/2020/05/15/Ap3aekdBQ1SIJXP.png" alt="image-20200509205827461.png"></p>
+<h2 id="实验总结"><a href="#实验总结" class="headerlink" title="实验总结"></a>实验总结</h2><p>​        这次实验算得上是很硬核了，用到了很多x86汇编的知识，还要用 ld 这种完全不熟的工具，用gcc里各种奇奇怪怪的参数，甚至为了方便我还学了一下makefile <del>（好像早就该学了吧）</del>    ，遇到的困难也有很多，主要有：</p>
+<ul>
+<li><p>​        对汇编语言不够了解。主要是函数调用和传参那里，非常麻烦，之前从没有深入了解过。而且C语言程序编译生成的汇编代码跟自己写的在风格上有很大差别，让我很不适应。一开始的时候只能看懂一些关键的语句的意思，好在我看多了之后还是克服了心中的 “恐惧感” 。</p>
+</li>
+<li><p>​        debug实在是太麻烦了。虽然我会使用bochs调试程序，但很多bug非常隐蔽，包括但不限于:</p>
+<ol>
+<li><p>在键盘中输入alt+tab切换屏幕，导致后面的输入无法被bochs读入。至今我都没想到解决的办法，好在不影响我写程序。</p>
+</li>
+<li><p>向c语言的函数传字符串常量会出错。这个问题好像不止我一个遇到，其他的同学和网上的<a href="https://wu-kan.cn/_posts/2019-03-28-%E7%94%A8%E6%B1%87%E7%BC%96%E4%B8%8EC%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8B%AC%E7%AB%8B%E5%86%85%E6%A0%B8/" target="_blank" rel="noopener">博客</a>也有这样的问题。我至今也没找到原因，只能把字符串常量改为char*类型。</p>
+</li>
+<li><p>向指向int类型的指针传short类型变量的地址。我声明了一个short变量，调用 str_to_int (char* s，int* val) 函数的时候把它的地址传了进去，本来我觉得反正都会进行类型转换，没啥问题。可是我执行了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*val=<span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<p>之后，问题就来了: short类型变量是2个字节，但 val 指针是int类型的指针，上面的操作会把内存中4个字节全部置为0。更要命的是，由于第一个参数先压栈，第二个字符后压栈，val指向的后面两个字节刚好就是 s 字符串的前两个字节，于是这个函数就不会得到正确的结果。当我想到这个问题时，我不禁为这世上有如此巧妙的bug而感到震惊。</p>
+</li>
+</ol>
+</li>
+</ul>
+<p><img src="https://i.loli.net/2020/05/15/QxwsYLrkB8vln9G.png" alt="image-20200509000616841.png"></p>
+<p> <img src="https://i.loli.net/2020/05/15/PwOi6rSZyXVCknb.png" alt="image-20200509000427794.png"></p>
+<ol start="3">
+<li><p>int 16h 读键盘会导致光标位置出错。这是一个很奇怪的bug，不调用int 16h时，用int 10h 中断（ah=3）来读取光标位置可以正常运行，当我用 int 16h 读键盘输入后，用int 10h 中断（ah=03）就完全得不到正确结果，但在光标处打印字符却没有问题。我最终也没整明白这其中的缘由，只能放弃使用int 10h 中断来读取光标位置，改用 locc locr 这两个变量。</p>
+<p>我后来想到，debug不一定要对着bochs的那些汇编代码一行行看，用内核输入输出函数也能帮助我debug，这样稍微缓解了我的压力。</p>
+</li>
+</ol>
+<ul>
+<li>​        很多工具不会用。说出来有点丢脸，在这次实验之前我从来没用过 ld 这个工具，当我看到老师给的ppt里那一串参数时，突然认识到自己是多么不学无术。经过我反复地尝试、不断地失败后，我总算学会了如何使用ld和gcc完成C程序与汇编程序混合编译<del>事实上只是能跑起来而已，学会是不可能学会的</del>。</li>
+</ul>
+<p>​        虽然困难很多，但收获也同样不少。通过这次实验，我大大加强了对汇编语言和C语言的了解，对操作系统的工作方式的认识也更加深入了。同时，完成操作系统内核的开发也算是一件很鼓舞人心的事情，这让我有了更多的勇气和兴趣来进一步学习更深的知识。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a href="https://wu-kan.cn/_posts/2019-03-28-%E7%94%A8%E6%B1%87%E7%BC%96%E4%B8%8EC%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8B%AC%E7%AB%8B%E5%86%85%E6%A0%B8/" target="_blank" rel="noopener">https://wu-kan.cn/_posts/2019-03-28-%E7%94%A8%E6%B1%87%E7%BC%96%E4%B8%8EC%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8B%AC%E7%AB%8B%E5%86%85%E6%A0%B8/</a> （今年大三的学长，博客写的很不错）</li>
+<li><a href="https://blog.csdn.net/a200710716/article/details/45936643" target="_blank" rel="noopener">https://blog.csdn.net/a200710716/article/details/45936643</a> （关于键盘输入的ASCII码的资料）</li>
+<li><a href="https://www.cnblogs.com/johnshao/archive/2011/06/13/2079638.html" target="_blank" rel="noopener">https://www.cnblogs.com/johnshao/archive/2011/06/13/2079638.html</a> （int 10h 中断的详细介绍）</li>
+<li><a href="https://blog.csdn.net/ZCMUCZX/article/details/80462394?locationNum=4&amp;fps=1" target="_blank" rel="noopener">https://blog.csdn.net/ZCMUCZX/article/details/80462394?locationNum=4&amp;fps=1</a> （int 16h 中断的详细介绍）</li>
+<li><a href="https://blog.csdn.net/daydayup654/article/details/78630341" target="_blank" rel="noopener">https://blog.csdn.net/daydayup654/article/details/78630341</a> （ ld 工具的详细介绍）</li>
+<li><a href="http://c.biancheng.net/view/661.html" target="_blank" rel="noopener">http://c.biancheng.net/view/661.html</a> （gcc 的各种使用姿势）</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E4%BA%8C_%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%88%B7%E7%A8%8B%E5%BA%8F/" rel="prev" title="操作系统实验二_加载用户程序">
+      <i class="fa fa-chevron-left"></i> 操作系统实验二_加载用户程序
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/15/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A3/" rel="next" title="并行与分布式计算作业3">
+      并行与分布式计算作业3 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#操作系统实验三-操作系统内核"><span class="nav-number">1.</span> <span class="nav-text">操作系统实验三_操作系统内核</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实验目的"><span class="nav-number">1.1.</span> <span class="nav-text">实验目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验要求"><span class="nav-number">1.2.</span> <span class="nav-text">实验要求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验环境"><span class="nav-number">1.3.</span> <span class="nav-text">实验环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自制工具"><span class="nav-number">1.3.1.</span> <span class="nav-text">自制工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验内容"><span class="nav-number">1.4.</span> <span class="nav-text">实验内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.4.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#c与汇编混合编译"><span class="nav-number">1.4.2.</span> <span class="nav-text">c与汇编混合编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发操作系统内核"><span class="nav-number">1.4.3.</span> <span class="nav-text">开发操作系统内核</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#汇编程序部分"><span class="nav-number">1.4.3.1.</span> <span class="nav-text">汇编程序部分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C程序部分"><span class="nav-number">1.4.3.2.</span> <span class="nav-text">C程序部分</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#I-O-操作"><span class="nav-number">1.4.3.2.1.</span> <span class="nav-text">I&#x2F;O 操作</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#工具函数"><span class="nav-number">1.4.3.2.2.</span> <span class="nav-text">工具函数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#用户交互"><span class="nav-number">1.4.3.2.3.</span> <span class="nav-text">用户交互</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验过程"><span class="nav-number">1.5.</span> <span class="nav-text">实验过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验总结"><span class="nav-number">1.6.</span> <span class="nav-text">实验总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">1.7.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">reeeeeeeeeein</p>
+  <div class="site-description" itemprop="description">SYSU 计算机专业大二在读</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">reeeeeeeeeein</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>

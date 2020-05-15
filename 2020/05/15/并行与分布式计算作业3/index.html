@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="并行与分布式计算作业3题目要求​        利用LLVM （C、C++）或者Soot （Java）等工具检测多线程程序中潜在的数据竞争以及是否存在不可重入函数，给出案例程序并提交分析报告。 概述​        用pthreads编写一个简单的并行程序，用附带了ThreadSanitizer的clang对代码进行编译，在终端运行，查看数据竞争情况。再根据ThreadSanitizer的输出结果">
+<meta property="og:type" content="article">
+<meta property="og:title" content="并行与分布式计算作业3">
+<meta property="og:url" content="http://yoursite.com/2020/05/15/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A3/index.html">
+<meta property="og:site_name" content="reeeeeeeeeein的博客">
+<meta property="og:description" content="并行与分布式计算作业3题目要求​        利用LLVM （C、C++）或者Soot （Java）等工具检测多线程程序中潜在的数据竞争以及是否存在不可重入函数，给出案例程序并提交分析报告。 概述​        用pthreads编写一个简单的并行程序，用附带了ThreadSanitizer的clang对代码进行编译，在终端运行，查看数据竞争情况。再根据ThreadSanitizer的输出结果">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/yzVAJMmTWxp6ihv.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/RvzdrZ8S3Im7VEh.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/hL9vPbIAzw6tsuG.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/hIrN26FVJad5EDu.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/eZdkjpxIVoaWmLY.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/BVSGmTND7Hr42ke.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/WJbH2ApZY98dwGE.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/15/NiJcqHf8RXYGzL5.png">
+<meta property="article:published_time" content="2020-05-15T08:14:54.813Z">
+<meta property="article:modified_time" content="2020-05-15T08:14:54.813Z">
+<meta property="article:author" content="reeeeeeeeeein">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/15/yzVAJMmTWxp6ihv.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/05/15/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>并行与分布式计算作业3 | reeeeeeeeeein的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+<div class="bg_content">
+<canvas id="canvas"></canvas>
+</div>
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">reeeeeeeeeein的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/15/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          并行与分布式计算作业3
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-15 16:14:54" itemprop="dateCreated datePublished" datetime="2020-05-15T16:14:54+08:00">2020-05-15</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="并行与分布式计算作业3"><a href="#并行与分布式计算作业3" class="headerlink" title="并行与分布式计算作业3"></a>并行与分布式计算作业3</h1><h2 id="题目要求"><a href="#题目要求" class="headerlink" title="题目要求"></a>题目要求</h2><p>​        利用LLVM （C、C++）或者Soot （Java）等工具检测多线程程序中潜在的数据竞争以及是否存在不可重入函数，给出案例程序并提交分析报告。</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>​        用pthreads编写一个简单的并行程序，用附带了ThreadSanitizer的clang对代码进行编译，在终端运行，查看数据竞争情况。再根据ThreadSanitizer的输出结果对代码进行修改，通过忙等待、互斥量和信号量等方法对临界区加锁，消除数据竞争。</p>
+<p>​        编写一个检测程序中是否存在不可重入函数的程序，它读取一个IR文件，判断其中的每一个函数是否是不可重入的。</p>
+<h2 id="检测数据竞争"><a href="#检测数据竞争" class="headerlink" title="检测数据竞争"></a>检测数据竞争</h2><p>​        根据<br>    $$\pi=4<em>(\sum_{n=1}^{\infty}(-1)^{n-1}</em>\frac{1}{2n-1})$$</p>
+<p>​        编写一个计算$\pi$值的并行程序,代码见code1.c:</p>
+<p>​        通过命令行参数得到线程数量和要计算的范围。在第33行创建多个线程，每个线程负责计算一部分内容，把结果累加到全局变量sum上。由于多个线程是并行执行的，且会对sum进行修改，所以会出现问题。不用ThreadSanitizer时，程序运行结果如下:</p>
+<p><img src="https://i.loli.net/2020/05/15/yzVAJMmTWxp6ihv.png" alt="image-20200424185518501.png"></p>
+<p>​        可以看到，每次运行结果都不一样，有时偏大有时偏小，说明数据竞争现象确实存在。</p>
+<p>​        用ThreadSanitizer检测，结果如下:</p>
+<p><img src="https://i.loli.net/2020/05/15/RvzdrZ8S3Im7VEh.png" alt="image-20200424190726679.png"></p>
+<p>​        可以看到，运行结果显示存在data race，在第21行，刚好就是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sum+=factor/(<span class="number">2</span>*i+<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p>​        一个很自然的想法是，给每个线程创建一个局部变量，把要计算的值加到这个局部变量上，最后再对所有线程求一次和。只需将Thread_sum函数修改为这样:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">Thread_sum</span><span class="params">(<span class="keyword">void</span>* rank)</span></span>&#123;</span><br><span class="line">  <span class="keyword">long</span> my_rank=(<span class="keyword">long</span>)rank;</span><br><span class="line">  <span class="keyword">double</span> my_sum=<span class="number">0</span>;</span><br><span class="line">  <span class="keyword">double</span> factor;</span><br><span class="line">  <span class="keyword">long</span> <span class="keyword">long</span> i;</span><br><span class="line">  <span class="keyword">long</span> <span class="keyword">long</span> my_n=n/thread_count;</span><br><span class="line">  <span class="keyword">long</span> <span class="keyword">long</span> my_first_i=my_n*my_rank;</span><br><span class="line">  <span class="keyword">long</span> <span class="keyword">long</span> my_last_i=my_first_i+my_n;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(my_first_i%<span class="number">2</span>==<span class="number">0</span>)&#123;</span><br><span class="line">    factor=<span class="number">1.0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> factor=<span class="number">-1.0</span>;</span><br><span class="line">  <span class="keyword">for</span>(i = my_first_i;i&lt;my_last_i;i++,factor=-factor)&#123;</span><br><span class="line">    my_sum+=factor/(<span class="number">2</span>*i+<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  sum+=my_sum;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​        这样看似正常，但运行后发现，第24行仍然是多个线程同时修改一个全局变量，仍然存在数据竞争现象:</p>
+<p><img src="https://i.loli.net/2020/05/15/hL9vPbIAzw6tsuG.png" alt="image-20200424194846838.png"></p>
+<h2 id="解决数据竞争"><a href="#解决数据竞争" class="headerlink" title="解决数据竞争"></a>解决数据竞争</h2><p>​        尝试用忙等待、互斥量和信号量来解决数据竞争问题。</p>
+<h3 id="忙等待"><a href="#忙等待" class="headerlink" title="忙等待"></a>忙等待</h3><p>​        忙等待就是设置一个标记变量，用于指明临界区可以被哪个线程执行，该执行完之后修改这个标记变量，而不能执行临界区的线程必须一直处于忙等待状态。</p>
+<p>​        这只用定义一个flag，再对上面的第24行修改为:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(flag!=my_rank);</span><br><span class="line">sum+=my_sum;</span><br><span class="line">flag=(flag+<span class="number">1</span>)%thread_count;</span><br></pre></td></tr></table></figure>
+
+<p>​        完整代码保存在code2.c</p>
+<p>​        ThreadSanitizer似乎不支持用忙等待的方法对临界区加锁:</p>
+<p><img src="https://i.loli.net/2020/05/15/hIrN26FVJad5EDu.png" alt="image-20200424221456398.png"></p>
+<h3 id="互斥量"><a href="#互斥量" class="headerlink" title="互斥量"></a>互斥量</h3><p>​        互斥量能保证同一时间只有一个线程在执行临界区的代码，其他线程只能等待。等当前线程执行完之后，会从等待的线程中随机选一个进入临界区。</p>
+<p>​        这只用定义一个互斥量mutex，再将临界区代码修改为:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pthread_mutex_lock(&amp;mutex);</span><br><span class="line">sum+=my_sum;</span><br><span class="line">pthread_mutex_unlock(&amp;mutex);</span><br></pre></td></tr></table></figure>
+
+<p>​        完整代码保存在code3.c</p>
+<p>​        用ThreadSanitizer测试，结果正常，没有warning:<br><img src="https://i.loli.net/2020/05/15/eZdkjpxIVoaWmLY.png" alt="image-20200424220329505.png"></p>
+<h3 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h3><p>​        信号量(semaphore)可以认为是一种特殊类型的unsigned int，它的类型是sem_t。信号量可以赋值为0,1,……。大多数情况下，我们只用0和1两个值。这种只有0和1值的信号量也称为二元信号量。0对应上了锁的互斥量，1对应没上锁的互斥量。</p>
+<p>​        如果我们要用信号量来解决临界区问题，可以先创建一个全局信号量，初始值为1。在临界区前调用sem_wait()函数,这个函数的意义是:如果信号量为0则阻塞；如果是非0值则减1然后进入临界区。临界区执行完之后，调用sem_post()函数将信号量置为1。<del>好像跟互斥量没啥区别</del></p>
+<p>​        这也只用定义一个信号量my_semaphore，在main函数里初始化，再将临界区代码修改为:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sem_wait(&amp;my_semaphore);</span><br><span class="line">sum+=my_sum;</span><br><span class="line">sem_post(&amp;my_semaphore);</span><br></pre></td></tr></table></figure>
+
+<p>​        完整代码见code4.c</p>
+<p>​        测试一下，也很正常:</p>
+<p><img src="https://i.loli.net/2020/05/15/BVSGmTND7Hr42ke.png" alt="image-20200424221059782.png"></p>
+<h2 id="检测不可重入函数"><a href="#检测不可重入函数" class="headerlink" title="检测不可重入函数"></a>检测不可重入函数</h2><p>​        利用clang可以生成c语言程序对应的中间表示，下面这个函数:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">C</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">  B(<span class="number">1</span>);</span><br><span class="line">  val=<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    会被转化为</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">define void @C(i32) #0 &#123;</span><br><span class="line">  %2 = alloca i32,<span class="built_in"> align </span>4</span><br><span class="line">  store i32 %0, i32* %2,<span class="built_in"> align </span>4</span><br><span class="line">  call void @B(i32 1)</span><br><span class="line">  store i32 1, i32* @val,<span class="built_in"> align </span>4</span><br><span class="line">  ret void</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    我们不关心其他的内容，只需要知道:</p>
+<ol>
+<li><p>函数定义以“define”开始，这一行的第一个  ‘@’  和  ‘(‘  之间的字符串是函数的名字。</p>
+</li>
+<li><p>调用一个其他函数会以 “call” 开始， 这一行的第一个  ‘@’  和  ‘(‘  之间的字符串是被调用函数的名字。</p>
+</li>
+<li><p>访问一个全局变量时会用到 ‘@’ ,访问其他变量会用到 ‘%’ 。</p>
+<p>此外，被其他函数调用但没有在程序中定义的函数，像printf()函数等，都默认为不可重入函数。</p>
+</li>
+</ol>
+<p>​       知道了这些，就可以写一个程序来检测程序中的不可重入函数了。做法很简单，把函数理解为一个点，把调用关系理解为边，A调用了B就连一条B-&gt;A的边。然后将访问了全局变量的函数和在程序中没有给出定义的函数标记为不可重入函数，从这些 “原生的” 不可重入函数开始进行深度优先搜索，凡是访问到的点都是不可重入函数。深度优先搜索的示例代码如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> u)</span></span>&#123;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=head[u];i;i=e[i].next)&#123;<span class="comment">//用链式前向星的方法存边。这里是遍历u节点的每一条出边。</span></span><br><span class="line">    <span class="keyword">int</span> v=e[i].to;</span><br><span class="line">    <span class="keyword">if</span>(!vis[v])&#123;<span class="comment">//如果这个节点没有被访问过</span></span><br><span class="line">      vis[v]=<span class="literal">true</span>;</span><br><span class="line">      <span class="keyword">if</span>(bkcr[v]!=<span class="number">-1</span>)bkcr[v]=<span class="number">1</span>;<span class="comment">//-1代表的是"原生的" 不可重入函数，1是由于调用了不可重入函数而成为不可重入函数的函数</span></span><br><span class="line">      dfs(v);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​        完整代码见code5.cpp</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>​        编写一个test.c，里面有几个函数调用来调用去，如下图所示:</p>
+<p><img src="https://i.loli.net/2020/05/15/WJbH2ApZY98dwGE.png" alt="image-20200504124549947.png"></p>
+<p>​        用clang生成中间代码:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -O0 -S -emit-llvm ./<span class="built_in">test</span>/test.c -o input.ll</span><br></pre></td></tr></table></figure>
+
+<p>​        进行检测，输出如下:</p>
+<p><img src="https://i.loli.net/2020/05/15/NiJcqHf8RXYGzL5.png" alt="image-20200504124714169.png"></p>
+<p>​        结果符合预期。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>​        用ThreadSanitizer可以方便地检测多线程中存在的数据竞争问题，检测到临界区后，可以用互斥量和信号量对它进行加锁。利用llvm可以生成程序的中间代码，然后可以检测其中是否有不可重入函数。</p>
+<p>​        这次实验完成的比较简单，主要是因为之前学过一点pthread，还写了篇<a href="https://reeeeeeeeeein.github.io/2020/04/21/Pthread%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02/" target="_blank" rel="noopener">学习笔记</a>，于是直接把代码和博客的内容拿过来用了(<del>抄自己的博客不算抄吧</del>)。检测不可重入函数稍微有点复杂，不过只要对llvm的中间代码有了基本的了解，学过一些图论算法，解决起来也不算困难。</p>
+<p>​        一个比较大的收获是学会了使用ThreadSanitizer来检查数据竞争，大大方便了以后编写多线程程序。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E4%B8%89_%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8/" rel="prev" title="操作系统实验三_操作系统内核">
+      <i class="fa fa-chevron-left"></i> 操作系统实验三_操作系统内核
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#并行与分布式计算作业3"><span class="nav-number">1.</span> <span class="nav-text">并行与分布式计算作业3</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目要求"><span class="nav-number">1.1.</span> <span class="nav-text">题目要求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.2.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检测数据竞争"><span class="nav-number">1.3.</span> <span class="nav-text">检测数据竞争</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决数据竞争"><span class="nav-number">1.4.</span> <span class="nav-text">解决数据竞争</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#忙等待"><span class="nav-number">1.4.1.</span> <span class="nav-text">忙等待</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#互斥量"><span class="nav-number">1.4.2.</span> <span class="nav-text">互斥量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#信号量"><span class="nav-number">1.4.3.</span> <span class="nav-text">信号量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检测不可重入函数"><span class="nav-number">1.5.</span> <span class="nav-text">检测不可重入函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">1.5.1.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">reeeeeeeeeein</p>
+  <div class="site-description" itemprop="description">SYSU 计算机专业大二在读</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">reeeeeeeeeein</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
