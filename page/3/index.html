@@ -165,6 +165,76 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/16/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E7%AC%94%E8%AE%B02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/16/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E7%AC%94%E8%AE%B02/" class="post-title-link" itemprop="url">并行与分布式计算笔记2</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-16 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-16T00:00:00+08:00">2020-03-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-17 17:29:33" itemprop="dateModified" datetime="2020-03-17T17:29:33+08:00">2020-03-17</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="并行与分布式计算笔记2"><a href="#并行与分布式计算笔记2" class="headerlink" title="并行与分布式计算笔记2"></a>并行与分布式计算笔记2</h1><p>主函数之外的变量是全局的，被所有线程共享，一般用于通信。<br>在堆上申请的，可能是共享的。<br>栈上的变量一般是私有的，只有某个线程能够使用。</p>
+<p>线程是有限的，如果创建的线程太多，对操作系统而言是个灾难。<br>创建一个线程大概要1e4个cpu时钟，线程间切换大概要1e3个cpu时钟。</p>
+<p>线程的调度取决于:<br>操作系统的硬件，如果线程太多会执行不过来。<br>调度器的设计。<br>程序员的干预，可以设定线程跑在哪个CPU核心。</p>
+<p>有一些硬件本身支持多线程，线程间切换会快很多，大概10左右cpu时钟。<br>线程切换:<br>执行一定指令后切换(细粒度)<br>当线程遇到需要花很多时间的操作如cache miss切换，线程会off-cpu。‘；(粗粒度)</p>
+<p>将ILP和TLP结合<br>TLP是将几个指令流同时进行，可以把这里的指令换成ILP的指令。<br>这种方法称为同时多线程(Simultaneous Multi-threading),Intel称之为超线程。</p>
+<p>内存系统的latency和bandwidth<br>latency是请求的发出到返回的时间。<br>bandwidth是单位时间内能从内存中取出的数据量。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/12/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -678,7 +748,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

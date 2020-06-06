@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="时间序列相似度度量标准实现预备知识：样本相似度度量标准基础类型距离型以差值为基础的相似度计算方法，通常值越小越相似。 例子1： 欧式距离假设时间序列 $X&#x3D;{x_1,x_2……x_n}，Y&#x3D;{y_1,y_2……y_n}$，则可以定义它们之间的欧式距离： $d_{L^p}&#x3D;(\sum\limits_{k&#x3D;1}^{n}\left\vert x_k-y_k \right\vert^p)^{\frac 1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="时间序列相似度">
+<meta property="og:url" content="http://yoursite.com/2020/06/06/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E7%9B%B8%E4%BC%BC%E5%BA%A6/index.html">
+<meta property="og:site_name" content="reeeeeeeeeein的博客">
+<meta property="og:description" content="时间序列相似度度量标准实现预备知识：样本相似度度量标准基础类型距离型以差值为基础的相似度计算方法，通常值越小越相似。 例子1： 欧式距离假设时间序列 $X&#x3D;{x_1,x_2……x_n}，Y&#x3D;{y_1,y_2……y_n}$，则可以定义它们之间的欧式距离： $d_{L^p}&#x3D;(\sum\limits_{k&#x3D;1}^{n}\left\vert x_k-y_k \right\vert^p)^{\frac 1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/06/06/3b2wpQVOKTmXFaG.png">
+<meta property="og:image" content="https://pic4.zhimg.com/v2-343ad369c65bd575f40d17f10ae523ef_b.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/06/06/7BRvN3TzMlkayhE.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/06/TBKFsEo1PH26Cqk.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/06/jBuzlAnGoPLRsEt.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/06/2DJK9mwILQdhzRv.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/06/PZmMsNckqW7uLiw.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/06/D5UwZMiRAbcaQKo.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/06/gxuzD853QrbXlkT.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/06/J91Eogx3DBsAKqh.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/06/Dz9jpLuveJbEXVK.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/06/6OEouycJ5bAe72W.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/06/DsCXq1VcRS74I9a.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/06/XqjekxGlUFdMbVJ.png">
+<meta property="article:published_time" content="2020-06-06T13:55:02.972Z">
+<meta property="article:modified_time" content="2020-06-06T13:55:02.972Z">
+<meta property="article:author" content="reeeeeeeeeein">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/06/3b2wpQVOKTmXFaG.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/06/06/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E7%9B%B8%E4%BC%BC%E5%BA%A6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>时间序列相似度 | reeeeeeeeeein的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+<div class="bg_content">
+<canvas id="canvas"></canvas>
+</div>
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">reeeeeeeeeein的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/06/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E7%9B%B8%E4%BC%BC%E5%BA%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          时间序列相似度
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-06 21:55:02" itemprop="dateCreated datePublished" datetime="2020-06-06T21:55:02+08:00">2020-06-06</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="时间序列相似度度量标准实现"><a href="#时间序列相似度度量标准实现" class="headerlink" title="时间序列相似度度量标准实现"></a>时间序列相似度度量标准实现</h1><h2 id="预备知识：样本相似度度量标准"><a href="#预备知识：样本相似度度量标准" class="headerlink" title="预备知识：样本相似度度量标准"></a>预备知识：样本相似度度量标准</h2><h3 id="基础类型"><a href="#基础类型" class="headerlink" title="基础类型"></a>基础类型</h3><h4 id="距离型"><a href="#距离型" class="headerlink" title="距离型"></a>距离型</h4><p>以差值为基础的相似度计算方法，通常值越小越相似。</p>
+<h5 id="例子1：-欧式距离"><a href="#例子1：-欧式距离" class="headerlink" title="例子1： 欧式距离"></a>例子1： 欧式距离</h5><p>假设时间序列 $X={x_1,x_2……x_n}，Y={y_1,y_2……y_n}$，则可以定义它们之间的欧式距离：</p>
+<p>$d_{L^p}=(\sum\limits_{k=1}^{n}\left\vert x_k-y_k \right\vert^p)^{\frac 1p}$</p>
+<p>当 $p=1$ 时，距离为 $d_{L^1}=(\sum\limits_{k=1}^{n}\left\vert x_k-y_k \right\vert)$，也称为曼哈顿距离。</p>
+<p>当 $p=2$ 时，距离为 $d_{L^2}=(\sum\limits_{k=1}^{n}\left\vert x_k-y_k \right\vert^2)^{\frac 12}$，也称为欧几里得距离</p>
+<p>当 $p\rightarrow \infin$ 时，距离为 $d_{L^\infin}=\max\limits_{1\le k \le n}\left\vert x_k-y_k \right\vert$</p>
+<h5 id="例子2：马氏距离（可以看成欧式距离使用协方差矩阵达成的标准化形式）"><a href="#例子2：马氏距离（可以看成欧式距离使用协方差矩阵达成的标准化形式）" class="headerlink" title="例子2：马氏距离（可以看成欧式距离使用协方差矩阵达成的标准化形式）"></a>例子2：马氏距离（可以看成欧式距离使用协方差矩阵达成的标准化形式）</h5><p>两个向量的马氏距离为：</p>
+<p>$$d(\vec x,\vec y)=\sqrt{(\vec x-\vec y)^{T}\sum^{-1}(\vec x-\vec y)}$$</p>
+<p>其中，$\sum$ 为 $\vec x$ 和 $\vec y$ 的协方差矩阵。</p>
+<p>为什么要用马氏距离？欧式距离不行吗？考虑下面这个例子：</p>
+<p><img src="https://i.loli.net/2020/06/06/3b2wpQVOKTmXFaG.png" alt="image-20200602210843484.png"></p>
+<p>上图中，红圆圈是数据点的均值，绿色的×和红色的×到均值的欧式距离是相等的，但我们可以明显地看到，绿色的×应该属于这个分布，红色的×不属于。这是因为</p>
+<ol>
+<li><p>不同维度(x轴，y轴)之间存在相关性(在这里表现为x轴与y轴存在正相关)。</p>
+</li>
+<li><p>不同方向上变化幅度不同，把图顺时针旋转45度，可以看到横向上变化较大，竖向上变化较小(有些资料把这一点称为量纲不同和方差不同)。</p>
+</li>
+</ol>
+<p>用马氏距离就可以消除这种差别，它相当于把欧式距离进行了标准化。</p>
+<h4 id="夹角型"><a href="#夹角型" class="headerlink" title="夹角型"></a>夹角型</h4><p>以乘积为基础的相似度计算方法，通常值越大越相似。可以通过取相反数达成值越小越相似。</p>
+<h5 id="例子1：夹角余弦"><a href="#例子1：夹角余弦" class="headerlink" title="例子1：夹角余弦"></a>例子1：夹角余弦</h5><p>假设时间序列 $X={x_1,x_2……x_n}，Y={y_1,y_2……y_n}$，则可以定义它们之间的夹角 $\theta$ 满足：</p>
+<p>$cos\theta=\frac{\sum\limits_{k=1}^{n}x_k<em>y_k}{\sqrt{\sum\limits_{k=1}^{n}x_k^2}</em>\sqrt{\sum\limits_{k=1}^{n}y_k^2}}$</p>
+<h5 id="例子2：相关系数（其实也可以看成夹角余弦通过每个特征减均值达成的标准化形式）"><a href="#例子2：相关系数（其实也可以看成夹角余弦通过每个特征减均值达成的标准化形式）" class="headerlink" title="例子2：相关系数（其实也可以看成夹角余弦通过每个特征减均值达成的标准化形式）"></a>例子2：相关系数（其实也可以看成夹角余弦通过每个特征减均值达成的标准化形式）</h5><p>假设时间序列 $X={x_1,x_2……x_n}，Y={y_1,y_2……y_n}$，则可以定义它们之间的Pearson相关系数 $cor(X,Y)$ 满足：</p>
+<p>$cor(X,Y)=\frac{\sum\limits_{k=1}^{n}(x_k-\bar x)<em>(y_k-\bar y)}{\sqrt{\sum\limits_{k=1}^{n}(x_k-\bar x)^2}</em>\sqrt{\sum\limits_{k=1}^{n}(x_k-\bar x)^2}}$</p>
+<h2 id="针对特殊结构数据"><a href="#针对特殊结构数据" class="headerlink" title="针对特殊结构数据"></a>针对特殊结构数据</h2><h3 id="时间序列"><a href="#时间序列" class="headerlink" title="时间序列"></a>时间序列</h3><p>核心需要：对齐</p>
+<p>什么是对齐：样本特征的互相配对。</p>
+<p>为什么要对齐：样本的相似度是根据样本特征的相似度累加/平均的，结构化数据的特征直接对齐了，但时间序列的每一时刻值可能没有天然强对齐关系。</p>
+<p>得到样本相似度度量的实际处理：不同对齐策略下的相似度度量最值</p>
+<p>不同对齐策略指对对齐的搜索空间的不同约束，搜索空间的大小会导致不同的复杂度。</p>
+<p>时间序列对齐策略的潜在需求：</p>
+<p>保序性（单调性）：例如T1:a, b, c; T2:x, y, z，无论怎么配对，T1配对出的匹配序列T2‘顺序满足y不会在x前面，z不会再x,y前面。</p>
+<h4 id="保端点型对齐策略"><a href="#保端点型对齐策略" class="headerlink" title="保端点型对齐策略"></a>保端点型对齐策略</h4><p>可以一对多，需要全部点（时间序列各个时刻的值）都找到配对（从而开始点一定配对开始点，结束点一定配对结束点，也满足连续性）</p>
+<p>比较适合的场景：语音相似度识别</p>
+<h5 id="典型例子：DTW（-Dynamic-Time-Warping，动态时间规整）：保端点型对齐策略下的距离型度量"><a href="#典型例子：DTW（-Dynamic-Time-Warping，动态时间规整）：保端点型对齐策略下的距离型度量" class="headerlink" title="典型例子：DTW（[Dynamic Time Warping，动态时间规整）：保端点型对齐策略下的距离型度量"></a>典型例子：DTW（[Dynamic Time Warping，动态时间规整）：保端点型对齐策略下的距离型度量</h5><p><img src="https://pic4.zhimg.com/v2-343ad369c65bd575f40d17f10ae523ef_b.jpg" alt="img"></p>
+<p>上图就是DTW对齐策略的一个例子。</p>
+<p>最基本的DTW可以用动态规划(dp)来实现。具体的，假设时间序列 $X={x_1,x_2……x_m}，Y={y_1,y_2……y_n}$ ，用 $dp[i][j] ,i\le m,j\le n$ 来表示 $X$ 的前 $i$ 个点和 $Y$ 的前 $j$ 个点能取得的最小距离，定义状态转移方程为：</p>
+<p>​                    $$dp[i][j]=\begin{cases} dist(1,1),i=1,j=1 \ dp[i-1][j]+dist(i,1)，i&gt;1,j=1 \ dp[i][j-1]+dist(1,j),i=1,j&gt;1\min(dp[i-1][j-1],dp[i][j-1],dp[i-1][j-1])+dist(i,j),i&gt;1,j&gt;1  \end{cases}$$</p>
+<p>其中 $dist(i,j)=(X[i]-Y[j])^2$ 。</p>
+<p>为了将结果可视化，可以将距离矩阵（即 dist ）绘制出来，如 $X=[3,6,8],Y=[2,4,8,7]$ 时，距离矩阵如下所示：</p>
+<p><img src="https://i.loli.net/2020/06/06/7BRvN3TzMlkayhE.png" alt="image-20200604221146644.png"></p>
+<p>要达到一个最小距离，相当于从左上角走到右下角，且每次只允许往右、往下或者往右下走，使得走过的数字的和最小。显然在这个图里应该这样走：</p>
+<p><img src="https://i.loli.net/2020/06/06/TBKFsEo1PH26Cqk.png" alt="image-20200604221539941.png"></p>
+<h6 id="DTW的优点"><a href="#DTW的优点" class="headerlink" title="DTW的优点"></a>DTW的优点</h6><p>DTW能处理长度不同的时间序列，这是它比传统的距离算法强的地方。而且对很多时间序列，用DTW进行距离计算明显更合理。</p>
+<h6 id="DTW的缺点"><a href="#DTW的缺点" class="headerlink" title="DTW的缺点"></a>DTW的缺点</h6><p>用距离来度量相似度的算法的时间复杂度是 $O(n)$ ，空间复杂度是 $O(1)$ 的 ，而DTW算法在时间和空间上都是 $O(nm)$ 的。对于较长的时间序列，直接进行计算显然开销太大，于是要引进一些优化的方法。</p>
+<p>以下的变种是基于缩减搜索空间得到的变种。</p>
+<h5 id="DTW变种1：greedy-DTW"><a href="#DTW变种1：greedy-DTW" class="headerlink" title="DTW变种1：greedy-DTW"></a>DTW变种1：greedy-DTW</h5><p>来自论文《Time2Graph: Revisiting Time Series Modeling with Dynamic Shapelets》的附录A.1的Algorithm 5</p>
+<p>这种算法是用贪心的思想，即每次选择所有能走的点里代价最小的点。为了避免出现沿着边缘走的情况，设置一个窗口 $w$ ，规定走到的位置 $x,y$ 满足 $|x-y|\le w$ 。比如说，对时间序列 $X=[2,3,5,7,1],Y=[4,2,8,6,4]$，dist矩阵和走过的路线是这样子的：</p>
+<p><img src="https://i.loli.net/2020/06/06/jBuzlAnGoPLRsEt.png" alt="image-20200605171339497.png"> </p>
+<h6 id="greedy-DTW的优点"><a href="#greedy-DTW的优点" class="headerlink" title="greedy-DTW的优点"></a>greedy-DTW的优点</h6><p>它最大的优点是速度快，只需要 $O(n+m)$ 的时间复杂度就可以完成计算。</p>
+<h6 id="greedy-DTW的缺点"><a href="#greedy-DTW的缺点" class="headerlink" title="greedy-DTW的缺点"></a>greedy-DTW的缺点</h6><p>缺点也很明显，贪心算法无法保证取得全局最优解，容易”误入歧途”。</p>
+<h5 id="DTW变种2：Fast-DTW"><a href="#DTW变种2：Fast-DTW" class="headerlink" title="DTW变种2：Fast-DTW"></a>DTW变种2：Fast-DTW</h5><p>来自论文《FastDTW: Toward Accurate Dynamic Time Warping in Linear Time and Space》</p>
+<p>可参考<a href="https://www.cnblogs.com/kemaswill/archive/2013/04/18/3029078.html" target="_blank" rel="noopener">https://www.cnblogs.com/kemaswill/archive/2013/04/18/3029078.html</a></p>
+<p>这种方法的基本策略是递归。FastDTW 算法如下：</p>
+<p>对于两个时间序列 $X=[1,2,3,4],Y=[3,4,5,6]$，首先将它们的长度缩短为一半，变成 $X’=[1.5,3.5],Y’=[3.5,5.5]$ ，相对应的，矩阵从 4×4 变成了 2×2，如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/06/2DJK9mwILQdhzRv.png" alt="image-20200606011018301.png"></p>
+<p>然后，对压缩后的时间序列递归地应用 FastDTW找到一条路径（由于这里的时间序列长度只有2，就可以直接找到不用递归），如下所示：</p>
+<p><img src="https://i.loli.net/2020/06/06/PZmMsNckqW7uLiw.png" alt="image-20200606011233288.png"></p>
+<p>在原来的矩阵中给这条路径经过的块打上标记，如下所示：</p>
+<p><img src="https://i.loli.net/2020/06/06/D5UwZMiRAbcaQKo.png" alt="image-20200606011749696.png"></p>
+<p>为了增大搜索范围，对路径以 $r$ 为半径拓展，即将与路径的距离小于等于 $r$ 的路径打上标记。$r=1$ 时，如下所示：</p>
+<p><img src="https://i.loli.net/2020/06/06/gxuzD853QrbXlkT.png" alt="image-20200606012002821.png"></p>
+<p>这样，就得到了我们的搜索路径，然后只用在这条路径里找就可以了。看起来，搜索路径并不比原来的矩阵小多少，但当时间序列长度足够大时，搜索路径会很小，因为它是 $O(n*r)$ 的，证明略。</p>
+<h6 id="Fast-DTW的优点"><a href="#Fast-DTW的优点" class="headerlink" title="Fast-DTW的优点"></a>Fast-DTW的优点</h6><p>最大的优点显然是速度快，如下图所示（顺便吐槽一句，04年的时候执行一个 $n=1000$ 的 $O(n^2)$ 算法竟然要0.92秒，而今天的计算机可能不用0.01秒，看来计算机领域的发展还是很快的）：</p>
+<p><img src="https://i.loli.net/2020/06/06/J91Eogx3DBsAKqh.png" alt="image-20200606012512919.png"></p>
+<p><img src="https://i.loli.net/2020/06/06/Dz9jpLuveJbEXVK.png" alt="image-20200606012619988.png"></p>
+<p>对于 $N=1000$ 左右的时间序列，用 $r=20$ 的 Fast-DTW 会比 DTW 快了 4-5倍。当 $N$ 不断增大时，加速效果还会更明显。</p>
+<h6 id="Fast-DTW的缺点"><a href="#Fast-DTW的缺点" class="headerlink" title="Fast-DTW的缺点"></a>Fast-DTW的缺点</h6><p>由于这种方法得到的是较优解，因此我们有必要关注它的误差。定义误差如下所示：</p>
+<p><img src="https://i.loli.net/2020/06/06/6OEouycJ5bAe72W.png" alt="image-20200606013024726.png"></p>
+<p>经过试验得到误差大小：</p>
+<p><img src="https://i.loli.net/2020/06/06/DsCXq1VcRS74I9a.png" alt="image-20200606013005315.png"></p>
+<p>可以看到，当 $r=20$ 时，平均误差已经小于 $1%$ 。虽然误差仍然存在，但已经基本可以忽略。</p>
+<p>还有一个缺点是编程难度较DTW大。</p>
+<h5 id="DTW变种3：constrained-DTW"><a href="#DTW变种3：constrained-DTW" class="headerlink" title="DTW变种3：constrained DTW"></a>DTW变种3：constrained DTW</h5><p>来自论文《Searching and mining trillions of time series subsequences under dynamic time warping》</p>
+<p>这篇文章对几种已有的剪枝策略进行了讨论，对它们的下界和时间复杂度进行了比较进行了比较，如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/06/XqjekxGlUFdMbVJ.png" alt="image-20200606141816713.png"></p>
+<p>一般认为在虚线下方的剪枝策略是没用的，因为至少存在一种下界更高且时间复杂度更低的策略。</p>
+<p>最终作者决定用这种策略：先用 $LB_{Kim}FL$ ，如果不能大于 $Best_so_far$ ，则再用 $LB_{Keogh}EQ$ ，还是不行就用 $LB_{Keogh}EC$，再不行就用 $Early_abandoning_DTW$ 。</p>
+<p>至于cDTW，似乎这篇论文并没有提到，查了其他的资料，大概就是把DTW的路径限制在对角线旁边的样子。</p>
+<h4 id="平移型对齐策略"><a href="#平移型对齐策略" class="headerlink" title="平移型对齐策略"></a>平移型对齐策略</h4><p>只可一对一，允许两边边界的点（端点及端点附近点）找不到配对，满足连续性。</p>
+<p>比较适合的场景：时钟不共享而有一定偏差的两条时间序列</p>
+<h5 id="典型例子：cross-correlation：平移型对齐策略下的夹角型度量"><a href="#典型例子：cross-correlation：平移型对齐策略下的夹角型度量" class="headerlink" title="典型例子：cross-correlation：平移型对齐策略下的夹角型度量"></a>典型例子：cross-correlation：平移型对齐策略下的夹角型度量</h5><p>可参考论文&lt;&lt;k-Shape: Efficient and Accurate Clustering of Time Series&gt;&gt;的3.1节的介绍</p>
+<p>cross-correlation的定义与卷积类似，对于函数 $f(x)$ 和 $g(x)$ ，它们的 cross-correlation 定义为 </p>
+<p>$$h(x)=\int_{-\infin}^{+\infin}f(t)g(x+t)dt$$。事实上，把 + 号改为 - 号就是卷积了。两个已经标准化了的时间序列 $\vec x=(x_1,…,x_m)$ 和 $\vec  y=(y_1,…,y_m)$ 的 cross-correlation 可以这样定义：$CC(\vec x,\vec y)=(c_1,c_2,…,c_{2*m-1})$</p>
+<p>其中：$c_{k+m}=\begin{cases}\sum\limits_{l=1}^{m-k}x_{l+k}y_l,k&gt;0\ \vec x · \vec y ,k=0 \ \sum\limits_{l=1-k}^{m}x_{l+k}y_l,k&lt;0 \end{cases}$</p>
+<p>然后在 $CC(\vec x,\vec y)$ 中找到一个最大的，记为 $CC_w(\vec x,\vec y)$，定义 $NCC_c(\vec x,\vec y)=\frac{CC_w(\vec x,\vec y)}{\sqrt{R_0(\vec x,\vec x)·R_0(\vec y,\vec y)}}$。这样就把距离归化到 $[-1,1]$。再定义 $SBD(\vec x,\vec y)=1-NCC_c(\vec x,\vec y)$ ，则得到 向量 $\vec x$ 和向量 $\vec y$ 的 SBD（Shape-based distance）距离，对于形状接近的时间序列，这个值接近于0，否则接近于2。</p>
+<p>值得注意的是，直接计算两个长为 $m$ 的时间序列的SBD距离是 $O(m^2)$ 的，但我们知道两个序列的卷积可以 $O(mlogm)$ 地计算，而)卷积只用把 $\vec x$ 翻转一下就变成了 $CC(\vec x,\vec y)$，因此，计算 SBD 距离也是 $O(mlogm)$ 的。这会比 $O(m^2)$ 的 DTW 算法快很多。</p>
+<p>以下的变种是基于不同标准化思路得到的变种。</p>
+<p>&lt;&lt;k-Shape: Efficient and Accurate Clustering of Time Series&gt;&gt;的3.1节的公式8的3个变种</p>
+<p>定义 $NCC_b(\vec x,\vec y)=\frac{CC_w(\vec x,\vec y)}{m}$ 这样的结果并不会归一化到一个区间，有啥规律我也看不出来…</p>
+<p>定义 $NCC_u(\vec x,\vec y)=\frac{CC_w(\vec x,\vec y)}{w-|w-m|}$，这样的结果是上面有多少项相乘，则结果就除以多少。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/15/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%E4%BD%9C%E4%B8%9A3/" rel="prev" title="并行与分布式计算作业3">
+      <i class="fa fa-chevron-left"></i> 并行与分布式计算作业3
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#时间序列相似度度量标准实现"><span class="nav-number">1.</span> <span class="nav-text">时间序列相似度度量标准实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#预备知识：样本相似度度量标准"><span class="nav-number">1.1.</span> <span class="nav-text">预备知识：样本相似度度量标准</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础类型"><span class="nav-number">1.1.1.</span> <span class="nav-text">基础类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#距离型"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">距离型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#例子1：-欧式距离"><span class="nav-number">1.1.1.1.1.</span> <span class="nav-text">例子1： 欧式距离</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#例子2：马氏距离（可以看成欧式距离使用协方差矩阵达成的标准化形式）"><span class="nav-number">1.1.1.1.2.</span> <span class="nav-text">例子2：马氏距离（可以看成欧式距离使用协方差矩阵达成的标准化形式）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#夹角型"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">夹角型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#例子1：夹角余弦"><span class="nav-number">1.1.1.2.1.</span> <span class="nav-text">例子1：夹角余弦</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#例子2：相关系数（其实也可以看成夹角余弦通过每个特征减均值达成的标准化形式）"><span class="nav-number">1.1.1.2.2.</span> <span class="nav-text">例子2：相关系数（其实也可以看成夹角余弦通过每个特征减均值达成的标准化形式）</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#针对特殊结构数据"><span class="nav-number">1.2.</span> <span class="nav-text">针对特殊结构数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#时间序列"><span class="nav-number">1.2.1.</span> <span class="nav-text">时间序列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#保端点型对齐策略"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">保端点型对齐策略</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#典型例子：DTW（-Dynamic-Time-Warping，动态时间规整）：保端点型对齐策略下的距离型度量"><span class="nav-number">1.2.1.1.1.</span> <span class="nav-text">典型例子：DTW（[Dynamic Time Warping，动态时间规整）：保端点型对齐策略下的距离型度量</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#DTW的优点"><span class="nav-number">1.2.1.1.1.1.</span> <span class="nav-text">DTW的优点</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#DTW的缺点"><span class="nav-number">1.2.1.1.1.2.</span> <span class="nav-text">DTW的缺点</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#DTW变种1：greedy-DTW"><span class="nav-number">1.2.1.1.2.</span> <span class="nav-text">DTW变种1：greedy-DTW</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#greedy-DTW的优点"><span class="nav-number">1.2.1.1.2.1.</span> <span class="nav-text">greedy-DTW的优点</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#greedy-DTW的缺点"><span class="nav-number">1.2.1.1.2.2.</span> <span class="nav-text">greedy-DTW的缺点</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#DTW变种2：Fast-DTW"><span class="nav-number">1.2.1.1.3.</span> <span class="nav-text">DTW变种2：Fast-DTW</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Fast-DTW的优点"><span class="nav-number">1.2.1.1.3.1.</span> <span class="nav-text">Fast-DTW的优点</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Fast-DTW的缺点"><span class="nav-number">1.2.1.1.3.2.</span> <span class="nav-text">Fast-DTW的缺点</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#DTW变种3：constrained-DTW"><span class="nav-number">1.2.1.1.4.</span> <span class="nav-text">DTW变种3：constrained DTW</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#平移型对齐策略"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">平移型对齐策略</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#典型例子：cross-correlation：平移型对齐策略下的夹角型度量"><span class="nav-number">1.2.1.2.1.</span> <span class="nav-text">典型例子：cross-correlation：平移型对齐策略下的夹角型度量</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">reeeeeeeeeein</p>
+  <div class="site-description" itemprop="description">SYSU 计算机专业大二在读</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">reeeeeeeeeein</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
