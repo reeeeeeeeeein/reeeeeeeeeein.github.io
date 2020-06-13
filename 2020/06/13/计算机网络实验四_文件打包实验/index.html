@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="文件打包实验实验目的掌握文件打包的方法 参考资料C语言字符串函数：http:&#x2F;&#x2F;msdn.microsoft.com&#x2F;zh-cn&#x2F;library&#x2F;f0151s4x(v&#x3D;vs.110).aspxC语言程序设计：http:&#x2F;&#x2F;www.runoob.com&#x2F;cprogramming&#x2F;C语言函数分类：http:&#x2F;&#x2F;msdn.microsoft.com&#x2F;zh-cn&#x2F;library&#x2F;2aza74he(v&#x3D;vs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络实验四_文件打包实验">
+<meta property="og:url" content="http://yoursite.com/2020/06/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AE%9E%E9%AA%8C%E5%9B%9B_%E6%96%87%E4%BB%B6%E6%89%93%E5%8C%85%E5%AE%9E%E9%AA%8C/index.html">
+<meta property="og:site_name" content="reeeeeeeeeein的博客">
+<meta property="og:description" content="文件打包实验实验目的掌握文件打包的方法 参考资料C语言字符串函数：http:&#x2F;&#x2F;msdn.microsoft.com&#x2F;zh-cn&#x2F;library&#x2F;f0151s4x(v&#x3D;vs.110).aspxC语言程序设计：http:&#x2F;&#x2F;www.runoob.com&#x2F;cprogramming&#x2F;C语言函数分类：http:&#x2F;&#x2F;msdn.microsoft.com&#x2F;zh-cn&#x2F;library&#x2F;2aza74he(v&#x3D;vs">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/kaM6TqbwDrl2i8K.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/FNUq791M6cytlPu.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/GM4pROQSgc5djvn.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/EtCqsHoPmU91iyQ.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/owWin5OECPtcKRq.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/UCjz28hKyHmlagR.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/PEgrhOMU2NFCVBu.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/spHRybxaojB6feG.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/v39SGnLaDsRVrKZ.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/lQrjKA6Xvik7PIe.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/PgRAF8jXKC1qyBM.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/Az5Zb1d6rvpytV4.png">
+<meta property="article:published_time" content="2020-06-13T10:17:49.213Z">
+<meta property="article:modified_time" content="2020-06-13T10:17:49.213Z">
+<meta property="article:author" content="reeeeeeeeeein">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/13/kaM6TqbwDrl2i8K.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/06/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AE%9E%E9%AA%8C%E5%9B%9B_%E6%96%87%E4%BB%B6%E6%89%93%E5%8C%85%E5%AE%9E%E9%AA%8C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>计算机网络实验四_文件打包实验 | reeeeeeeeeein的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+<div class="bg_content">
+<canvas id="canvas"></canvas>
+</div>
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">reeeeeeeeeein的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AE%9E%E9%AA%8C%E5%9B%9B_%E6%96%87%E4%BB%B6%E6%89%93%E5%8C%85%E5%AE%9E%E9%AA%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机网络实验四_文件打包实验
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-13 18:17:49" itemprop="dateCreated datePublished" datetime="2020-06-13T18:17:49+08:00">2020-06-13</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="文件打包实验"><a href="#文件打包实验" class="headerlink" title="文件打包实验"></a>文件打包实验</h1><h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><p>掌握文件打包的方法</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>C语言字符串函数：<a href="http://msdn.microsoft.com/zh-cn/library/f0151s4x(v=vs.110).aspx" target="_blank" rel="noopener">http://msdn.microsoft.com/zh-cn/library/f0151s4x(v=vs.110).aspx</a><br>C语言程序设计：<a href="http://www.runoob.com/cprogramming/" target="_blank" rel="noopener">http://www.runoob.com/cprogramming/</a><br>C语言函数分类：<a href="http://msdn.microsoft.com/zh-cn/library/2aza74he(v=vs.110).aspx" target="_blank" rel="noopener">http://msdn.microsoft.com/zh-cn/library/2aza74he(v=vs.110).aspx</a></p>
+<h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p>WSL+ gcc</p>
+<h2 id="实验内容"><a href="#实验内容" class="headerlink" title="实验内容"></a>实验内容</h2><h3 id="把输入的结构数据保存到文件中"><a href="#把输入的结构数据保存到文件中" class="headerlink" title="把输入的结构数据保存到文件中"></a>把输入的结构数据保存到文件中</h3><h4 id="实验要求"><a href="#实验要求" class="headerlink" title="实验要求"></a>实验要求</h4><p>循环输入员工(Person)的信息，每输入一个员工的信息，立即写入文件(Persons.stru)，直到输入的姓名为exit时跳出循环。<br>Person的信息表示：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Person</span> &#123;</span></span><br><span class="line">   <span class="keyword">char</span> username[USER_NAME_LEN];      <span class="comment">// 员工名</span></span><br><span class="line">   <span class="keyword">int</span> level;                         <span class="comment">// 工资级别</span></span><br><span class="line">   <span class="keyword">char</span> email[EMAIL_LEN];             <span class="comment">// email地址</span></span><br><span class="line">   DWORD sendtime;                    <span class="comment">// 发送时间</span></span><br><span class="line">   <span class="keyword">time_t</span> regtime;                    <span class="comment">// 注册时间</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="完成后截屏运行结果"><a href="#完成后截屏运行结果" class="headerlink" title="完成后截屏运行结果"></a>完成后截屏运行结果</h4><p><img src="https://i.loli.net/2020/06/13/kaM6TqbwDrl2i8K.png" alt="image.png"></p>
+<h4 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> USER_NAME_LEN 100</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> EMAIL_LEN 100</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUF_LEN 100</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TIME_BUF_LEN 100</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> PERSON_BUF_LEN 300</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Person</span>&#123;</span></span><br><span class="line">  <span class="keyword">char</span> userName[USER_NAME_LEN];</span><br><span class="line">  <span class="keyword">int</span> level;</span><br><span class="line">  <span class="keyword">char</span> email[EMAIL_LEN];</span><br><span class="line">  <span class="keyword">long</span> <span class="keyword">long</span> sendtime;</span><br><span class="line">  <span class="keyword">time_t</span> regtime;</span><br><span class="line">&#125;person;</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> text_buf[BUF_LEN];</span><br><span class="line"><span class="keyword">int</span> level_buf;</span><br><span class="line"><span class="keyword">char</span> pts[TIME_BUF_LEN];</span><br><span class="line"><span class="keyword">time_t</span> now;</span><br><span class="line"><span class="keyword">char</span> person_buf[PERSON_BUF_LEN];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  FILE* file=fopen(<span class="string">"Person.txt"</span>,<span class="string">"wb"</span>);</span><br><span class="line">  <span class="keyword">if</span>(file==<span class="literal">NULL</span>)&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"File open error!\n"</span>);</span><br><span class="line">    <span class="built_in">abort</span>();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"name:"</span>);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%s"</span>,text_buf);</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">strcmp</span>(<span class="string">"exit"</span>,text_buf)==<span class="number">0</span>)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"Exit input!\n"</span>);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">strncpy</span>(person.userName,text_buf,USER_NAME_LEN);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"level:"</span>);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;level_buf);</span><br><span class="line">    person.level=level_buf;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"email:"</span>);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%s"</span>,text_buf);</span><br><span class="line">    <span class="built_in">strncpy</span>(person.email,text_buf,EMAIL_LEN);</span><br><span class="line">    time(&amp;now);</span><br><span class="line">    person.sendtime=(<span class="keyword">long</span> <span class="keyword">long</span>)now;</span><br><span class="line">    person.regtime=now;</span><br><span class="line">    <span class="built_in">memcpy</span>(person_buf,&amp;person,<span class="keyword">sizeof</span>(struct Person));</span><br><span class="line">    <span class="keyword">if</span>(fwrite(person_buf,PERSON_BUF_LEN,<span class="number">1</span>,file)!=<span class="number">1</span>)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"Write file error!\n"</span>);</span><br><span class="line">      <span class="built_in">abort</span>();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  fclose(file);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="从文件读出结构数据并显示出来"><a href="#从文件读出结构数据并显示出来" class="headerlink" title="从文件读出结构数据并显示出来"></a>从文件读出结构数据并显示出来</h3><h4 id="完成后截屏运行结果-1"><a href="#完成后截屏运行结果-1" class="headerlink" title="完成后截屏运行结果"></a>完成后截屏运行结果</h4><p><img src="https://i.loli.net/2020/06/13/FNUq791M6cytlPu.png" alt="image.png"></p>
+<h4 id="源代码-1"><a href="#源代码-1" class="headerlink" title="源代码"></a>源代码</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> USER_NAME_LEN 100</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> EMAIL_LEN 100</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUF_LEN 100</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> PERSON_BUF_LEN 300</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Person</span>&#123;</span></span><br><span class="line">  <span class="keyword">char</span> userName[USER_NAME_LEN];</span><br><span class="line">  <span class="keyword">int</span> level;</span><br><span class="line">  <span class="keyword">char</span> email[EMAIL_LEN];</span><br><span class="line">  <span class="keyword">long</span> <span class="keyword">long</span> sendtime;</span><br><span class="line">  <span class="keyword">time_t</span> regtime;</span><br><span class="line">&#125;person;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> person_buf[PERSON_BUF_LEN];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">  FILE* file2=fopen(<span class="string">"Person.txt"</span>,<span class="string">"rb"</span>);</span><br><span class="line">  <span class="keyword">while</span>(fread(person_buf,PERSON_BUF_LEN,<span class="number">1</span>,file2)!=<span class="number">0</span>)&#123;</span><br><span class="line"><span class="comment">//    printf("%s",person_buf);</span></span><br><span class="line">    <span class="built_in">memcpy</span>(&amp;person,person_buf,PERSON_BUF_LEN);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"姓名:%s  级别:%d  电子邮件:%s  发送时间%s  注册时间%s\n"</span>,person.userName,person.level,person.email,ctime(&amp;person.sendtime),ctime(&amp;person.regtime));</span><br><span class="line">  &#125;</span><br><span class="line">  fclose(file2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="打包文件-FilePack-c"><a href="#打包文件-FilePack-c" class="headerlink" title="打包文件 (FilePack.c)"></a>打包文件 (FilePack.c)</h3><h4 id="实验要求-1"><a href="#实验要求-1" class="headerlink" title="实验要求"></a>实验要求</h4><p>(1) 先输入打包文件名（含路径）；<br>(2) 循环输入要打包的文件名（含路径），每输入一个，就把该文件的文件名（最多300字节）、文件大小(long)和文件内容写入文件FileSet.pak中，当输入文件名为exit时跳出循环。<br>当前文件夹下有FilePack和FilePack.c等多个文件<br><img src="https://i.loli.net/2020/06/13/GM4pROQSgc5djvn.png" alt="image.png"></p>
+<h4 id="运行程序"><a href="#运行程序" class="headerlink" title="运行程序"></a>运行程序</h4><p><img src="https://i.loli.net/2020/06/13/EtCqsHoPmU91iyQ.png" alt="image.png"><br>生成的dest文件：<br><img src="https://i.loli.net/2020/06/13/owWin5OECPtcKRq.png" alt="image.png"></p>
+<h4 id="源代码-2"><a href="#源代码-2" class="headerlink" title="源代码"></a>源代码</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUF_LEN 100</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> PERSON_BUF_LEN 300</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FILE_NAME_LEN 300</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">FileStruct</span> &#123;</span></span><br><span class="line">  <span class="keyword">char</span> fileName[<span class="number">300</span>];</span><br><span class="line">  <span class="keyword">long</span> <span class="keyword">long</span> fileSize;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">long</span> <span class="keyword">long</span> <span class="title">getFileSize</span><span class="params">(<span class="keyword">char</span> * fileName)</span></span>&#123;</span><br><span class="line">  FILE* fp=fopen(fileName,<span class="string">"r"</span>);</span><br><span class="line">  fseek(fp, <span class="number">0</span>, SEEK_END);</span><br><span class="line">  <span class="keyword">size_t</span> <span class="built_in">size</span> = ftell(fp);</span><br><span class="line">  fclose(fp);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">size</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">char</span> * <span class="title">getFileName</span><span class="params">(<span class="keyword">char</span> *pathName)</span></span>&#123;</span><br><span class="line">  <span class="keyword">while</span>(*pathName!=<span class="string">'\0'</span>)pathName++;</span><br><span class="line">  <span class="keyword">while</span>(*pathName!=<span class="string">'/'</span>)pathName--;</span><br><span class="line">  <span class="keyword">return</span> pathName+<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> text_buf[BUF_LEN];</span><br><span class="line"><span class="keyword">time_t</span> now;</span><br><span class="line"><span class="keyword">char</span> person_buf[PERSON_BUF_LEN];</span><br><span class="line"><span class="keyword">char</span> file_NAME[FILE_NAME_LEN];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"输入要目标文件名（含路径）："</span>);</span><br><span class="line">  <span class="built_in">scanf</span>(<span class="string">"%s"</span>,text_buf);</span><br><span class="line">  FILE* file3=fopen(text_buf,<span class="string">"wb"</span>);</span><br><span class="line">  <span class="keyword">int</span> now=<span class="number">0</span>;</span><br><span class="line">  <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">    now++;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"输入要打包的#%d文件（含路径）："</span>,now);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%s"</span>,text_buf);</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">strcmp</span>(text_buf,<span class="string">"exit"</span>)==<span class="number">0</span>)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"打包结束！\n"</span>);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">FileStruct</span> <span class="title">f</span>;</span></span><br><span class="line">    f.fileSize=getFileSize(text_buf);</span><br><span class="line">    <span class="built_in">strcpy</span>(f.fileName,getFileName(text_buf));</span><br><span class="line">    <span class="keyword">int</span> a=fwrite(&amp;f,<span class="keyword">sizeof</span>(struct FileStruct),<span class="number">1</span>,file3);</span><br><span class="line">    FILE* tem_file=fopen(text_buf,<span class="string">"r"</span>);</span><br><span class="line">    <span class="keyword">char</span>* content=(<span class="keyword">char</span>*)<span class="built_in">malloc</span>(f.fileSize);</span><br><span class="line">    fread(content,f.fileSize,<span class="number">1</span>,tem_file);</span><br><span class="line">    fclose(tem_file);</span><br><span class="line">    fwrite(content,f.fileSize,<span class="number">1</span>,file3);</span><br><span class="line">  &#125;</span><br><span class="line">  fclose(file3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="解包文件-FileUnpack-c"><a href="#解包文件-FileUnpack-c" class="headerlink" title="解包文件 (FileUnpack.c)"></a>解包文件 (FileUnpack.c)</h3><h4 id="实验要求-2"><a href="#实验要求-2" class="headerlink" title="实验要求"></a>实验要求</h4><p>(1)输入解包路径<br>(2)输入打包文件名，然后解包其中每一个文件,有重名文件时文件名加上序号（从2开始）。</p>
+<p>先把几个文件打包进dest文件中，然后解包.</p>
+<p>运行结果：<br><img src="https://i.loli.net/2020/06/13/UCjz28hKyHmlagR.png" alt="image.png"><br>new文件夹的内容变为：<br><img src="https://i.loli.net/2020/06/13/PEgrhOMU2NFCVBu.png" alt="image.png"></p>
+<p>五个文件均可打开，显示内容正常，字节数与源文件相同：<br><img src="https://i.loli.net/2020/06/13/spHRybxaojB6feG.png" alt="image.png"></p>
+<h4 id="源代码-3"><a href="#源代码-3" class="headerlink" title="源代码"></a>源代码</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUF_LEN 100</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> PERSON_BUF_LEN 300</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FILE_NAME_LEN 300</span></span><br><span class="line"><span class="comment">//#define FILE_CONTENT_LEN 100000</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">FileStruct</span> &#123;</span></span><br><span class="line">  <span class="keyword">char</span> fileName[<span class="number">300</span>];</span><br><span class="line">  <span class="keyword">long</span> <span class="keyword">long</span> fileSize;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">long</span> <span class="keyword">long</span> <span class="title">getFileSize</span><span class="params">(<span class="keyword">char</span> * fileName)</span></span>&#123;</span><br><span class="line">  FILE* fp=fopen(fileName,<span class="string">"r"</span>);</span><br><span class="line">  fseek(fp, <span class="number">0</span>, SEEK_END);</span><br><span class="line">  <span class="keyword">size_t</span> <span class="built_in">size</span> = ftell(fp);</span><br><span class="line">  fclose(fp);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">size</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">char</span> * <span class="title">getFileName</span><span class="params">(<span class="keyword">char</span> *pathName)</span></span>&#123;</span><br><span class="line">  <span class="keyword">while</span>(*pathName!=<span class="string">'\0'</span>)pathName++;</span><br><span class="line">  <span class="keyword">while</span>(*pathName!=<span class="string">'/'</span>)pathName--;</span><br><span class="line">  <span class="keyword">return</span> pathName+<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Unpack</span><span class="params">(struct FileStruct* fileStruct,<span class="keyword">char</span>* file_content,<span class="keyword">char</span>* folder_name)</span></span>&#123;</span><br><span class="line">  <span class="keyword">char</span>* Full_name[FILE_NAME_LEN];</span><br><span class="line">  <span class="built_in">sprintf</span>(Full_name,<span class="string">"%s/%s"</span>,folder_name,fileStruct-&gt;fileName);</span><br><span class="line"><span class="comment">//  printf("%s\n",Full_name);</span></span><br><span class="line">  FILE* file=fopen(Full_name,<span class="string">"wb"</span>);</span><br><span class="line">  fwrite(file_content,<span class="keyword">sizeof</span>(<span class="keyword">char</span>),fileStruct-&gt;fileSize,file);</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add_suffix</span><span class="params">(<span class="keyword">char</span>* new_filename,<span class="keyword">int</span> occur_time,<span class="keyword">char</span>* old_filename)</span></span>&#123;</span><br><span class="line">  <span class="keyword">char</span>* tem=old_filename;</span><br><span class="line">  <span class="keyword">while</span>(*tem!=<span class="string">'\0'</span>)tem++;</span><br><span class="line">  <span class="keyword">while</span>(*tem!=<span class="string">'.'</span>&amp;&amp;tem!=old_filename)tem--;</span><br><span class="line">  <span class="keyword">if</span>(tem!=old_filename)&#123;</span><br><span class="line">    *tem=<span class="string">'\0'</span>;</span><br><span class="line">    <span class="built_in">sprintf</span>(new_filename,<span class="string">"%s(%d).%s"</span>,old_filename,occur_time,tem+<span class="number">1</span>);</span><br><span class="line">    *tem=<span class="string">'.'</span>;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="built_in">sprintf</span>(new_filename,<span class="string">"%s(%d)"</span>,old_filename,occur_time);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> text_buf[BUF_LEN];</span><br><span class="line"><span class="keyword">char</span> person_buf[PERSON_BUF_LEN];</span><br><span class="line"><span class="keyword">char</span> file_NAME[FILE_NAME_LEN];</span><br><span class="line"><span class="keyword">char</span> dest_folder[FILE_NAME_LEN];</span><br><span class="line"><span class="keyword">char</span>* file_content;</span><br><span class="line"><span class="keyword">char</span> file_names[BUF_LEN][FILE_NAME_LEN];</span><br><span class="line"><span class="keyword">int</span> occur_times[BUF_LEN];</span><br><span class="line"><span class="keyword">int</span> file_name_count=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"输入要目标文件夹："</span>);</span><br><span class="line">  <span class="built_in">scanf</span>(<span class="string">"%s"</span>,dest_folder);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"输入要解压的文件："</span>);</span><br><span class="line">  <span class="built_in">scanf</span>(<span class="string">"%s"</span>,file_NAME);</span><br><span class="line">  FILE* f=fopen(file_NAME,<span class="string">"rb"</span>);</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">FileStruct</span> <span class="title">fileStruct</span>;</span></span><br><span class="line">  <span class="keyword">while</span>(fread(&amp;fileStruct,<span class="keyword">sizeof</span>(struct FileStruct),<span class="number">1</span>,f)!=<span class="number">0</span>)&#123;</span><br><span class="line">    file_content=(<span class="keyword">char</span>*)<span class="built_in">malloc</span>(fileStruct.fileSize);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d"</span>,fileStruct.fileSize);</span><br><span class="line">    fread(file_content,<span class="keyword">sizeof</span>(<span class="keyword">char</span>),fileStruct.fileSize,f);</span><br><span class="line">    <span class="keyword">int</span> ok=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;file_name_count;i++)&#123;</span><br><span class="line">      <span class="keyword">if</span>(<span class="built_in">strcmp</span>(file_names[i],fileStruct.fileName)==<span class="number">0</span>)&#123;</span><br><span class="line">        occur_times[i]++;</span><br><span class="line">        <span class="keyword">int</span> occur_time=occur_times[i];</span><br><span class="line">        add_suffix(file_NAME,occur_time,fileStruct.fileName);</span><br><span class="line">        <span class="built_in">strcpy</span>(fileStruct.fileName,file_NAME);</span><br><span class="line">        ok=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(ok==<span class="number">0</span>)&#123;</span><br><span class="line">      <span class="built_in">strcpy</span>(file_names[file_name_count],fileStruct.fileName);</span><br><span class="line">      occur_times[file_name_count++]++;</span><br><span class="line">    &#125;</span><br><span class="line">    Unpack(&amp;fileStruct,file_content,dest_folder);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="与同学互测并截屏运行结果"><a href="#与同学互测并截屏运行结果" class="headerlink" title="与同学互测并截屏运行结果"></a>与同学互测并截屏运行结果</h3><p>对同学发过来的这个文件进行解包：<br><img src="https://i.loli.net/2020/06/13/v39SGnLaDsRVrKZ.png" alt="image.png"><br>解包正常：<br><img src="https://i.loli.net/2020/06/13/lQrjKA6Xvik7PIe.png" alt="image.png"><br><img src="https://i.loli.net/2020/06/13/PgRAF8jXKC1qyBM.png" alt="image.png"><br>把我的dest文件发给同学后，解包结果如下：<br><img src="https://i.loli.net/2020/06/13/Az5Zb1d6rvpytV4.png" alt="image.png"><br>结果正常，证明不同操作系统的打包文件也可以被互相解包。</p>
+<h3 id="实验体会"><a href="#实验体会" class="headerlink" title="实验体会"></a>实验体会</h3><p>这次实验算很简单了，并没有用到计算机网络中的什么知识，唯一比较难的是对文件的读写操作，通过查阅资料也能解决。借着这次实验复习了一下c语言中的各种基础知识，也算是一个不错的收获吧。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AE%9E%E9%AA%8C%E4%B8%89_%E5%BA%94%E7%94%A8%E5%B1%82%E5%AE%9E%E9%AA%8C/" rel="prev" title="计算机网络实验三_应用层实验">
+      <i class="fa fa-chevron-left"></i> 计算机网络实验三_应用层实验
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E5%9B%9B_%E4%B8%AD%E6%96%AD%E6%8E%A7%E5%88%B6/" rel="next" title="操作系统实验四_中断控制">
+      操作系统实验四_中断控制 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文件打包实验"><span class="nav-number">1.</span> <span class="nav-text">文件打包实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实验目的"><span class="nav-number">1.1.</span> <span class="nav-text">实验目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">1.2.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验环境"><span class="nav-number">1.3.</span> <span class="nav-text">实验环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验内容"><span class="nav-number">1.4.</span> <span class="nav-text">实验内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#把输入的结构数据保存到文件中"><span class="nav-number">1.4.1.</span> <span class="nav-text">把输入的结构数据保存到文件中</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实验要求"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">实验要求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#完成后截屏运行结果"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">完成后截屏运行结果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#源代码"><span class="nav-number">1.4.1.3.</span> <span class="nav-text">源代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从文件读出结构数据并显示出来"><span class="nav-number">1.4.2.</span> <span class="nav-text">从文件读出结构数据并显示出来</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#完成后截屏运行结果-1"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">完成后截屏运行结果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#源代码-1"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">源代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#打包文件-FilePack-c"><span class="nav-number">1.4.3.</span> <span class="nav-text">打包文件 (FilePack.c)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实验要求-1"><span class="nav-number">1.4.3.1.</span> <span class="nav-text">实验要求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行程序"><span class="nav-number">1.4.3.2.</span> <span class="nav-text">运行程序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#源代码-2"><span class="nav-number">1.4.3.3.</span> <span class="nav-text">源代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解包文件-FileUnpack-c"><span class="nav-number">1.4.4.</span> <span class="nav-text">解包文件 (FileUnpack.c)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实验要求-2"><span class="nav-number">1.4.4.1.</span> <span class="nav-text">实验要求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#源代码-3"><span class="nav-number">1.4.4.2.</span> <span class="nav-text">源代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#与同学互测并截屏运行结果"><span class="nav-number">1.4.5.</span> <span class="nav-text">与同学互测并截屏运行结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验体会"><span class="nav-number">1.4.6.</span> <span class="nav-text">实验体会</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">reeeeeeeeeein</p>
+  <div class="site-description" itemprop="description">SYSU 计算机专业大二在读</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">reeeeeeeeeein</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>

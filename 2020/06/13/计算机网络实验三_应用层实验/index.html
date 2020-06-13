@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="应用层实验实验目的掌握应用层的基本工作原理和实现方法 实验工具telnet，WSL 实验内容HTTP协议的实验从学校网站（www.sysu.edu.cn）找一个网页下载http请求： 123GET &#x2F;2012&#x2F;cn&#x2F;index.htm HTTP&#x2F;1.1Connection: keep-aliveHost: www.sysu.edu.cn  12GET &#x2F;2012&#x2F;cn&#x2F;index.htm HTTP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络实验三_应用层实验">
+<meta property="og:url" content="http://yoursite.com/2020/06/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AE%9E%E9%AA%8C%E4%B8%89_%E5%BA%94%E7%94%A8%E5%B1%82%E5%AE%9E%E9%AA%8C/index.html">
+<meta property="og:site_name" content="reeeeeeeeeein的博客">
+<meta property="og:description" content="应用层实验实验目的掌握应用层的基本工作原理和实现方法 实验工具telnet，WSL 实验内容HTTP协议的实验从学校网站（www.sysu.edu.cn）找一个网页下载http请求： 123GET &#x2F;2012&#x2F;cn&#x2F;index.htm HTTP&#x2F;1.1Connection: keep-aliveHost: www.sysu.edu.cn  12GET &#x2F;2012&#x2F;cn&#x2F;index.htm HTTP">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/fc8tQs7VDFN2Azb.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/xadvFyCmpj5ZQ1U.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/FZI987nMwqS1kly.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/9HFT6bqkSwU2ZJX.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/zgjC4bKplyZfP8d.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/rqLnHle6ON9vahC.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/PWFYa3yUe6iAsIp.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/qo5dxYUXb14OncS.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/NlTCaqWweoUxYP9.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/6cigMTpH9Yf8ZGz.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/mpTiJE269bklfB3.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/1HvXrUNtFSlw5kn.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/FuVImgrxpcSaWRn.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/DrEndlhq8gpuxKm.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/U4q9VatxmWEXpZR.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/Y96GhpoX2aHBTkC.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/n7pk4x8IoPFDuq2.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/CB4MkDntdXWKo1w.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/VjeiDKMav8R4nqU.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/BZvNxW2V8JLkMeg.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/a6LcYAVPBD28zm1.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/rQmARxzFNJK1sPn.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/RvhTS1JioGKjP9w.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/F4IDPiYUErxkmJy.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/UwXPdqLKjSC2nhR.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/WALJP5sdqBV6UGN.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/PaQbJpXNz4CHEqF.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/TBsv5m1RZiCpVO9.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/krUMFTZn6vVHDez.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/13/ujNOFE6DytKpcZz.png">
+<meta property="article:published_time" content="2020-06-13T09:59:15.348Z">
+<meta property="article:modified_time" content="2020-06-13T09:59:15.348Z">
+<meta property="article:author" content="reeeeeeeeeein">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/12/fc8tQs7VDFN2Azb.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/06/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AE%9E%E9%AA%8C%E4%B8%89_%E5%BA%94%E7%94%A8%E5%B1%82%E5%AE%9E%E9%AA%8C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>计算机网络实验三_应用层实验 | reeeeeeeeeein的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+<div class="bg_content">
+<canvas id="canvas"></canvas>
+</div>
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">reeeeeeeeeein的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AE%9E%E9%AA%8C%E4%B8%89_%E5%BA%94%E7%94%A8%E5%B1%82%E5%AE%9E%E9%AA%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机网络实验三_应用层实验
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-13 17:59:15" itemprop="dateCreated datePublished" datetime="2020-06-13T17:59:15+08:00">2020-06-13</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="应用层实验"><a href="#应用层实验" class="headerlink" title="应用层实验"></a>应用层实验</h1><h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><p>掌握应用层的基本工作原理和实现方法</p>
+<h2 id="实验工具"><a href="#实验工具" class="headerlink" title="实验工具"></a>实验工具</h2><p>telnet，WSL</p>
+<h2 id="实验内容"><a href="#实验内容" class="headerlink" title="实验内容"></a>实验内容</h2><h3 id="HTTP协议的实验"><a href="#HTTP协议的实验" class="headerlink" title="HTTP协议的实验"></a>HTTP协议的实验</h3><h4 id="从学校网站（www-sysu-edu-cn）找一个网页下载"><a href="#从学校网站（www-sysu-edu-cn）找一个网页下载" class="headerlink" title="从学校网站（www.sysu.edu.cn）找一个网页下载"></a>从学校网站（<a href="http://www.sysu.edu.cn）找一个网页下载" target="_blank" rel="noopener">www.sysu.edu.cn）找一个网页下载</a></h4><p>http请求：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/2012/cn/index.htm</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Connection</span>: keep-alive</span><br><span class="line"><span class="attribute">Host</span>: www.sysu.edu.cn</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/2012/cn/index.htm</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: www.sysu.edu.cn</span><br></pre></td></tr></table></figure>
+
+<p>http响应：</p>
+<p><img src="https://i.loli.net/2020/06/12/fc8tQs7VDFN2Azb.png" alt="image.png"></p>
+<h4 id="从学校网站（www-sysu-edu-cn）找一个图片下载"><a href="#从学校网站（www-sysu-edu-cn）找一个图片下载" class="headerlink" title="从学校网站（www.sysu.edu.cn）找一个图片下载"></a>从学校网站（<a href="http://www.sysu.edu.cn）找一个图片下载" target="_blank" rel="noopener">www.sysu.edu.cn）找一个图片下载</a></h4><p>http请求：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/2012/images/content/2020-02/20200202145357635528.jpg</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: www.sysu.edu.cn</span><br></pre></td></tr></table></figure>
+
+<p>http响应：<br><img src="https://i.loli.net/2020/06/12/xadvFyCmpj5ZQ1U.png" alt="image.png"></p>
+<h4 id="在http请求的头部行中加入If-Modified-Since-Sat-16-May-2020-14-57-17-GMT从学校网站下载-2-的图片"><a href="#在http请求的头部行中加入If-Modified-Since-Sat-16-May-2020-14-57-17-GMT从学校网站下载-2-的图片" class="headerlink" title="在http请求的头部行中加入If-Modified-Since: Sat, 16 May 2020 14:57:17 GMT从学校网站下载(2)的图片"></a>在http请求的头部行中加入If-Modified-Since: Sat, 16 May 2020 14:57:17 GMT从学校网站下载(2)的图片</h4><p>http请求：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/2012/images/content/2020-02/20200202145357635528.jpg</span> HTTP/1.1</span><br><span class="line"><span class="attribute">If-Modified-Since</span>: Sat, 16 May 2020 14:57:17 GMT</span><br><span class="line"><span class="attribute">Host</span>: www.sysu.edu.cn</span><br></pre></td></tr></table></figure>
+
+<p>http响应：<br><img src="https://i.loli.net/2020/06/12/FZI987nMwqS1kly.png" alt="image.png"><br>没有修改</p>
+<h4 id="用流水线方式实现前面（1）（2），即把它们的请求拷贝到一起后发送出去（可能太长，第一部分可以只有看到末尾）。注意：connection都要是keep-alive"><a href="#用流水线方式实现前面（1）（2），即把它们的请求拷贝到一起后发送出去（可能太长，第一部分可以只有看到末尾）。注意：connection都要是keep-alive" class="headerlink" title="用流水线方式实现前面（1）（2），即把它们的请求拷贝到一起后发送出去（可能太长，第一部分可以只有看到末尾）。注意：connection都要是keep-alive"></a>用流水线方式实现前面（1）（2），即把它们的请求拷贝到一起后发送出去（可能太长，第一部分可以只有看到末尾）。注意：connection都要是keep-alive</h4><p>http请求：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/2012/cn/index.htm</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Connection</span>: keep-alive</span><br><span class="line"><span class="attribute">Host</span>: www.sysu.edu.cn</span><br><span class="line"></span><br><span class="line"><span class="keyword">GET</span> <span class="string">/2012/images/content/2020-02/20200202145357635528.jpg</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Connection</span>: keep-alive</span><br><span class="line"><span class="attribute">Host</span>: www.sysu.edu.cn</span><br></pre></td></tr></table></figure>
+
+<p>http响应：</p>
+<p><img src="https://i.loli.net/2020/06/12/9HFT6bqkSwU2ZJX.png" alt="image.png"><br><img src="https://i.loli.net/2020/06/12/zgjC4bKplyZfP8d.png" alt="image.png"></p>
+<h4 id="用（1）的地址取回网页的一部分-100-200-400"><a href="#用（1）的地址取回网页的一部分-100-200-400" class="headerlink" title="用（1）的地址取回网页的一部分(100-200,400-)"></a>用（1）的地址取回网页的一部分(100-200,400-)</h4><p>http请求：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/2012/cn/index.htm</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Connection</span>: keep-alive</span><br><span class="line">Range:bytes=100-200,400-</span><br><span class="line"><span class="attribute">Host</span>: www.sysu.edu.cn</span><br></pre></td></tr></table></figure>
+
+<p>http响应：<br><img src="https://i.loli.net/2020/06/12/rqLnHle6ON9vahC.png" alt="image.png"></p>
+<h3 id="FTP协议的实验"><a href="#FTP协议的实验" class="headerlink" title="FTP协议的实验"></a>FTP协议的实验</h3><p>FTP服务器：IP地址为103.26.79.35，端口号为 21 （用户名：net，密码：123456）</p>
+<h4 id="上传用学号命名的一个文本文件-学号-txt"><a href="#上传用学号命名的一个文本文件-学号-txt" class="headerlink" title="上传用学号命名的一个文本文件(学号.txt)"></a>上传用学号命名的一个文本文件(学号.txt)</h4><p>控制连接的请求响应信息：<br><img src="https://i.loli.net/2020/06/12/PWFYa3yUe6iAsIp.png" alt="image.png"></p>
+<p>数据连接的截屏：<br><img src="https://i.loli.net/2020/06/12/qo5dxYUXb14OncS.png" alt="image.png"></p>
+<h4 id="查看当前目录内容-太多则选择一些-，并标注出-1-中自己上传的文件"><a href="#查看当前目录内容-太多则选择一些-，并标注出-1-中自己上传的文件" class="headerlink" title="查看当前目录内容(太多则选择一些)，并标注出(1)中自己上传的文件"></a>查看当前目录内容(太多则选择一些)，并标注出(1)中自己上传的文件</h4><p>控制连接的请求响应信息：<br><img src="https://i.loli.net/2020/06/12/NlTCaqWweoUxYP9.png" alt="image.png"><br>数据连接的截屏：<br><img src="https://i.loli.net/2020/06/12/6cigMTpH9Yf8ZGz.png" alt="image.png"></p>
+<h4 id="下载-1-中自己上传的文本文件"><a href="#下载-1-中自己上传的文本文件" class="headerlink" title="下载(1)中自己上传的文本文件"></a>下载(1)中自己上传的文本文件</h4><p>控制连接的请求响应信息：<br><img src="https://i.loli.net/2020/06/12/mpTiJE269bklfB3.png" alt="image.png"><br>数据连接的截屏：<br><img src="https://i.loli.net/2020/06/12/1HvXrUNtFSlw5kn.png" alt="image.png"></p>
+<h4 id="下载-ebook下的一个二进制文件-例如，-pdf文件"><a href="#下载-ebook下的一个二进制文件-例如，-pdf文件" class="headerlink" title="下载/ebook下的一个二进制文件(例如，.pdf文件)"></a>下载/ebook下的一个二进制文件(例如，.pdf文件)</h4><p>控制连接的请求响应信息：<br><img src="https://i.loli.net/2020/06/12/FuVImgrxpcSaWRn.png" alt="image.png"><br>数据连接的截屏：<br><img src="https://i.loli.net/2020/06/12/DrEndlhq8gpuxKm.png" alt="image.png"></p>
+<h4 id="采用断点续传下载一个-text下的一个文本文件的一部分"><a href="#采用断点续传下载一个-text下的一个文本文件的一部分" class="headerlink" title="采用断点续传下载一个/text下的一个文本文件的一部分"></a>采用断点续传下载一个/text下的一个文本文件的一部分</h4><p>控制连接的请求响应信息：<br><img src="https://i.loli.net/2020/06/12/U4q9VatxmWEXpZR.png" alt="image.png"><br>数据连接的截屏：<br><img src="https://i.loli.net/2020/06/12/Y96GhpoX2aHBTkC.png" alt="image.png"></p>
+<h4 id="分两次上传一个文本文件-（使用APPE命令）"><a href="#分两次上传一个文本文件-（使用APPE命令）" class="headerlink" title="分两次上传一个文本文件 （使用APPE命令）"></a>分两次上传一个文本文件 （使用APPE命令）</h4><p>控制连接的请求响应信息：<br><img src="https://i.loli.net/2020/06/12/n7pk4x8IoPFDuq2.png" alt="image.png"></p>
+<p>第一次数据连接的截屏<br> <img src="https://i.loli.net/2020/06/12/CB4MkDntdXWKo1w.png" alt="image.png"><br>第一次ftp目录的截屏（包含上传文件）：<br> <img src="https://i.loli.net/2020/06/12/VjeiDKMav8R4nqU.png" alt="image.png"><br>第二次数据连接的截屏<br> <img src="https://i.loli.net/2020/06/12/BZvNxW2V8JLkMeg.png" alt="image.png"><br>第二次ftp目录的截屏（包含上传文件）：<br> <img src="https://i.loli.net/2020/06/12/a6LcYAVPBD28zm1.png" alt="image.png"><br>修改时间改变了。</p>
+<h3 id="SMTP协议的实验"><a href="#SMTP协议的实验" class="headerlink" title="SMTP协议的实验"></a>SMTP协议的实验</h3><h4 id="通过我的QQ邮箱发一封没有附件的邮件到我的中大邮箱"><a href="#通过我的QQ邮箱发一封没有附件的邮件到我的中大邮箱" class="headerlink" title="通过我的QQ邮箱发一封没有附件的邮件到我的中大邮箱"></a>通过我的QQ邮箱发一封没有附件的邮件到我的中大邮箱</h4><p>请求和响应信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">HELO 1347453756</span><br><span class="line">AUTH LOGIN</span><br><span class="line">*******</span><br><span class="line">*******</span><br><span class="line">MAIL FROM:&lt;1347453756@qq.com&gt;</span><br><span class="line">RCPT TO:&lt;zhangjr35@mail2.sysu.edu.cn&gt;</span><br><span class="line">data</span><br><span class="line">Date:Sat, 16 May 2020 21:52:50 +0800</span><br><span class="line">From: &quot;1347453756&quot; &lt;1347453756@qq.com&gt;</span><br><span class="line">To: &quot;zhangjr35&quot;&lt;zhangjr35@sysu.edu.cn&gt;</span><br><span class="line">Subject: I am zjr</span><br><span class="line">This a mail from zjr to zjr</span><br><span class="line">.</span><br><span class="line">QUIT</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/06/12/rQmARxzFNJK1sPn.png" alt="image.png"><br>打开中大邮箱，发现确实可以收到：<br><img src="https://i.loli.net/2020/06/12/RvhTS1JioGKjP9w.png" alt="image.png"></p>
+<h4 id="通过我的QQ邮箱发一封带附件-二进制文件-的邮件-MIME-txt-到我的中大邮箱"><a href="#通过我的QQ邮箱发一封带附件-二进制文件-的邮件-MIME-txt-到我的中大邮箱" class="headerlink" title="通过我的QQ邮箱发一封带附件(二进制文件)的邮件(MIME.txt)到我的中大邮箱"></a>通过我的QQ邮箱发一封带附件(二进制文件)的邮件(MIME.txt)到我的中大邮箱</h4><p>请求和响应信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">HELO 1347453756</span><br><span class="line">AUTH LOGIN</span><br><span class="line">******</span><br><span class="line">******</span><br><span class="line">MAIL FROM:&lt;1347453756@qq.com&gt;</span><br><span class="line">RCPT TO:&lt;zhangjr35@mail2.sysu.edu.cn&gt;</span><br></pre></td></tr></table></figure>
+
+<p>邮件内容:<br><img src="https://i.loli.net/2020/06/13/F4IDPiYUErxkmJy.png" alt="image.png"><br>收到结果：<br><img src="https://i.loli.net/2020/06/13/UwXPdqLKjSC2nhR.png" alt="image.png"></p>
+<h4 id="通过中大邮箱发送另一个带附件的邮件给QQ邮箱。可以先给你自己发一封带附件的邮件-再通过查看源码截取该响应报文的一部分，参见MIME-txt"><a href="#通过中大邮箱发送另一个带附件的邮件给QQ邮箱。可以先给你自己发一封带附件的邮件-再通过查看源码截取该响应报文的一部分，参见MIME-txt" class="headerlink" title="通过中大邮箱发送另一个带附件的邮件给QQ邮箱。可以先给你自己发一封带附件的邮件,再通过查看源码截取该响应报文的一部分，参见MIME.txt"></a>通过中大邮箱发送另一个带附件的邮件给QQ邮箱。可以先给你自己发一封带附件的邮件,再通过查看源码截取该响应报文的一部分，参见MIME.txt</h4><p>找了半天也没有找到查看源码的地方在哪。。。。。。只能放弃了。</p>
+<h4 id="从你的邮箱发一份邮件到同学的邮箱"><a href="#从你的邮箱发一份邮件到同学的邮箱" class="headerlink" title="从你的邮箱发一份邮件到同学的邮箱"></a>从你的邮箱发一份邮件到同学的邮箱</h4><p>请求和响应信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">HELO 1347453756</span><br><span class="line">AUTH LOGIN</span><br><span class="line">******</span><br><span class="line">******</span><br><span class="line">MAIL FROM:&lt;1347453756@qq.com&gt;</span><br><span class="line">RCPT TO:zhanghb55@mail2.sysu.edu.cn</span><br></pre></td></tr></table></figure>
+
+<p>邮件内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">data</span><br><span class="line">Date: Thu, 17 Apr 2014 20:30:07 +0800</span><br><span class="line">From: &#x3D;?utf-8?B?zjr?&#x3D; &lt;1347453756@qq.com&gt;</span><br><span class="line">To: zhanghb55 &lt;zhanghb55@mail2.sysu.edu.cn&gt;</span><br><span class="line">Subject: hbnb</span><br><span class="line">Mime-Version: 1.0</span><br><span class="line">Content-Type: multipart&#x2F;mixed;</span><br><span class="line">  boundary&#x3D;&quot;----&#x3D;_001_NextPart061116676577_&#x3D;----&quot;</span><br><span class="line"></span><br><span class="line">This is a multi-part message in MIME format.</span><br><span class="line"></span><br><span class="line">------&#x3D;_001_NextPart061116676577_&#x3D;----</span><br><span class="line">Content-Type: multipart&#x2F;alternative;</span><br><span class="line">  boundary&#x3D;&quot;----&#x3D;_002_NextPart640832068374_&#x3D;----&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">------&#x3D;_002_NextPart640832068374_&#x3D;----</span><br><span class="line">Content-Type: text&#x2F;plain;charset&#x3D;&quot;GB2312&quot;</span><br><span class="line">Content-Transfer-Encoding: base64</span><br><span class="line"></span><br><span class="line">aGJuYmhibmI&#x3D;</span><br><span class="line"></span><br><span class="line">------&#x3D;_002_NextPart640832068374_&#x3D;------</span><br><span class="line"></span><br><span class="line">------&#x3D;_001_NextPart061116676577_&#x3D;------</span><br><span class="line">.</span><br></pre></td></tr></table></figure>
+
+<p>实验结果：<br><img src="https://i.loli.net/2020/06/13/WALJP5sdqBV6UGN.png" alt="image.png"><br>好像时间不对。。。为了避免麻烦同学就没改了。</p>
+<h3 id="POP3协议"><a href="#POP3协议" class="headerlink" title="POP3协议"></a>POP3协议</h3><h4 id="查看我的QQ邮箱中每个邮件大小"><a href="#查看我的QQ邮箱中每个邮件大小" class="headerlink" title="查看我的QQ邮箱中每个邮件大小"></a>查看我的QQ邮箱中每个邮件大小</h4><p>请求和响应信息：<br><img src="https://i.loli.net/2020/06/13/PaQbJpXNz4CHEqF.png" alt="image.png"></p>
+<h4 id="取回我的QQ邮箱的最后一封邮件的邮件唯一标识符"><a href="#取回我的QQ邮箱的最后一封邮件的邮件唯一标识符" class="headerlink" title="取回我的QQ邮箱的最后一封邮件的邮件唯一标识符"></a>取回我的QQ邮箱的最后一封邮件的邮件唯一标识符</h4><p>请求和响应信息：<br>用 UIDL 命令即可<br> <img src="https://i.loli.net/2020/06/13/TBsv5m1RZiCpVO9.png" alt="image.png"></p>
+<h4 id="取回zsureceiver5-sina-com最后一封邮件"><a href="#取回zsureceiver5-sina-com最后一封邮件" class="headerlink" title="取回zsureceiver5@sina.com最后一封邮件"></a>取回<a href="mailto:zsureceiver5@sina.com">zsureceiver5@sina.com</a>最后一封邮件</h4><p>请求和响应信息：<br>用RETR命令即可<br> <img src="https://i.loli.net/2020/06/13/krUMFTZn6vVHDez.png" alt="image.png"></p>
+<h4 id="取回三-1-中发到你邮箱的邮件"><a href="#取回三-1-中发到你邮箱的邮件" class="headerlink" title="取回三(1)中发到你邮箱的邮件"></a>取回三(1)中发到你邮箱的邮件</h4><p>请求和响应信息：<br>先用list命令看一下有多少封，取出最后一封即可。<br><img src="https://i.loli.net/2020/06/13/ujNOFE6DytKpcZz.png" alt="image.png"></p>
+<p>五、mytelent源代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* client2.c */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;netdb.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;error.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUFLEN          20000                  <span class="comment">// 缓冲区大小</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">input</span><span class="params">(<span class="keyword">char</span>* buf)</span></span>&#123;</span><br><span class="line">  fgets(buf,BUFLEN,<span class="built_in">stdin</span>);</span><br><span class="line">  <span class="keyword">int</span> len=<span class="built_in">strlen</span>(buf);</span><br><span class="line">  buf[len<span class="number">-1</span>]=<span class="string">'\r'</span>,buf[len]=<span class="string">'\n'</span>,buf[++len]=<span class="string">'\0'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">client_recv</span><span class="params">(<span class="keyword">void</span>* in)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> my_sock=(<span class="keyword">long</span>)in;</span><br><span class="line">  <span class="keyword">char</span>* buf=(<span class="keyword">char</span>*)<span class="built_in">malloc</span>((BUFLEN+<span class="number">1</span>)*<span class="keyword">sizeof</span>(<span class="keyword">char</span>));</span><br><span class="line">  <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">    <span class="keyword">int</span> c1=recv(my_sock,buf,BUFSIZ,<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span>(c1==<span class="number">0</span>)&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    buf[c1]=<span class="string">'\0'</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s\n"</span>,buf);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span>* argv[])</span></span>&#123;</span><br><span class="line">  <span class="keyword">char</span>* ptr,**pptr;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">hostent</span>* <span class="title">hptr</span>;</span></span><br><span class="line">  <span class="keyword">char</span> str[<span class="number">32</span>];</span><br><span class="line">  ptr=argv[<span class="number">1</span>];</span><br><span class="line">  <span class="keyword">if</span>((hptr=gethostbyname(ptr))==<span class="literal">NULL</span>)&#123;</span><br><span class="line">    perror(<span class="string">"gethostbyname"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  pptr=hptr-&gt;h_addr_list;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span>* host=inet_ntop(hptr-&gt;h_addrtype,*pptr,str,<span class="keyword">sizeof</span>(str));</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%s"</span>,host);</span><br><span class="line">  <span class="keyword">char</span>    *service = argv[<span class="number">2</span>];        <span class="comment">/* server port to connect       */</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">sin</span>;</span>             <span class="comment">/* an Internet endpoint address */</span></span><br><span class="line">  <span class="keyword">char</span>    buf[BUFLEN+<span class="number">1</span>];              <span class="comment">/* buffer for one line of text  */</span></span><br><span class="line">  <span class="keyword">int</span>     sock;                       <span class="comment">/* socket descriptor            */</span></span><br><span class="line">  <span class="keyword">int</span>     cc;                        <span class="comment">/* recv character count         */</span></span><br><span class="line">  <span class="keyword">pthread_t</span> thread_handle;</span><br><span class="line">  sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);    <span class="comment">//创建套接字，参数：因特网协议簇(family)，流套接字，TCP协议</span></span><br><span class="line">                                                      <span class="comment">//返回：要监听套接字的描述符或INVALID_SOCKET</span></span><br><span class="line">  <span class="built_in">memset</span>(&amp;<span class="built_in">sin</span>, <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="built_in">sin</span>));                      <span class="comment">// 从&amp;sin开始的长度为sizeof(sin)的内存清0</span></span><br><span class="line">  <span class="built_in">sin</span>.sin_family = AF_INET;                        <span class="comment">// 因特网地址簇</span></span><br><span class="line">  <span class="built_in">sin</span>.sin_addr.s_addr = inet_addr(host);</span><br><span class="line"><span class="comment">//  printf("%d\n",sin.sin_addr.s_addr);               // 设置服务器IP地址(32位)</span></span><br><span class="line">  <span class="built_in">sin</span>.sin_port = htons((<span class="keyword">unsigned</span> short)atoi(service));         <span class="comment">// 设置服务器端口号</span></span><br><span class="line">  <span class="keyword">int</span> ret=<span class="built_in">connect</span>(sock, (struct sockaddr *)&amp;<span class="built_in">sin</span>, <span class="keyword">sizeof</span>(<span class="built_in">sin</span>)); <span class="comment">// 连接到服务器，第二个参数指向存放服务器地址的结构，第三个参数为该结构的大小，返回值为0时表示无错误发生，</span></span><br><span class="line">  pthread_create(&amp;thread_handle,<span class="literal">NULL</span>,client_recv,(<span class="keyword">void</span>*)sock);</span><br><span class="line">  <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">    input(buf);</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">strcmp</span>(buf,<span class="string">"exit"</span>)==<span class="number">0</span>)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"退出成功!\n"</span>);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> c1=send(sock,buf,<span class="built_in">strlen</span>(buf),<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">close</span>(sock);                             <span class="comment">// 关闭监听套接字</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"按回车键继续..."</span>);</span><br><span class="line">  getchar();                              <span class="comment">// 等待任意按键</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="实验体会"><a href="#实验体会" class="headerlink" title="实验体会"></a>实验体会</h3><p>这次实验内容很多，我花了很长时间才完成。遇到的困难主要有:<br>1.windows系统下Telnet用不了，并不清楚为什么。折腾了一番之后只能在wsl(一个能在windows下跑的linux子系统)下用telnet。不过后来看到实验要自己写一个telnet，就又写了一个。<br>2.在写Telnet的过程中也遇到了很多问题，一个是不知道怎么把域名转为ip地址，后来在一篇博客上找到了相关的函数。第二个问题是连接网页的时候总是报 400 错误，找了半天发现是回车符的问题，把所有的\n改为\r\n后就解决了。其他的部分就简单了，我一开始以为要写很久，后来发现只要把实验二的客户端代码改一下就完成了。<br>3.对MIME格式文件不是很熟悉，看了很久才看明白（可能是上课听讲不认真）。<br>总的来说这次实验还是很有价值的，一方面锻炼了编程能力，另一方面也学到了很多应用层的相关知识，期待下一个实验的到来。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/06/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E7%9B%B8%E4%BC%BC%E5%BA%A6/" rel="prev" title="时间序列相似度">
+      <i class="fa fa-chevron-left"></i> 时间序列相似度
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AE%9E%E9%AA%8C%E5%9B%9B_%E6%96%87%E4%BB%B6%E6%89%93%E5%8C%85%E5%AE%9E%E9%AA%8C/" rel="next" title="计算机网络实验四_文件打包实验">
+      计算机网络实验四_文件打包实验 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#应用层实验"><span class="nav-number">1.</span> <span class="nav-text">应用层实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实验目的"><span class="nav-number">1.1.</span> <span class="nav-text">实验目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验工具"><span class="nav-number">1.2.</span> <span class="nav-text">实验工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验内容"><span class="nav-number">1.3.</span> <span class="nav-text">实验内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP协议的实验"><span class="nav-number">1.3.1.</span> <span class="nav-text">HTTP协议的实验</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#从学校网站（www-sysu-edu-cn）找一个网页下载"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">从学校网站（www.sysu.edu.cn）找一个网页下载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从学校网站（www-sysu-edu-cn）找一个图片下载"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">从学校网站（www.sysu.edu.cn）找一个图片下载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在http请求的头部行中加入If-Modified-Since-Sat-16-May-2020-14-57-17-GMT从学校网站下载-2-的图片"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">在http请求的头部行中加入If-Modified-Since: Sat, 16 May 2020 14:57:17 GMT从学校网站下载(2)的图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用流水线方式实现前面（1）（2），即把它们的请求拷贝到一起后发送出去（可能太长，第一部分可以只有看到末尾）。注意：connection都要是keep-alive"><span class="nav-number">1.3.1.4.</span> <span class="nav-text">用流水线方式实现前面（1）（2），即把它们的请求拷贝到一起后发送出去（可能太长，第一部分可以只有看到末尾）。注意：connection都要是keep-alive</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用（1）的地址取回网页的一部分-100-200-400"><span class="nav-number">1.3.1.5.</span> <span class="nav-text">用（1）的地址取回网页的一部分(100-200,400-)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FTP协议的实验"><span class="nav-number">1.3.2.</span> <span class="nav-text">FTP协议的实验</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#上传用学号命名的一个文本文件-学号-txt"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">上传用学号命名的一个文本文件(学号.txt)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看当前目录内容-太多则选择一些-，并标注出-1-中自己上传的文件"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">查看当前目录内容(太多则选择一些)，并标注出(1)中自己上传的文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#下载-1-中自己上传的文本文件"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">下载(1)中自己上传的文本文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#下载-ebook下的一个二进制文件-例如，-pdf文件"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">下载&#x2F;ebook下的一个二进制文件(例如，.pdf文件)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#采用断点续传下载一个-text下的一个文本文件的一部分"><span class="nav-number">1.3.2.5.</span> <span class="nav-text">采用断点续传下载一个&#x2F;text下的一个文本文件的一部分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分两次上传一个文本文件-（使用APPE命令）"><span class="nav-number">1.3.2.6.</span> <span class="nav-text">分两次上传一个文本文件 （使用APPE命令）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SMTP协议的实验"><span class="nav-number">1.3.3.</span> <span class="nav-text">SMTP协议的实验</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通过我的QQ邮箱发一封没有附件的邮件到我的中大邮箱"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">通过我的QQ邮箱发一封没有附件的邮件到我的中大邮箱</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过我的QQ邮箱发一封带附件-二进制文件-的邮件-MIME-txt-到我的中大邮箱"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">通过我的QQ邮箱发一封带附件(二进制文件)的邮件(MIME.txt)到我的中大邮箱</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过中大邮箱发送另一个带附件的邮件给QQ邮箱。可以先给你自己发一封带附件的邮件-再通过查看源码截取该响应报文的一部分，参见MIME-txt"><span class="nav-number">1.3.3.3.</span> <span class="nav-text">通过中大邮箱发送另一个带附件的邮件给QQ邮箱。可以先给你自己发一封带附件的邮件,再通过查看源码截取该响应报文的一部分，参见MIME.txt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从你的邮箱发一份邮件到同学的邮箱"><span class="nav-number">1.3.3.4.</span> <span class="nav-text">从你的邮箱发一份邮件到同学的邮箱</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#POP3协议"><span class="nav-number">1.3.4.</span> <span class="nav-text">POP3协议</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#查看我的QQ邮箱中每个邮件大小"><span class="nav-number">1.3.4.1.</span> <span class="nav-text">查看我的QQ邮箱中每个邮件大小</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#取回我的QQ邮箱的最后一封邮件的邮件唯一标识符"><span class="nav-number">1.3.4.2.</span> <span class="nav-text">取回我的QQ邮箱的最后一封邮件的邮件唯一标识符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#取回zsureceiver5-sina-com最后一封邮件"><span class="nav-number">1.3.4.3.</span> <span class="nav-text">取回zsureceiver5@sina.com最后一封邮件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#取回三-1-中发到你邮箱的邮件"><span class="nav-number">1.3.4.4.</span> <span class="nav-text">取回三(1)中发到你邮箱的邮件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验体会"><span class="nav-number">1.3.5.</span> <span class="nav-text">实验体会</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">reeeeeeeeeein</p>
+  <div class="site-description" itemprop="description">SYSU 计算机专业大二在读</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">reeeeeeeeeein</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>

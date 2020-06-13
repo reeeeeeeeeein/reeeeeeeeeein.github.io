@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="操作系统实验报告[toc] 实验目的1、PC系统的中断机制和原理 2、理解操作系统内核对异步事件的处理方法 3、掌握中断处理编程的方法 4、掌握内核中断处理代码组织的设计方法 5、了解查询式I&#x2F;O控制方式的编程方法 实验要求1、知道PC系统的中断硬件系统的原理 2、掌握x86汇编语言对时钟中断的响应处理编程方法 3、重写和扩展实验三的的内核程序，增加时钟中断的响应处理和键盘中断响应。 4、编写实验">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统实验四_中断控制">
+<meta property="og:url" content="http://yoursite.com/2020/06/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E5%9B%9B_%E4%B8%AD%E6%96%AD%E6%8E%A7%E5%88%B6/index.html">
+<meta property="og:site_name" content="reeeeeeeeeein的博客">
+<meta property="og:description" content="操作系统实验报告[toc] 实验目的1、PC系统的中断机制和原理 2、理解操作系统内核对异步事件的处理方法 3、掌握中断处理编程的方法 4、掌握内核中断处理代码组织的设计方法 5、了解查询式I&#x2F;O控制方式的编程方法 实验要求1、知道PC系统的中断硬件系统的原理 2、掌握x86汇编语言对时钟中断的响应处理编程方法 3、重写和扩展实验三的的内核程序，增加时钟中断的响应处理和键盘中断响应。 4、编写实验">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/FhemI2Kxtn9Du7c.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/B2jz3rXtkOyVm6Q.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/12/pKMRmZtx73rEOhP.png">
+<meta property="article:published_time" content="2020-06-13T10:20:29.920Z">
+<meta property="article:modified_time" content="2020-06-13T10:20:29.920Z">
+<meta property="article:author" content="reeeeeeeeeein">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/12/FhemI2Kxtn9Du7c.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/06/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E5%9B%9B_%E4%B8%AD%E6%96%AD%E6%8E%A7%E5%88%B6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>操作系统实验四_中断控制 | reeeeeeeeeein的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+<div class="bg_content">
+<canvas id="canvas"></canvas>
+</div>
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">reeeeeeeeeein的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E5%9B%9B_%E4%B8%AD%E6%96%AD%E6%8E%A7%E5%88%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="reeeeeeeeeein">
+      <meta itemprop="description" content="SYSU 计算机专业大二在读">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="reeeeeeeeeein的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统实验四_中断控制
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-13 18:20:29" itemprop="dateCreated datePublished" datetime="2020-06-13T18:20:29+08:00">2020-06-13</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="操作系统实验报告"><a href="#操作系统实验报告" class="headerlink" title="操作系统实验报告"></a>操作系统实验报告</h1><p>[toc]</p>
+<h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><p>1、PC系统的中断机制和原理</p>
+<p>2、理解操作系统内核对异步事件的处理方法</p>
+<p>3、掌握中断处理编程的方法</p>
+<p>4、掌握内核中断处理代码组织的设计方法</p>
+<p>5、了解查询式I/O控制方式的编程方法</p>
+<h2 id="实验要求"><a href="#实验要求" class="headerlink" title="实验要求"></a>实验要求</h2><p>1、知道PC系统的中断硬件系统的原理</p>
+<p>2、掌握x86汇编语言对时钟中断的响应处理编程方法</p>
+<p>3、重写和扩展实验三的的内核程序，增加时钟中断的响应处理和键盘中断响应。</p>
+<p>4、编写实验报告，描述实验工作的过程和必要的细节，如截屏或录屏，以证实实验工作的真实性</p>
+<h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><ul>
+<li>Windows 10</li>
+<li>WSL （Windows Subsystem for Linux） [Ubuntu 18.04.2 LTS]：WSL 是以软件的形式运行在 Windows 下的 Linux 子系统，是近些年微软推出来的新工具，可以在 Windows 系统上原生运行 Linux。</li>
+<li>gcc version 7.5.0：C 语言程序编译器，Ubuntu 自带。</li>
+<li>ld  version 2.3.0:  链接器，Ubuntu自带</li>
+<li>NASM version 2.13.02：汇编程序编译器，通过<code>sudo apt install nasm</code>安装在 WSL 上。</li>
+<li>Oracle VM VirtualBox ：轻量开源的虚拟机软件，安装在Windows下。</li>
+<li>VSCode - Insiders v1.33.0：好用的文本编辑器，有丰富的插件，可以用它来打开WSL中的文件夹，用它自带的终端执行make命令。</li>
+<li>GNU Make 4.1：安装在 Ubuntu 下，一键编译并连接代码，生成最终的文件。</li>
+<li>Bochs 2.1.1：安装在Windows下，用于调试代码。</li>
+</ul>
+<h3 id="自制工具"><a href="#自制工具" class="headerlink" title="自制工具"></a>自制工具</h3><p>​由于我的虚拟机和Bochs都安装在Windows下，所以需要将WSL中生成的文件写入至Windows的磁盘，这可以用我编写的工具 do 来解决，只需要执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;do 文件名 写入的扇区</span><br></pre></td></tr></table></figure>
+
+<p>就可以了。</p>
+<h2 id="实验内容"><a href="#实验内容" class="headerlink" title="实验内容"></a>实验内容</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>​由于<a href="https://reeeeeeeeeein.github.io/2020/05/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E4%B8%89_%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8/" target="_blank" rel="noopener">上次实验</a>已经写好了操作系统内核，这次只用在里面修改即可。首先学习x86中断系统，明白时钟中断的原理，然后用时间中断实现”风火轮“，用一个其他中断实现用户程序敲击键盘显示’OUCH!OUCH!’的功能。</p>
+<h3 id="设置中断入口点"><a href="#设置中断入口点" class="headerlink" title="设置中断入口点"></a>设置中断入口点</h3><p>​为了方便地使用中断，可以编写一个中断服务程序，再修改中断号对应的中断向量表。修改中断向量表的操作对不同中断是相似的，只是中断号和中断服务程序的地址不同而已，我们把这部分内容写成一个宏，放置在entry.asm里，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">%macro set_ivt 2</span><br><span class="line">;第一个参数表示第几号中断，第二个参数表示中断服务程序的位置</span><br><span class="line">push ax</span><br><span class="line">push es</span><br><span class="line">push bx</span><br><span class="line">push si</span><br><span class="line">push dx</span><br><span class="line"></span><br><span class="line">xor ax,ax</span><br><span class="line">mov es,ax</span><br><span class="line">mov ax,%1</span><br><span class="line">mov bx,4</span><br><span class="line">xor dx,dx</span><br><span class="line">mul bx;中断号*4后得到中断向量表中对应的地址</span><br><span class="line">mov si,ax</span><br><span class="line">xor dx,dx</span><br><span class="line">mov ax,%2</span><br><span class="line">mov bx,16;把位置除以16，得到偏移量和段地址</span><br><span class="line">div bx</span><br><span class="line">mov word [es:si],dx;前两个字节放偏移量</span><br><span class="line">mov word [es:si+2],ax;后两个字节放段地址</span><br><span class="line"></span><br><span class="line">pop dx</span><br><span class="line">pop si</span><br><span class="line">pop bx</span><br><span class="line">pop es</span><br><span class="line">pop ax</span><br><span class="line">%endmacro</span><br></pre></td></tr></table></figure>
+
+<h3 id="编写时钟中断"><a href="#编写时钟中断" class="headerlink" title="编写时钟中断"></a>编写时钟中断</h3><p>​x86系统会自动产生时钟中断，为了实现’’风火轮’的效果，我们可以修改中断向量表中0x08号中断对应的内容，让它指向我们编写的中断服务程序。中断服务程序很简单，只用在内存中放置一个变量表示当前是显示’-‘、’\‘还是’/‘即可。但值得注意的是开始时要关中断，返回前要开中断，且要加上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int 0x1c</span><br><span class="line">mov al,20h</span><br><span class="line">out 20h,al</span><br></pre></td></tr></table></figure>
+
+<p>​这几行代码，没有这些代码会出现莫名其妙的错误，一直找不到原因。</p>
+<p>​写完之后，在内核入口处加上一句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_ivt 8h,_int_8h</span><br></pre></td></tr></table></figure>
+
+<p>​就可以修改中断向量表了。</p>
+<h3 id="编写-33号中断"><a href="#编写-33号中断" class="headerlink" title="编写 33号中断"></a>编写 33号中断</h3><p>​编写33号中断以实现在屏幕下方显示”OUCH!OUCH!”的功能，然后在用户程序中每次敲击键盘时调用33号中断。判断用户是否敲击键盘，只用调用0x16号中断即可，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int 16h</span><br><span class="line">jz do</span><br><span class="line">int 33</span><br></pre></td></tr></table></figure>
+
+<p>同样，写完之后加上一句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_ivt 33,_int_33</span><br></pre></td></tr></table></figure>
+
+<p>​就可以运行了。</p>
+<h2 id="实验过程"><a href="#实验过程" class="headerlink" title="实验过程"></a>实验过程</h2><p>​编写一个makefile文件，然后就可以在VSCode自带的终端里输入make完成大量的工作。这次的makefile与上次没有任何区别，不再赘述。</p>
+<p>​用bochs运行,可以看到风火轮的效果：<br><img src="https://i.loli.net/2020/06/12/FhemI2Kxtn9Du7c.png" alt="image-20200529153811786.png"></p>
+<p><img src="https://i.loli.net/2020/06/12/B2jz3rXtkOyVm6Q.png" alt="image-20200529153848248.png"></p>
+<p>​进入用户程序，敲击键盘：</p>
+<p><img src="https://i.loli.net/2020/06/12/pKMRmZtx73rEOhP.png" alt="image-20200529153920257.png"></p>
+<p>​可以看到显示了 ‘OUCH!OUCH!’，并且风火轮还在转动。</p>
+<p>​提交的文件夹中还附带了一个录屏视频，可以查看。</p>
+<h2 id="实验总结"><a href="#实验总结" class="headerlink" title="实验总结"></a>实验总结</h2><p>​在完成这次实验过程中遇到的主要困难有：</p>
+<ol>
+<li><p>编写完0x08号中断后，操作系统运行的时候经常莫名其妙地卡住，无法正常运行。找了半天我也没想明白问题出在哪。于是我只好把BIOS的0x08号中断 “扣” 出来，然后在它上面进行修改，然后就能正常运行了。</p>
+</li>
+<li><p>本来是打算在显示 “OUCH!OUCH!” 的时候顺便显示系统的时间的，但BOCHS的时间系统似乎比正常的要快很多，导致完全无法显示正常的时间，而用Virtual Box又无法正常执行，于是只能把那一段代码删掉。</p>
+<p>​总的来说，这次实验算比较简单了，只需要将原有的操作系统内核稍作修改即可。但又十分重要，毕竟操作系统的很多内容都要靠时钟中断来完成。我对这些内容掌握的还不够扎实，以后还要加强。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AE%9E%E9%AA%8C%E5%9B%9B_%E6%96%87%E4%BB%B6%E6%89%93%E5%8C%85%E5%AE%9E%E9%AA%8C/" rel="prev" title="计算机网络实验四_文件打包实验">
+      <i class="fa fa-chevron-left"></i> 计算机网络实验四_文件打包实验
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AE%9E%E9%AA%8C%E4%BA%94_%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93%E5%AE%9E%E9%AA%8C/" rel="next" title="计算机网络实验五_文件传输实验">
+      计算机网络实验五_文件传输实验 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#操作系统实验报告"><span class="nav-number">1.</span> <span class="nav-text">操作系统实验报告</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实验目的"><span class="nav-number">1.1.</span> <span class="nav-text">实验目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验要求"><span class="nav-number">1.2.</span> <span class="nav-text">实验要求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验环境"><span class="nav-number">1.3.</span> <span class="nav-text">实验环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自制工具"><span class="nav-number">1.3.1.</span> <span class="nav-text">自制工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验内容"><span class="nav-number">1.4.</span> <span class="nav-text">实验内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.4.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置中断入口点"><span class="nav-number">1.4.2.</span> <span class="nav-text">设置中断入口点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写时钟中断"><span class="nav-number">1.4.3.</span> <span class="nav-text">编写时钟中断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写-33号中断"><span class="nav-number">1.4.4.</span> <span class="nav-text">编写 33号中断</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验过程"><span class="nav-number">1.5.</span> <span class="nav-text">实验过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验总结"><span class="nav-number">1.6.</span> <span class="nav-text">实验总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">reeeeeeeeeein</p>
+  <div class="site-description" itemprop="description">SYSU 计算机专业大二在读</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">reeeeeeeeeein</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
